@@ -1,0 +1,24 @@
+{
+  "name": "weekly-chart-site",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Static weekly chart site generator",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "rank": "node scripts/rank.mjs",
+    "collect": "node scripts/collect.mjs",
+    "test": "node --test",
+    "render": "node tests/render.mjs",
+    "privacy": "python3 .github/scripts/privacy_check.py",
+    "baseline:restore": "node scripts/rank.mjs --restore-baseline",
+    "assets": "node scripts/assets.mjs all",
+    "assets:brand": "node scripts/assets.mjs brand"
+  },
+  "devDependencies": {
+    "sharp": "0.35.5"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

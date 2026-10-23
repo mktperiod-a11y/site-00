@@ -1,0 +1,42 @@
+name: bootstrap
+
+on:
+  push:
+    branches: ["claude/**"]
+    paths: [".github/bootstrap-request"]
+
+permissions:
+  contents: write
+
+jobs:
+  first-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - name: Download raw images
+        run: node scripts/assets.mjs fetch
+      - name: Keep two store pages for parser review
+        run: |
+          curl -sL -A "Mozilla/5.0" "https://play.google.com/store/apps/details?id=com.ondisk.mobile4v18M&hl=ko&gl=KR" \
+            -o .cache/raw/play-sample-1.html || true
+          curl -sL -A "Mozilla/5.0" "https://play.google.com/store/apps/details?id=com.winpeople.filebogo&hl=ko&gl=KR" \
+            -o .cache/raw/play-sample-2.html || true
+      - name: Collect and rank
+        env:
+          NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
+          NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
+        run: |
+          node scripts/collect.mjs
+          node scripts/rank.mjs || true
+      - name: Commit results to this branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git add -f .cache/raw
+          git commit -m "Bootstrap: first metrics and raw images" || echo "nothing to commit"
+          git push

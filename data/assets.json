@@ -1,0 +1,21 @@
+{
+  "ondisk": { "logo": "header" },
+  "kdisk": { "logo": "header" },
+  "filebogo": { "logo": "https://wimg.filebogo.com/images_bogo/common/logo.png" },
+  "yesfile": { "logo": "https://www.yesfile.com/img/main/top_logo.png" },
+  "wedisk": { "logo": "https://www.wedisk.co.kr/common/html/2017_mobile/images/top_logo.png" },
+  "filenori": { "logo": "header" },
+  "filekuki": { "logo": "header" },
+  "filesun": { "logo": "https://img.filesun.com/common/header/logo/sun_logo200x72v4.png" },
+  "filejo": { "logo": "https://wimg.filejo.com/top/logo.gif" },
+  "filemong": { "logo": "header" },
+  "tple": { "logo": "header" },
+  "ggulfile": { "logo": "header" },
+  "filemaru": { "logo": "header" },
+  "ssadafile": { "logo": "header" },
+  "filecity": { "logo": "header" },
+  "todisk": { "logo": "header" },
+  "filestar": { "logo": "https://filestar.co.kr/_static/web/images/common/logo_new.png" },
+  "geniefile": { "logo": "header" },
+  "bigfile": { "logo": "header" }
+}

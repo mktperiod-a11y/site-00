@@ -1,0 +1,41 @@
+name: checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build
+        run: node scripts/build.mjs
+      - name: Tests
+        run: node --test
+      - name: Privacy check
+        env:
+          PRIVACY_PATTERNS: ${{ secrets.PRIVACY_PATTERNS }}
+        run: python3 .github/scripts/privacy_check.py _site
+
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install browser
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Render at four widths
+        run: node tests/render.mjs
