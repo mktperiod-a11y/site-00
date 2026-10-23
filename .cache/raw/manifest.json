@@ -1,0 +1,120 @@
+{
+  "ondisk": {
+    "iconFrom": "appstore",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/3d/c1/d6/3dc1d649-94b5-6b75-4317-af9a8c378d92/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg",
+    "logoCandidates": [
+      "https://cimage.ondisk.co.kr/data/mdns_bigbanner/310/1765947799_logo.jpg",
+      "https://image.ondisk.co.kr/new/pc/image/layout/logo.jpg",
+      "https://image.ondisk.co.kr/new/pc/image/layout/logo_fixed.jpg"
+    ],
+    "logo": "https://cimage.ondisk.co.kr/data/mdns_bigbanner/310/1765947799_logo.jpg"
+  },
+  "kdisk": {
+    "iconFrom": "appstore",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/b1/8f/e3/b18fe31c-8361-a306-7d4d-866bbb8acd4a/AppIcon-0-0-1x_U007emarketing-0-8-0-0-85-220.png/512x512bb.jpg",
+    "logoCandidates": []
+  },
+  "filebogo": {
+    "iconFrom": "appstore",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/70/36/8b/70368b71-21a3-4ffb-c290-0fd746d9aa51/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg",
+    "logo": "https://wimg.filebogo.com/images_bogo/common/logo.png"
+  },
+  "yesfile": {
+    "iconFrom": "appstore",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/e0/c1/39/e0c139e7-fda6-cd40-5106-cc3da511a7c8/AppIcon-0-0-1x_U007emarketing-0-8-0-85-220.png/512x512bb.jpg",
+    "logo": "https://www.yesfile.com/img/main/top_logo.png"
+  },
+  "wedisk": {},
+  "filenori": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/xHzL1mAbSA70TTEgL_khRv1Ur_8V3j5GoCDZfGLQ21u-fj12En116xE_51bdfUodgkGXMqv5YDk2QZ-IRkF4=s512"
+  },
+  "filekuki": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/TORW6AaXfz50AJxzEdV7fphl7Ei5SC4Cb7qGMHYM1ADbftuxGn4ay9z9AUCI1h-XAIGpqHxgVgriec9cTWGC=s512",
+    "logoCandidates": [
+      "https://www.filekuki.com/kuki/img/kkr_logo_01_k.png",
+      "https://www.filekuki.com/kuki/img/kkr_logo_01_dk.png",
+      "https://www.filekuki.com/kuki/img/kkr_logo_k.png",
+      "https://www.filekuki.com/kuki/img/kkr_logo_dk.png"
+    ],
+    "logo": "https://www.filekuki.com/kuki/img/kkr_logo_01_k.png"
+  },
+  "filesun": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/4Vm-qGQ3FeHRsRaPCRDzOXP-lZ4Hwdcu29iUHF2xfykLi0wJGjLIkNBSjKRZdin2Tk2S-koOsB87dYPH7wLTOQ=s512",
+    "logo": "https://img.filesun.com/common/header/logo/sun_logo200x72v4.png"
+  },
+  "filejo": {
+    "iconFrom": "appstore",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/3d/32/d7/3d32d720-2ba3-779b-e1d6-3956d4981d29/AppIcon2-0-0-1x_U007emarketing-0-11-0-0-85-220.png/512x512bb.jpg",
+    "logo": "https://wimg.filejo.com/top/logo.gif"
+  },
+  "filemong": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/MPySL8haxX66wokzCnD2jAEDk8yhGjFJSow-aVmApDDnVKE9pOFsaKOyez62dD3I6AQ1z3cy8vLXw81Fj3l8kQ=s512",
+    "logoCandidates": [
+      "https://filemong.com/design/img/event_logo/event_logo_chipmunk.gif",
+      "https://filemong.com/design/img/logo.png",
+      "https://filemong.com/design/img/ft_logo.png",
+      "https://filemong.com/design/img/logo_red.png"
+    ],
+    "logo": "https://filemong.com/design/img/event_logo/event_logo_chipmunk.gif"
+  },
+  "tple": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/PjnVmgpNorZQ8X0SC17XekWjSSeN2T0pCklk_kZjWzMVoQv66fMVls2Os0vlwBuHQA_sjGaGvmR6q_Fi744w7Q=s512",
+    "logoCandidates": []
+  },
+  "ggulfile": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/RQSqIk4xEorpyccgIgbSdp3KiU0ZKFcdoSF5T9Kh66rxMLq-Gcv_awL_KGD3_oglrOnCv5-6t4EZslfQlnBuPw=s512",
+    "logoCandidates": [
+      "https://ggulfile.com/images/new_logo.png",
+      "https://ggulfile.com/images/footer_logo.png"
+    ]
+  },
+  "filemaru": {
+    "iconFrom": "appstore",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple116/v4/d7/5b/21/d75b21a5-4863-2407-911d-22dd6c1e5ed1/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/512x512bb.jpg",
+    "logoCandidates": []
+  },
+  "ssadafile": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/HKNh6iwulZjts_2YMPFrysNO5ASHuvoyF2RwKnKEWJ71d1Z6lCcDVDW9E0wG9DmukSHRmn5VAFIuxP0kim_5qw=s512",
+    "logoCandidates": []
+  },
+  "filecity": {
+    "iconFrom": "appstore",
+    "icon": "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/c6/b5/f8/c6b5f818-fd8e-25c1-8592-de04fabc7277/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg",
+    "logoCandidates": [
+      "https://www.filecity.co.kr/img/logo2.png"
+    ],
+    "logo": "https://www.filecity.co.kr/img/logo2.png"
+  },
+  "todisk": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/BDS9IFs5oAbR3yk3hlG-s6nXnnX0XDAiKH5O8QVT0zcNmYNxn1TmdRrFZE-g4ZsaSxseajU14rOqrNlUz5tA=s512",
+    "logoCandidates": [
+      "https://himg.todisk.com/main/data/2026/10/15/logo/pc_logo_1792050067fm4Ut29599.jpg"
+    ],
+    "logo": "https://himg.todisk.com/main/data/2026/10/15/logo/pc_logo_1792050067fm4Ut29599.jpg"
+  },
+  "filestar": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/H_SU-TZLeFxbgcVDVUflWhxwmmUkBNL9t78Dut0JNNOw7_naVIOS3l_lZ1-aVGCBUm6eZaRf2jNBJbj44ZyWkCk=s512",
+    "logo": "https://filestar.co.kr/_static/web/images/common/logo_new.png"
+  },
+  "geniefile": {
+    "iconFrom": "play",
+    "icon": "https://play-lh.googleusercontent.com/qbHfXTtxIMGsUM9XdTNNKDHc6_klZH5y31YE95-foq5-dxvfCQVQj1p9Pus-ej_4cKFxZ9YNZypE78Q37lSMWg=s512",
+    "logoCandidates": []
+  },
+  "bigfile": {
+    "iconFrom": "appstore",
+    "logoCandidates": [
+      "https://www.bigfile.co.kr/_template/service/images/common/2026/bigfile_logo.png"
+    ],
+    "logo": "https://www.bigfile.co.kr/_template/service/images/common/2026/bigfile_logo.png"
+  }
+}
