@@ -1,0 +1,117 @@
+{
+  "ondisk": {
+    "candidates": [
+      "https://image.ondisk.co.kr/new/pc/image/layout/logo.jpg",
+      "https://image.ondisk.co.kr/new/pc/image/layout/logo_fixed.jpg"
+    ]
+  },
+  "kdisk": {
+    "page": "https://kdisk.co.kr/index.php",
+    "erase": [
+      {
+        "left": 44,
+        "top": 48,
+        "width": 100,
+        "height": 19
+      },
+      {
+        "left": 136,
+        "top": 0,
+        "width": 101,
+        "height": 127
+      }
+    ],
+    "crop": {
+      "left": 0,
+      "top": 54,
+      "width": 140,
+      "height": 46
+    }
+  },
+  "filebogo": {
+    "logo": "https://wimg.filebogo.com/images_bogo/common/logo.png"
+  },
+  "yesfile": {
+    "logo": "https://www.yesfile.com/img/main/top_logo.png"
+  },
+  "wedisk": {
+    "logo": "https://www.wedisk.co.kr/common/html/2017_mobile/images/top_logo.png"
+  },
+  "filenori": {
+    "logo": "header"
+  },
+  "filekuki": {
+    "candidates": [
+      "https://www.filekuki.com/kuki/img/kkr_logo_01_k.png",
+      "https://www.filekuki.com/kuki/img/kkr_logo_01_dk.png",
+      "https://www.filekuki.com/kuki/img/kkr_logo_k.png",
+      "https://www.filekuki.com/kuki/img/kkr_logo_dk.png"
+    ]
+  },
+  "filesun": {
+    "logo": "https://img.filesun.com/common/header/logo/sun_logo200x72v4.png",
+    "crop": {
+      "left": 0,
+      "top": 0,
+      "width": 200,
+      "height": 54
+    }
+  },
+  "filejo": {
+    "logo": "https://wimg.filejo.com/top/logo.gif"
+  },
+  "filemong": {
+    "candidates": [
+      "https://filemong.com/design/img/logo.png",
+      "https://filemong.com/design/img/logo_red.png"
+    ],
+    "pick": 1
+  },
+  "tple": {
+    "candidates": [
+      "https://image3.tple.co.kr/_logo/161467307683395.png",
+      "https://image3.tple.co.kr/_siteLogo/174305409654861.png",
+      "https://image3.tple.co.kr/_siteLogo/174305409660716.png",
+      "https://image3.tple.co.kr/_siteLogo/174305409673131.png",
+      "https://image3.tple.co.kr/_siteLogo/177491988010353.png",
+      "https://image3.tple.co.kr/_siteLogo/177491988068267.png"
+    ]
+  },
+  "ggulfile": {
+    "candidates": [
+      "https://ggulfile.com/images/new_logo.png"
+    ]
+  },
+  "filemaru": {
+    "candidates": [
+      "https://www.filemaru.com/img/sub/logo.gif"
+    ]
+  },
+  "ssadafile": {
+    "page": "https://ssadafile.com/index.php"
+  },
+  "filecity": {
+    "candidates": [
+      "https://www.filecity.co.kr/img/logo2.png"
+    ]
+  },
+  "todisk": {
+    "candidates": [
+      "https://www.todisk.com/event/image/logo/pc_145430562526954.png",
+      "https://himg.todisk.com/main/data/2026/10/15/logo/pc_logo_1792050067fm4Ut29599.jpg"
+    ],
+    "pick": 0
+  },
+  "filestar": {
+    "logo": "https://filestar.co.kr/_static/web/images/common/logo_new.png"
+  },
+  "geniefile": {
+    "logo": "header"
+  },
+  "bigfile": {
+    "candidates": [
+      "https://www.bigfile.co.kr/_template/service/images/common/2026/bigfile_logo.png",
+      "https://www.bigfile.co.kr/images/common/logo.png"
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "brand": "디스크차트",
+  "brandEn": "DISKCHART",
+  "publicCount": 10,
+  "starFloor": 3.6,
+  "floors": [
+    { "id": "ondisk", "maxRank": 3 },
+    { "id": "kdisk", "maxRank": 5 }
+  ],
+  "weights": { "search": 40, "usage": 35, "reaction": 25 },
+  "ratingPrior": 300,
+  "historyWeeks": 26,
+  "naverSiteVerification": ""
+}

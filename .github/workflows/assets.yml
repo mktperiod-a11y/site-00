@@ -1,0 +1,32 @@
+name: assets
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --no-audit --no-fund
+      - name: Download and re-save icons and logos
+        run: node scripts/assets.mjs all
+      - name: Privacy check
+        run: python3 .github/scripts/privacy_check.py src/static
+      - name: Commit images
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add src/static
+          if git diff --cached --quiet; then
+            echo "no image change"
+          else
+            git commit -m "Refresh vendor images"
+            git push
+          fi
