@@ -120,6 +120,9 @@ async function recolorIfLight(img) {
   const { data, info } = await img.clone().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
   let sum = 0;
   let count = 0;
+  let clear = 0;
+  for (let i = 3; i < data.length; i += 4) if (data[i] < 250) clear++;
+  if (clear < (data.length / 4) * 0.05) return img;
   for (let i = 0; i < data.length; i += 4) {
     if (data[i + 3] < 128) continue;
     sum += (0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2]) / 255;
@@ -149,6 +152,15 @@ async function processAll() {
     const logoRaw = path.join(RAW, `logo-${v.id}-${opts.pick ?? 0}`);
     if (fs.existsSync(logoRaw) && !opts.skipLogo) {
       let img = sharp(logoRaw, { animated: false }).ensureAlpha();
+      if (opts.erase) {
+        const meta = await img.metadata();
+        const mask = Buffer.from(
+          `<svg xmlns="http://www.w3.org/2000/svg" width="${meta.width}" height="${meta.height}">` +
+            opts.erase.map((r) => `<rect x="${r.left}" y="${r.top}" width="${r.width}" height="${r.height}"/>`).join('') +
+            '</svg>',
+        );
+        img = sharp(await img.composite([{ input: mask, blend: 'dest-out' }]).png().toBuffer());
+      }
       if (opts.crop) img = img.extract(opts.crop);
       if (opts.flatten) img = img.flatten({ background: opts.flatten });
       img = sharp(await img.png().toBuffer()).trim({ threshold: opts.trim ?? 12 });

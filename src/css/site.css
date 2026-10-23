@@ -761,7 +761,13 @@ ol {
 .crumbs ol {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--sp-1);
+}
+
+.crumbs li {
+  display: inline-flex;
+  align-items: center;
 }
 
 .crumbs li + li::before {
