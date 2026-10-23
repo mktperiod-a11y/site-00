@@ -238,7 +238,7 @@ ol {
 }
 
 .kicker {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--sp-2);
@@ -326,8 +326,8 @@ ol {
     "rank bar bar bar";
   align-items: center;
   column-gap: var(--sp-2);
-  row-gap: 6px;
-  padding: 10px var(--sp-3);
+  row-gap: var(--sp-1);
+  padding: var(--sp-2) var(--sp-3);
   background: var(--card);
   border: var(--rule-w) solid var(--rule);
   border-radius: var(--r-2);
@@ -439,6 +439,10 @@ ol {
   border-radius: var(--r-1);
   color: var(--ink-soft);
   transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.entry .total {
+  display: none;
 }
 
 .entry:hover .total,
@@ -1026,6 +1030,18 @@ ol {
 
   .brand-sub {
     display: inline;
+  }
+
+  .kicker {
+    display: flex;
+  }
+
+  .entry .total {
+    display: inline;
+  }
+
+  .entry {
+    row-gap: 6px;
   }
 
   .menu-btn {
