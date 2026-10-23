@@ -58,49 +58,62 @@ async function fetchAll() {
   const manifest = {};
   for (const v of vendors) {
     const rec = (manifest[v.id] = {});
-    try {
-      let iconUrl = null;
-      if (v.appStoreId) {
+    const opts = sources[v.id] ?? {};
+    let iconUrl = null;
+    if (v.appStoreId) {
+      try {
         const { body } = await get(`https://itunes.apple.com/lookup?id=${v.appStoreId}&country=kr`, 'text');
         iconUrl = JSON.parse(body).results?.[0]?.artworkUrl512 ?? null;
         rec.iconFrom = 'appstore';
+      } catch (e) {
+        warn(`app store lookup for ${v.id}: ${e.message}`);
       }
-      if (!iconUrl && v.playId) {
+    }
+    if (!iconUrl && v.playId) {
+      try {
         const { body } = await get(`https://play.google.com/store/apps/details?id=${v.playId}&hl=ko&gl=KR`, 'text');
         const og = playIcon(body);
         iconUrl = og ? og.replace(/=[^=/]*$/, '=s512') : null;
         rec.iconFrom = 'play';
+      } catch (e) {
+        warn(`store page for ${v.id}: ${e.message}`);
       }
-      if (iconUrl) {
+    }
+    if (iconUrl) {
+      try {
         const { body } = await get(iconUrl);
         fs.writeFileSync(path.join(RAW, `icon-${v.id}`), body);
         rec.icon = iconUrl;
+      } catch (e) {
+        warn(`icon for ${v.id}: ${e.message}`);
       }
-    } catch (e) {
-      warn(`icon for ${v.id}: ${e.message}`);
     }
-    try {
-      const src = sources[v.id]?.logo;
-      let logoUrl = src && src !== 'header' ? src : null;
-      if (!logoUrl) {
-        const page = await get(v.url, 'text');
+    let urls = opts.candidates ?? (opts.logo && opts.logo !== 'header' ? [opts.logo] : null);
+    if (!urls) {
+      try {
+        const page = await get(opts.page ?? v.url, 'text');
         fs.writeFileSync(path.join(RAW, `home-${v.id}.html`), page.body);
-        const found = headerLogoCandidates(page.body, page.url);
-        rec.logoCandidates = found;
-        logoUrl = found[0] ?? null;
+        urls = headerLogoCandidates(page.body, page.url);
+      } catch (e) {
+        warn(`home page for ${v.id}: ${e.message}`);
+        urls = [];
       }
-      if (logoUrl) {
-        const { body } = await get(logoUrl);
-        fs.writeFileSync(path.join(RAW, `logo-${v.id}`), body);
-        rec.logo = logoUrl;
+    }
+    rec.logos = [];
+    for (const [i, url] of urls.entries()) {
+      try {
+        const { body } = await get(url);
+        fs.writeFileSync(path.join(RAW, `logo-${v.id}-${i}`), body);
+        rec.logos.push(url);
+      } catch (e) {
+        warn(`logo ${i} for ${v.id}: ${e.message}`);
+        rec.logos.push(null);
       }
-    } catch (e) {
-      warn(`logo for ${v.id}: ${e.message}`);
     }
   }
   writeJSON('.cache/raw/manifest.json', manifest);
   console.log(`fetched: ${Object.values(manifest).filter((m) => m.icon).length} icons, ` +
-    `${Object.values(manifest).filter((m) => m.logo).length} logos`);
+    `${Object.values(manifest).filter((m) => m.logos.some(Boolean)).length} vendors with logos`);
 }
 
 async function recolorIfLight(img) {
@@ -133,7 +146,7 @@ async function processAll() {
         .webp({ quality: 88 })
         .toFile(path.join(STATIC, 'icon', `${v.id}.webp`));
     }
-    const logoRaw = path.join(RAW, `logo-${v.id}`);
+    const logoRaw = path.join(RAW, `logo-${v.id}-${opts.pick ?? 0}`);
     if (fs.existsSync(logoRaw) && !opts.skipLogo) {
       let img = sharp(logoRaw, { animated: false }).ensureAlpha();
       if (opts.crop) img = img.extract(opts.crop);
