@@ -1,7 +1,7 @@
 {
-  "date": "2026-10-23",
-  "week": "2026-10-W4",
-  "weekLabel": "10월 4주차",
+  "date": "2026-10-26",
+  "week": "2026-10-W5",
+  "weekLabel": "10월 5주차",
   "year": 2026,
   "month": 10,
   "candidates": 19,
@@ -17,113 +17,113 @@
     {
       "id": "ondisk",
       "rank": 1,
-      "total": 98.6,
+      "total": 98.5,
       "stars": 5,
       "parts": {
         "search": null,
         "usage": 58.3,
-        "reaction": 40.3
+        "reaction": 40.2
       },
-      "change": null,
-      "prevRank": null,
+      "change": 0,
+      "prevRank": 1,
       "adjusted": 0
     },
     {
       "id": "filesun",
       "rank": 2,
-      "total": 94.9,
+      "total": 94.8,
       "stars": 4.9,
       "parts": {
         "search": null,
-        "usage": 56,
+        "usage": 55.9,
         "reaction": 38.9
       },
-      "change": null,
-      "prevRank": null,
+      "change": 0,
+      "prevRank": 2,
       "adjusted": 0
     },
     {
       "id": "filemong",
       "rank": 3,
-      "total": 84.2,
+      "total": 84.3,
       "stars": 4.8,
       "parts": {
         "search": null,
-        "usage": 43.5,
-        "reaction": 40.7
+        "usage": 43.4,
+        "reaction": 40.9
       },
-      "change": null,
-      "prevRank": null,
+      "change": 0,
+      "prevRank": 3,
       "adjusted": 0
     },
     {
       "id": "tple",
       "rank": 4,
-      "total": 80.2,
+      "total": 80.1,
       "stars": 4.7,
       "parts": {
         "search": null,
-        "usage": 38.5,
+        "usage": 38.4,
         "reaction": 41.7
       },
-      "change": null,
-      "prevRank": null,
+      "change": 0,
+      "prevRank": 4,
       "adjusted": 0
     },
     {
       "id": "kdisk",
       "rank": 5,
-      "total": 76.2,
+      "total": 76.3,
       "stars": 4.7,
       "parts": {
         "search": null,
         "usage": 37.8,
-        "reaction": 38.4
+        "reaction": 38.5
       },
-      "change": null,
-      "prevRank": null,
-      "adjusted": 13.8
+      "change": 0,
+      "prevRank": 5,
+      "adjusted": 13.9
     },
     {
       "id": "filejo",
       "rank": 6,
-      "total": 76.1,
+      "total": 76.2,
       "stars": 4.7,
       "parts": {
         "search": null,
-        "usage": 45,
-        "reaction": 31.1
+        "usage": 44.9,
+        "reaction": 31.3
       },
-      "change": null,
-      "prevRank": null,
+      "change": 0,
+      "prevRank": 6,
       "adjusted": 0
     },
     {
-      "id": "ssadafile",
+      "id": "ggulfile",
       "rank": 7,
       "total": 76.1,
       "stars": 4.7,
       "parts": {
         "search": null,
-        "usage": 42.1,
-        "reaction": 34
+        "usage": 39.5,
+        "reaction": 36.6
       },
-      "change": null,
-      "prevRank": null,
+      "change": 1,
+      "prevRank": 8,
       "adjusted": 0
     },
     {
-      "id": "ggulfile",
+      "id": "ssadafile",
       "rank": 8,
-      "total": 75.7,
+      "total": 76,
       "stars": 4.7,
       "parts": {
         "search": null,
-        "usage": 39.6,
-        "reaction": 36.1
+        "usage": 42,
+        "reaction": 34
       },
-      "change": null,
-      "prevRank": null,
+      "change": -1,
+      "prevRank": 7,
       "adjusted": 0
     },
     {
@@ -136,134 +136,134 @@
         "usage": 54.4,
         "reaction": 21.1
       },
-      "change": null,
-      "prevRank": null,
+      "change": 0,
+      "prevRank": 9,
       "adjusted": 0
     },
     {
       "id": "filekuki",
       "rank": 10,
-      "total": 62,
+      "total": 61.7,
       "stars": 4.5,
       "parts": {
         "search": null,
-        "usage": 26.4,
-        "reaction": 35.6
+        "usage": 26.2,
+        "reaction": 35.5
       },
-      "change": null,
-      "prevRank": null,
+      "change": 0,
+      "prevRank": 10,
       "adjusted": 0
     },
     {
       "id": "filenori",
       "rank": 11,
-      "total": 59.9,
+      "total": 59.8,
       "stars": 4.4,
       "parts": {
         "search": null,
-        "usage": 30.7,
+        "usage": 30.6,
         "reaction": 29.2
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 11,
       "adjusted": 0
     },
     {
       "id": "filebogo",
       "rank": 12,
-      "total": 54.5,
+      "total": 54.4,
       "stars": 4.4,
       "parts": {
         "search": null,
-        "usage": 40,
+        "usage": 39.9,
         "reaction": 14.5
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 12,
       "adjusted": 0
     },
     {
       "id": "filecity",
       "rank": 13,
-      "total": 53.5,
+      "total": 53.3,
       "stars": 4.3,
       "parts": {
         "search": null,
-        "usage": 26.7,
-        "reaction": 26.8
+        "usage": 26.6,
+        "reaction": 26.7
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 13,
       "adjusted": 0
     },
     {
       "id": "bigfile",
       "rank": 14,
-      "total": 53.4,
+      "total": 53.2,
       "stars": 4.3,
       "parts": {
         "search": null,
-        "usage": 26.4,
-        "reaction": 27
+        "usage": 26.3,
+        "reaction": 26.9
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 14,
       "adjusted": 0
     },
     {
       "id": "todisk",
       "rank": 15,
-      "total": 48.5,
+      "total": 48.4,
       "stars": 4.3,
       "parts": {
         "search": null,
-        "usage": 28.7,
+        "usage": 28.6,
         "reaction": 19.8
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 15,
       "adjusted": 0
     },
     {
       "id": "filemaru",
       "rank": 16,
-      "total": 41.8,
+      "total": 41.7,
       "stars": 4.2,
       "parts": {
         "search": null,
-        "usage": 41.8,
+        "usage": 41.7,
         "reaction": 0
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 16,
       "adjusted": 0
     },
     {
       "id": "filestar",
       "rank": 17,
-      "total": 39.8,
+      "total": 39.6,
       "stars": 4.2,
       "parts": {
         "search": null,
-        "usage": 11.7,
+        "usage": 11.5,
         "reaction": 28.1
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 17,
       "adjusted": 0
     },
     {
       "id": "geniefile",
       "rank": 18,
-      "total": 32.4,
+      "total": 32.5,
       "stars": 4.1,
       "parts": {
         "search": null,
         "usage": 0,
-        "reaction": 32.4
+        "reaction": 32.5
       },
-      "change": null,
-      "prevRank": null,
+      "change": "new",
+      "prevRank": 18,
       "adjusted": 0
     }
   ]

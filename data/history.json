@@ -42,5 +42,49 @@
       "filestar": 39.8,
       "geniefile": 32.4
     }
+  },
+  {
+    "week": "2026-10-W5",
+    "date": "2026-10-26",
+    "order": [
+      "ondisk",
+      "filesun",
+      "filemong",
+      "tple",
+      "kdisk",
+      "filejo",
+      "ggulfile",
+      "ssadafile",
+      "yesfile",
+      "filekuki",
+      "filenori",
+      "filebogo",
+      "filecity",
+      "bigfile",
+      "todisk",
+      "filemaru",
+      "filestar",
+      "geniefile"
+    ],
+    "totals": {
+      "ondisk": 98.5,
+      "filesun": 94.8,
+      "filemong": 84.3,
+      "tple": 80.1,
+      "kdisk": 76.3,
+      "filejo": 76.2,
+      "ggulfile": 76.1,
+      "ssadafile": 76,
+      "yesfile": 75.5,
+      "filekuki": 61.7,
+      "filenori": 59.8,
+      "filebogo": 54.4,
+      "filecity": 53.3,
+      "bigfile": 53.2,
+      "todisk": 48.4,
+      "filemaru": 41.7,
+      "filestar": 39.6,
+      "geniefile": 32.5
+    }
   }
 ]
