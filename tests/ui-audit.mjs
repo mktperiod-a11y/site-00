@@ -1,6 +1,6 @@
 // Layout audit run inside the page. Each check turns an "it looks off" judgement into a measurement.
 // The function must stay self-contained because Playwright serializes it into the page.
-export function audit({ firstScreen }) {
+export function audit({ firstScreen, budget = {}, names = [] }) {
   const issues = [];
   const label = (el) => {
     const cls = typeof el.className === 'string' && el.className ? `.${el.className.trim().split(/\s+/).join('.')}` : '';
@@ -250,6 +250,89 @@ export function audit({ firstScreen }) {
     });
     const t = document.querySelector('.stamp time');
     if (!t || t.getBoundingClientRect().bottom > window.innerHeight) issues.push('update date below the fold');
+  }
+
+  // Blocks must breathe: away from the header, from each other and from the screen edge.
+  const header = document.querySelector('.masthead');
+  const main = document.querySelector('main');
+  if (header && main) {
+    const hb = header.getBoundingClientRect().bottom + window.scrollY;
+    const isBox = (el) => {
+      const s = getComputedStyle(el);
+      const bg = s.backgroundColor;
+      const hasBg = bg && !/rgba\(0, 0, 0, 0\)|transparent/.test(bg);
+      const hasBorder = ['Top', 'Right', 'Bottom', 'Left'].every((side) => parseFloat(s[`border${side}Width`]) > 0 &&
+        s[`border${side}Style`] !== 'none');
+      return hasBg || hasBorder || s.backgroundImage !== 'none';
+    };
+    const boxes = [...main.querySelectorAll('*')].filter((el) => visible(el) && isBox(el) && !el.closest('.sr, table') &&
+      el.getBoundingClientRect().width > 120);
+    const top = boxes.filter((el) => !boxes.some((o) => o !== el && o.contains(el)));
+    const tops = [];
+    const tw0 = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+    while (tw0.nextNode()) {
+      const node = tw0.currentNode;
+      if (!node.data.trim() || !visible(node.parentElement) || node.parentElement.closest('.sr')) continue;
+      const r = document.createRange();
+      r.selectNodeContents(node);
+      const rect = r.getBoundingClientRect();
+      if (rect.width) tops.push(rect.top + window.scrollY);
+    }
+    if (tops.length && Math.min(...tops) - hb < 16) issues.push('content touches the header');
+    for (const el of top) {
+      const b = el.getBoundingClientRect();
+      if (b.top + window.scrollY - hb < 24) issues.push(`box too close to the header: ${label(el)}`);
+      if (b.left < 8 || b.right > window.innerWidth - 8) issues.push(`box touches the screen edge: ${label(el)}`);
+    }
+    for (let i = 0; i < top.length; i++) {
+      for (let j = i + 1; j < top.length; j++) {
+        const a = top[i];
+        const c = top[j];
+        if (a.parentElement === c.parentElement && a.tagName === c.tagName) continue;
+        const ra = a.getBoundingClientRect();
+        const rc = c.getBoundingClientRect();
+        const overlapX = Math.min(ra.right, rc.right) - Math.max(ra.left, rc.left);
+        const overlapY = Math.min(ra.bottom, rc.bottom) - Math.max(ra.top, rc.top);
+        if (overlapX > 0) {
+          const gap = Math.max(ra.top, rc.top) - Math.min(ra.bottom, rc.bottom);
+          if (gap >= 0 && gap < 16) issues.push(`boxes ${gap}px apart: ${label(a)} / ${label(c)}`);
+        } else if (overlapY > 0) {
+          const gap = Math.max(ra.left, rc.left) - Math.min(ra.right, rc.right);
+          if (gap >= 0 && gap < 16) issues.push(`boxes ${gap}px apart: ${label(a)} / ${label(c)}`);
+        }
+      }
+    }
+  }
+
+  // Text budget: visible characters without spaces, vendor names, benefit wording or screen-reader text.
+  const countText = (root, maxTop = Infinity) => {
+    let n = 0;
+    const tw = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    while (tw.nextNode()) {
+      const node = tw.currentNode;
+      const el = node.parentElement;
+      if (!node.data.trim() || !visible(el) || el.closest('.sr, .skip, .perks, .perk-none, svg, script, style, noscript')) continue;
+      const r = document.createRange();
+      r.selectNodeContents(node);
+      const rect = r.getBoundingClientRect();
+      if (!rect.width || rect.top >= maxTop) continue;
+      let text = node.data;
+      for (const name of names) text = text.split(name).join('');
+      n += text.replace(/\s/g, '').length;
+    }
+    return n;
+  };
+  if (budget.first) {
+    const n = countText(document.body, window.innerHeight);
+    if (n > budget.first) issues.push(`first screen has ${n} characters (budget ${budget.first})`);
+  }
+  if (budget.total) {
+    const n = countText(document.body);
+    if (n > budget.total) issues.push(`page has ${n} characters (budget ${budget.total})`);
+  }
+  for (const card of all('.entry')) {
+    const n = countText(card);
+    if (n > (budget.card ?? 20)) issues.push(`card #${card.id} has ${n} characters (budget ${budget.card ?? 20})`);
   }
 
   return {

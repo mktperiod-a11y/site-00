@@ -3,7 +3,7 @@
     "id": "ondisk", "name": "온디스크", "status": "active",
     "url": "https://new.ondisk.co.kr/", "affiliateUrl": null,
     "playId": "com.ondisk.mobile4v18M", "appStoreId": "1536892993",
-    "color": "#2563eb",
+    "color": "#2e8afa",
     "benefits": [
       { "kind": "join", "text": "가입 1,000P" },
       { "kind": "event", "text": "앱 설치 2,000P" }
@@ -13,7 +13,7 @@
     "id": "kdisk", "name": "케이디스크", "status": "active",
     "url": "https://kdisk.co.kr/", "affiliateUrl": null,
     "playId": "com.kdisk.mobileapp5", "appStoreId": "1492405942",
-    "color": "#e11d48",
+    "color": "#f9104a",
     "benefits": [
       { "kind": "join", "text": "가입 1,000P" },
       { "kind": "event", "text": "앱 설치 쿠폰 3장" }
@@ -23,7 +23,7 @@
     "id": "filebogo", "name": "파일보고", "status": "active",
     "url": "https://www.filebogo.com/", "affiliateUrl": null,
     "playId": "com.winpeople.filebogo", "appStoreId": "6766728476",
-    "color": "#0eaa6b",
+    "color": "#10edf9",
     "benefits": [
       { "kind": "join", "text": "가입 1,000P" }
     ]
@@ -32,7 +32,7 @@
     "id": "yesfile", "name": "예스파일", "status": "active",
     "url": "https://www.yesfile.com/", "affiliateUrl": null,
     "playId": "com.mnt.aos.yesfile.shortcuts", "appStoreId": "562793918",
-    "color": "#ff6714",
+    "color": "#f96d10",
     "benefits": [
       { "kind": "join", "text": "가입 1,000P" }
     ]
@@ -41,7 +41,7 @@
     "id": "wedisk", "name": "위디스크", "status": "active",
     "url": "https://www.wedisk.co.kr/", "affiliateUrl": null,
     "playId": null, "appStoreId": null,
-    "color": "#8100b8",
+    "color": "#b975f0",
     "benefits": [
       { "kind": "join", "text": "가입 2,000P" },
       { "kind": "event", "text": "포인트 3배 사은행사" }
@@ -51,7 +51,7 @@
     "id": "filenori", "name": "파일노리", "status": "active",
     "url": "https://www.filenori.com/", "affiliateUrl": null,
     "playId": "com.FNoriShopGo", "appStoreId": null,
-    "color": "#14a1ff",
+    "color": "#10b3f9",
     "benefits": [
       { "kind": "join", "text": "가입 2,000P" },
       { "kind": "event", "text": "골라받기 3배 행사" }
@@ -61,7 +61,7 @@
     "id": "filekuki", "name": "파일쿠키", "status": "active",
     "url": "https://www.filekuki.com/", "affiliateUrl": null,
     "playId": "com.filekukiv6", "appStoreId": null,
-    "color": "#6d8e0b",
+    "color": "#bff910",
     "benefits": [
       { "kind": "join", "text": "가입 1,000P" },
       { "kind": "event", "text": "VIP 이벤트" }
@@ -71,7 +71,7 @@
     "id": "filesun", "name": "파일썬", "status": "active",
     "url": "https://www.filesun.com/", "affiliateUrl": null,
     "playId": "com.is.filesun.version4", "appStoreId": null,
-    "color": "#c69010",
+    "color": "#f9bf10",
     "benefits": [
       { "kind": "join", "text": "가입 300P" },
       { "kind": "event", "text": "야간 50% 페이백" }
@@ -81,7 +81,7 @@
     "id": "filejo", "name": "파일조", "status": "active",
     "url": "https://www.filejo.com/main/", "affiliateUrl": null,
     "playId": "com.funbox.jlsco", "appStoreId": "1207126155",
-    "color": "#0d9488",
+    "color": "#7bf075",
     "benefits": [
       { "kind": "join", "text": "가입 500P" },
       { "kind": "event", "text": "방송 3사 100원" }
@@ -91,7 +91,7 @@
     "id": "filemong", "name": "파일몽", "status": "active",
     "url": "https://filemong.com/", "affiliateUrl": null,
     "playId": "com.me.filemong", "appStoreId": null,
-    "color": "#ff14d0",
+    "color": "#f075a0",
     "benefits": [
       { "kind": "join", "text": "가입 300P" },
       { "kind": "event", "text": "30일 무제한 100원" }
@@ -101,7 +101,7 @@
     "id": "tple", "name": "티플", "status": "active",
     "url": "https://www.tple.co.kr/", "affiliateUrl": null,
     "playId": "kr.co.tple.downapp", "appStoreId": null,
-    "color": "#0000f5",
+    "color": "#d323e7",
     "benefits": [
       { "kind": "join", "text": "본인인증 1,000B" },
       { "kind": "event", "text": "앱 리뷰 스토어당 3,000P" }
@@ -111,7 +111,7 @@
     "id": "ggulfile", "name": "꿀파일", "status": "active",
     "url": "https://ggulfile.com/", "affiliateUrl": null,
     "playId": "com.ggulfile.app.ggulfile_app", "appStoreId": null,
-    "color": "#f50087",
+    "color": "#fbb36a",
     "benefits": [
       { "kind": "join", "text": "가입 300P" },
       { "kind": "event", "text": "페이백 이벤트" }
@@ -121,7 +121,7 @@
     "id": "filemaru", "name": "파일마루", "status": "active",
     "url": "https://www.filemaru.com/", "affiliateUrl": null,
     "playId": "com.mideak.fmav7", "appStoreId": "1640598483",
-    "color": "#dc14ff",
+    "color": "#f910a7",
     "benefits": [
       { "kind": "event", "text": "인스타 팔로우 이벤트" }
     ]
@@ -130,7 +130,7 @@
     "id": "ssadafile", "name": "싸다파일", "status": "active",
     "url": "https://ssadafile.com/", "affiliateUrl": null,
     "playId": "com.ssadafile.app.ssadafilev1", "appStoreId": null,
-    "color": "#00b800",
+    "color": "#10f910",
     "benefits": [
       { "kind": "join", "text": "가입 300P" },
       { "kind": "event", "text": "페이백 이벤트" }
@@ -140,7 +140,7 @@
     "id": "filecity", "name": "파일시티", "status": "active",
     "url": "https://www.filecity.co.kr/", "affiliateUrl": null,
     "playId": "kr.co.filecity.filecity_mobile_flutter_google2", "appStoreId": "6514282151",
-    "color": "#003d99",
+    "color": "#ed705a",
     "benefits": [
       { "kind": "join", "text": "첫 달 자유이용권 100원" },
       { "kind": "event", "text": "출근 시간 콘텐츠 무료" }
@@ -150,7 +150,7 @@
     "id": "todisk", "name": "투디스크", "status": "active",
     "url": "https://www.todisk.com/", "affiliateUrl": null,
     "playId": "com.todisk.aosdown", "appStoreId": null,
-    "color": "#aa0e9a",
+    "color": "#e72371",
     "benefits": [
       { "kind": "event", "text": "선착순 이용권 100원" }
     ]
@@ -159,7 +159,7 @@
     "id": "filestar", "name": "파일스타", "status": "active",
     "url": "https://filestar.co.kr/", "affiliateUrl": null,
     "playId": "com.me.filestar2", "appStoreId": null,
-    "color": "#8e0b60",
+    "color": "#f0f075",
     "benefits": [
       { "kind": "join", "text": "가입 300P" }
     ]
@@ -168,7 +168,7 @@
     "id": "geniefile", "name": "지니파일", "status": "active",
     "url": "https://geniefile.com/", "affiliateUrl": null,
     "playId": "com.geniefilev2", "appStoreId": null,
-    "color": "#ff1420",
+    "color": "#f91c10",
     "benefits": [
       { "kind": "join", "text": "가입 300P" }
     ]
@@ -177,7 +177,7 @@
     "id": "bigfile", "name": "빅파일", "status": "active",
     "url": "https://www.bigfile.co.kr/", "affiliateUrl": null,
     "playId": "kr.service.bigplay", "appStoreId": "1577712260",
-    "color": "#0891b2",
+    "color": "#f9ed10",
     "benefits": [
       { "kind": "join", "text": "가입 500P", "unconfirmed": true },
       { "kind": "event", "text": "본인인증 30일 자유이용권", "unconfirmed": true }
