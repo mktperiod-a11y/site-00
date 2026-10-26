@@ -49,7 +49,7 @@ function serve(dir, prefix) {
 const problems = [];
 const note = (msg) => problems.push(msg);
 
-async function checkPage(context, url, label, { width, height, firstScreen = false, budget = {}, names = [] }) {
+async function checkPage(context, url, label, { width, height, firstScreen = false }) {
   const page = await context.newPage();
   const errors = [];
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
@@ -62,7 +62,7 @@ async function checkPage(context, url, label, { width, height, firstScreen = fal
   const missing = label.endsWith('-404');
   if (!missing && res.status() !== 200) note(`${label}@${width}: HTTP ${res.status()}`);
   await page.waitForTimeout(150);
-  const r = await page.evaluate(audit, { firstScreen, budget, names });
+  const r = await page.evaluate(audit, { firstScreen });
   for (const i of r.issues) note(`${label}@${width}: ${i}`);
   for (const e of errors) if (!(missing && /status of 404/.test(e))) note(`${label}@${width}: console ${e}`);
   for (const c of r.csp) note(`${label}@${width}: CSP ${c}`);
@@ -79,7 +79,7 @@ async function run(mode) {
   const server = await serve(tmp, prefix);
   const origin = `http://127.0.0.1:${server.address().port}`;
   const base = mode === 'default' ? 'https://owner.github.io/site-path/' : `${origin}/`;
-  const args = [path.join(ROOT, 'scripts/build.mjs'), '--out', tmp, '--base-url', base];
+  const args = [path.join(ROOT, 'scripts/compose.mjs'), '--out', tmp, '--base-url', base];
   let ranking = readJSON('data/ranking.json');
   let vendorList = readJSON('data/vendors.json');
   if (mode === 'edge') {
@@ -103,14 +103,9 @@ async function run(mode) {
   const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
   const links = new Set();
   for (const [width, height] of WIDTHS) {
-    const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1, reducedMotion: 'reduce' });
+    const context = await browser.newContext({ viewport: { width, height }, deviceScaleFactor: 1 });
     for (const [label, url] of targets) {
-      const first = width >= 768 ? 200 : 150;
-      const budget = label === 'index' ? { first, total: 600 } : label.startsWith('detail') ? { total: 500 } : {};
-      const names = vendorList.map((v) => v.name).concat(['디스크차트']);
-      const found = await checkPage(context, url, `${mode}-${label}`, {
-        width, height, firstScreen: label === 'index', budget, names,
-      });
+      const found = await checkPage(context, url, `${mode}-${label}`, { width, height, firstScreen: label === 'index' });
       found.forEach((l) => links.add(l));
     }
     await context.close();

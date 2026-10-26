@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Image pipeline. Every file written here is re-encoded by sharp, which drops EXIF/XMP/IPTC and text chunks.
-//   node scripts/assets.mjs fetch     download app icons and logos into .cache/raw (needs open network)
-//   node scripts/assets.mjs process   turn .cache/raw into src/static/icon/*.webp and src/static/logo/*.webp
-//   node scripts/assets.mjs brand     draw the share image and touch icon
-//   node scripts/assets.mjs all       fetch, then process
+//   node scripts/imagery.mjs fetch     download app icons and logos into .cache/raw (needs open network)
+//   node scripts/imagery.mjs process   turn .cache/raw into src/static/icon/*.webp and src/static/logo/*.webp
+//   node scripts/imagery.mjs brand     draw the share image and touch icon
+//   node scripts/imagery.mjs all       fetch, then process
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
@@ -191,26 +191,20 @@ async function brand() {
     })
     .join('');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <defs>
-    <radialGradient id="spot" cx="0.5" cy="0" r="0.8">
-      <stop offset="0" stop-color="#3ddc97" stop-opacity="0.28"/>
-      <stop offset="1" stop-color="#3ddc97" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
-  <rect width="1200" height="630" fill="#0c1411"/>
-  <rect width="1200" height="630" fill="url(#spot)"/>
+  <rect width="1200" height="630" fill="#f7f3ec"/>
+  <rect y="0" width="1200" height="14" fill="#1b1a22"/>
   <g transform="translate(80 92) scale(2.2)">${markInner}</g>
   <text x="80" y="330" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="88" font-weight="700"
-    fill="#e9f3ee">${site.brand}</text>
-  <text x="84" y="400" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="40" fill="#a5b8af">주간 웹하드 순위 TOP 10</text>
+    fill="#1b1a22">${site.brand}</text>
+  <text x="84" y="400" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="40" fill="#55515f">주간 웹하드 순위 TOP 10</text>
   <text x="84" y="520" font-family="Inter, sans-serif" font-size="26" font-weight="700" letter-spacing="6"
-    fill="#5fe6aa">${site.brandEn} · WEEKLY CHART</text>
+    fill="#b3361b">${site.brandEn} · WEEKLY CHART</text>
   ${bars}
-  <rect x="740" y="520" width="420" height="4" fill="#35493f"/>
+  <rect x="740" y="520" width="420" height="4" fill="#1b1a22"/>
 </svg>`;
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'og.png'));
   const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
-  <rect width="180" height="180" fill="#0c1411"/>
+  <rect width="180" height="180" fill="#f7f3ec"/>
   <g transform="translate(26 26) scale(2)">${markInner}</g>
 </svg>`;
   await sharp(Buffer.from(icon)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'touch-icon.png'));

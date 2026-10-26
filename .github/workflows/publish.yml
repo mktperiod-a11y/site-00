@@ -1,4 +1,4 @@
-name: deploy
+name: publish
 
 on:
   push:
@@ -29,10 +29,10 @@ jobs:
       - id: pages
         uses: actions/configure-pages@v5
       - name: Build for the published address
-        run: node scripts/build.mjs --base-url "${{ steps.pages.outputs.base_url }}"
+        run: node scripts/compose.mjs --base-url "${{ steps.pages.outputs.base_url }}"
       - name: Stop if the address placeholder survived
         run: |
-          if grep -rl "site-url.invalid" _site; then
+          if grep -rl "\.invalid/" _site; then
             echo "::error::address placeholder left in the build"
             exit 1
           fi
@@ -40,8 +40,8 @@ jobs:
         run: node --test
       - name: Privacy check
         env:
-          PRIVACY_PATTERNS: ${{ secrets.PRIVACY_PATTERNS }}
-        run: python3 .github/scripts/privacy_check.py
+          LEAK_GUARD_TERMS: ${{ secrets.LEAK_GUARD_TERMS }}
+        run: python3 .github/scripts/leak_guard.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

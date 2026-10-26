@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <circle cx="27" cy="29" r="25" fill="#3ddc97"/>
-  <circle cx="27" cy="29" r="18" fill="none" stroke="#0c1411" stroke-opacity="0.35" stroke-width="2"/>
-  <circle cx="27" cy="29" r="12" fill="none" stroke="#0c1411" stroke-opacity="0.35" stroke-width="2"/>
-  <circle cx="27" cy="29" r="7.5" fill="#0c1411"/>
-  <circle cx="27" cy="29" r="2.2" fill="#3ddc97"/>
-  <g stroke="#0c1411" stroke-width="2.5">
-    <rect x="38" y="42" width="7" height="18" rx="1.5" fill="#e9f3ee"/>
-    <rect x="46.5" y="33" width="7" height="27" rx="1.5" fill="#f5c451"/>
-    <rect x="55" y="23" width="7" height="37" rx="1.5" fill="#e9f3ee"/>
+  <circle cx="27" cy="29" r="25" fill="#1b1a22"/>
+  <circle cx="27" cy="29" r="18" fill="none" stroke="#45424f" stroke-width="2"/>
+  <circle cx="27" cy="29" r="12" fill="none" stroke="#45424f" stroke-width="2"/>
+  <circle cx="27" cy="29" r="7.5" fill="#ff5a36"/>
+  <circle cx="27" cy="29" r="2.2" fill="#f7f3ec"/>
+  <g stroke="#f7f3ec" stroke-width="2.5">
+    <rect x="38" y="42" width="7" height="18" rx="1.5" fill="#ff5a36"/>
+    <rect x="46.5" y="33" width="7" height="27" rx="1.5" fill="#1b1a22"/>
+    <rect x="55" y="23" width="7" height="37" rx="1.5" fill="#ff5a36"/>
   </g>
 </svg>

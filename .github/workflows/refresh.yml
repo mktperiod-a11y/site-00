@@ -1,8 +1,8 @@
-name: weekly
+name: refresh
 
 on:
   schedule:
-    - cron: "17 21 * * 0"
+    - cron: "38 19 * * 0"
   workflow_dispatch:
 
 permissions:
@@ -26,12 +26,12 @@ jobs:
         env:
           NAVER_CLIENT_ID: ${{ secrets.NAVER_CLIENT_ID }}
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
-        run: node scripts/collect.mjs
+        run: node scripts/gather.mjs
       - name: Rank
-        run: node scripts/rank.mjs
+        run: node scripts/standings.mjs
       - name: Build and test
         run: |
-          node scripts/build.mjs
+          node scripts/compose.mjs
           node --test
       - name: Commit data
         run: |
@@ -51,4 +51,4 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: ./.github/workflows/deploy.yml
+    uses: ./.github/workflows/publish.yml

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Static site build. Reads data/ and src/, writes _site/.
-//   node scripts/build.mjs                       build with the address placeholder left in place
-//   node scripts/build.mjs --base-url <url>      also swap the placeholder for the deployed address
-//   node scripts/build.mjs --out <dir>           write somewhere other than _site/
-//   node scripts/build.mjs --data <dir>          read data from another folder (used for edge-case renders)
+//   node scripts/compose.mjs                       build with the address placeholder left in place
+//   node scripts/compose.mjs --base-url <url>      also swap the placeholder for the deployed address
+//   node scripts/compose.mjs --out <dir>           write somewhere other than _site/
+//   node scripts/compose.mjs --data <dir>          read data from another folder (used for edge-case renders)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -57,6 +57,7 @@ const DATE = ranking.date;
 const YM = `${ranking.year}.${String(ranking.month).padStart(2, '0')}`;
 const YM_KO = `${ranking.year}년 ${ranking.month}월`;
 const WEEK_KO = `${YM_KO} ${ranking.weekLabel.split(' ')[1]}`;
+const ISSUE = `${YM} · ${ranking.weekLabel.split(' ')[1]}`;
 const USED = METRIC_KEYS.filter((k) => ranking.metricsUsed.includes(k));
 const HAS_AFFILIATE = pub.some((it) => it.v.affiliateUrl);
 
@@ -299,6 +300,7 @@ function header(u, current, textOnly) {
     `    <a class="brand" href="${u('')}">`,
     textOnly ? null : `      <img src="${u('assets/brand.svg')}" width="32" height="32" alt="">`,
     `      <span>${esc(BRAND)}</span>`,
+    '      <span class="brand-sub">WEEKLY CHART</span>',
     '    </a>',
     textOnly
       ? null
@@ -312,9 +314,9 @@ function header(u, current, textOnly) {
         ]),
     '    <nav class="nav" id="site-nav" aria-label="주요 메뉴">',
     '      <ul>',
-    `        <li><a href="${u('')}"${cur('home')}>순위</a></li>`,
-    `        <li><a href="${u('criteria/')}"${cur('criteria')}>기준</a></li>`,
-    `        <li><a href="${u('')}#faq">FAQ</a></li>`,
+    `        <li><a href="${u('')}"${cur('home')}>이번 주 순위</a></li>`,
+    `        <li><a href="${u('criteria/')}"${cur('criteria')}>순위 기준</a></li>`,
+    `        <li><a href="${u('')}#faq">자주 묻는 질문</a></li>`,
     '      </ul>',
     '    </nav>',
     '  </div>',
@@ -327,12 +329,13 @@ function footer(u) {
     '<footer class="foot">',
     '  <div class="wrap">',
     `    <p class="foot-brand">${esc(BRAND)}</p>`,
-    '    <p>순위·혜택은 참고용이에요. 이용 문의는 각 서비스 고객센터로 해 주세요.</p>',
+    '    <p>웹하드 서비스를 매주 같은 기준으로 다시 줄 세우는 주간 차트예요.</p>',
+    '    <p class="fine">가입·결제·이용 문의는 각 서비스의 공식 고객센터로 해 주세요. 순위와 혜택 정보는 참고용이에요.</p>',
     '    <nav aria-label="바닥글 메뉴">',
     '      <ul>',
-    `        <li><a href="${u('')}">순위</a></li>`,
-    `        <li><a href="${u('criteria/')}">기준</a></li>`,
-    `        <li><a href="${u('')}#faq">FAQ</a></li>`,
+    `        <li><a href="${u('')}">이번 주 순위</a></li>`,
+    `        <li><a href="${u('criteria/')}">순위 기준</a></li>`,
+    `        <li><a href="${u('')}#faq">자주 묻는 질문</a></li>`,
     '      </ul>',
     '    </nav>',
     '  </div>',
@@ -374,13 +377,11 @@ function moveBadge(change) {
   return '<span class="move move-same"><span aria-hidden="true">–</span><span class="sr">변동 없음</span></span>';
 }
 
-function starsTag(stars, showNumber = true) {
+function starsTag(stars) {
   const n = Math.round(stars * 10);
   return block([
     `<span class="stars st-${n}" aria-hidden="true"><span class="stars-fill"></span></span>`,
-    showNumber
-      ? `<span class="stars-num"><span class="sr">별점 5점 만점에 </span>${stars.toFixed(1)}</span>`
-      : `<span class="sr">별점 5점 만점에 ${stars.toFixed(1)}</span>`,
+    `<span><span class="sr">별점 5점 만점에 </span>${stars.toFixed(1)}</span>`,
   ]);
 }
 
@@ -446,7 +447,7 @@ function goButton(v, u) {
   const rel = v.affiliateUrl ? 'sponsored nofollow' : 'nofollow';
   return block([
     `<a class="go-btn" href="${u(`go/${v.id}/`)}" rel="${rel}">`,
-    `  <span class="sr">${esc(v.name)} 사이트 </span>바로가기`,
+    `  <span class="sr">${esc(v.name)} </span><span class="go-long">사이트 </span>바로가기`,
     '  <svg class="go-arrow" viewBox="0 0 12 12" aria-hidden="true" focusable="false">',
     '    <path d="M3 9l6-6M4 3h5v5" fill="none" stroke="currentColor" stroke-width="1.8"/>',
     '  </svg>',
@@ -457,7 +458,7 @@ function goButton(v, u) {
 function entry(it, u, { eager = false, level = 'h3' } = {}) {
   const v = it.v;
   return block([
-    `<li class="entry vc-${v.id}${it.rank <= 3 ? ' is-podium' : ''}${chars(v.name) > 6 ? ' has-long-name' : ''}" id="rank-${v.id}">`,
+    `<li class="entry vc-${v.id}${it.rank <= 3 ? ' is-podium' : ''}" id="rank-${v.id}">`,
     '  <div class="entry-rank">',
     `    <span class="entry-no">${it.rank}<span class="sr">위</span></span>`,
     `    ${moveBadge(it.change)}`,
@@ -466,8 +467,8 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
     '  <div class="entry-main">',
     `    <${level} class="entry-name${chars(v.name) > 8 ? ' is-longer' : chars(v.name) > 6 ? ' is-long' : ''}"><a href="${u(`webhard/${v.id}/`)}">${esc(v.name)}</a></${level}>`,
     '    <p class="entry-score">',
-    indent(starsTag(it.stars, it.rank <= 3), 6),
-    `      <span class="total"><span class="sr">총점 </span>${it.total.toFixed(1)}</span>`,
+    indent(starsTag(it.stars), 6),
+    `      <span class="total"><span class="sr">총점 </span>${it.total.toFixed(1)}점</span>`,
     '    </p>',
     '  </div>',
     indent(perksList(v), 2),
@@ -484,33 +485,38 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
 
 function digest() {
   const [a, b, c] = pub;
+  const sentences = [
+    `이번 주 1위는 ${josa(a.v.name, '이에요/예요')}. 2위 ${b.v.name}, 3위 ${josa(c.v.name, '이/가')} 뒤를 이었어요.`,
+  ];
   const hasPrev = pub.some((it) => it.change !== null);
   const risers = pub.filter((it) => typeof it.change === 'number' && it.change > 0).sort((x, y) => y.change - x.change);
   const fresh = pub.filter((it) => it.change === 'new');
+  if (!hasPrev) sentences.push('이번 주가 첫 집계라 지난주와 비교한 변동은 다음 주부터 보여 드려요.');
+  else if (risers.length) {
+    const r = risers[0];
+    sentences.push(`지난주보다 가장 크게 오른 곳은 ${r.change}계단 오른 ${josa(r.v.name, '이에요/예요')}.`);
+  } else sentences.push('지난주보다 순위가 오른 곳은 없어요.');
+  if (fresh.length) {
+    const names = fresh.map((it) => it.v.name);
+    sentences.push(`새로 ${site.publicCount}위 안에 든 곳은 ${josa(listKo(names), '이에요/예요')}.`);
+  }
+  sentences.push(`후보 ${ranking.candidates}곳 가운데 지표가 모인 ${ranking.scored}곳을 같은 계산으로 비교했어요.`);
   const top = risers[0];
-  const summary = [`이번 주 1위는 <strong>${esc(josa(a.v.name, '이에요/예요'))}</strong>.`];
-  summary.push(`2위 ${esc(b.v.name)}, 3위 ${esc(josa(c.v.name, '이/가'))} 뒤를 이었어요.`);
   return {
-    summary,
+    sentences,
     stats: [
+      ['1위', a.v.name],
       ['최대 상승', top ? `${top.v.name} ▲${top.change}` : '–'],
       ['새로 진입', hasPrev ? `${fresh.length}곳` : '–'],
     ],
   };
 }
 
-const SOURCES = { search: '네이버 데이터랩', usage: '구글 플레이', reaction: '구글 플레이' };
-
-function sourceLine() {
-  const names = [...new Set(USED.map((k) => SOURCES[k]))];
-  return `출처 ${names.join(' · ')} · 기준일 ${koreanDate(DATE)}`;
-}
-
 function metricLine(k) {
   return {
-    search: '네이버 데이터랩',
-    usage: '구글 플레이 다운로드',
-    reaction: '구글 플레이 평점',
+    search: '네이버 검색어 트렌드에서 서비스 이름이 최근 4주 동안 얼마나 검색됐는지 봐요.',
+    usage: '구글 플레이 한국 스토어에 공개된 앱 다운로드 규모를 봐요.',
+    reaction: '구글 플레이 평점을 평가 수와 함께 살펴봐요.',
   }[k];
 }
 
@@ -555,26 +561,24 @@ const faqJson = (items, id) => ({
   })),
 });
 
-function methodSteps() {
+function methodCards(level = 'h3') {
   return block([
-    '<ol class="steps">',
-    ...METRIC_KEYS.map((k, i) => {
+    '<div class="methods">',
+    ...METRIC_KEYS.map((k) => {
       const on = USED.includes(k);
       return block([
-        '  <li>',
-        `    <span class="step-no" aria-hidden="true">0${i + 1}</span>`,
-        `    <span class="step-name">${METRIC_LABELS[k]}</span>`,
-        `    <span class="step-src">${metricLine(k)}</span>`,
-        `    <span class="flag${on ? ' flag-on' : ''}">${on ? '반영' : '이번 주 값 없음'}</span>`,
-        '  </li>',
+        '  <div class="method">',
+        `    <${level}>${METRIC_LABELS[k]}<span class="flag${on ? ' flag-on' : ''}">${on ? '이번 주 반영' : '이번 주 값 없음'}</span></${level}>`,
+        `    <p>${metricLine(k)}</p>`,
+        '  </div>',
       ]);
     }),
-    '</ol>',
+    '</div>',
   ]);
 }
 
-const CAVEAT = '공개 지표에 운영 기준을 더한 참고 순위예요. 선택은 직접 비교해 판단하세요.';
-const AFFILIATE_NOTE = '일부 바로가기는 제휴 링크예요. 링크를 거쳐도 이용 금액은 같아요.';
+const CAVEAT = '공개 지표에 운영 기준을 일부 더해 정리한 참고 순위예요. 어떤 서비스를 쓸지는 직접 비교해 보고 판단하세요.';
+const AFFILIATE_NOTE = '일부 바로가기는 제휴 링크예요. 링크를 거쳐 가입해도 이용자가 내는 금액은 달라지지 않아요.';
 
 /* ---------- pages ---------- */
 
@@ -621,35 +625,37 @@ function pageIndex() {
     ],
   };
   const main = block([
-    '<main id="main" class="wrap home">',
+    '<main id="main" class="wrap board home">',
     '  <section class="hero" aria-labelledby="page-title">',
+    `    <p class="kicker"><span class="issue">${ISSUE}</span><span>주간 웹하드 차트</span></p>`,
     `    <h1 id="page-title"><span class="h1-when">${YM_KO}</span> 웹하드 순위</h1>`,
-    `    <p class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신 · 후보 ${ranking.candidates}곳</p>`,
+    `    <p class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신<span data-updated="${DATE}"></span></p>`,
     `    <p class="caveat">${CAVEAT}</p>`,
     '  </section>',
     '  <section class="ranking" aria-labelledby="chart-title">',
-    '    <div class="board-head">',
+    '    <div class="section-head">',
     `      <h2 id="chart-title">이번 주 TOP ${site.publicCount}</h2>`,
-    '      <dl class="ticker">',
-    ...d.stats.map(([k, v]) => `        <div><dt>${k}</dt><dd>${esc(v)}</dd></div>`),
-    '      </dl>',
+    `      <p>후보 ${ranking.candidates}곳 중 상위 ${site.publicCount}곳</p>`,
     '    </div>',
-    '    <ol class="chart podium">',
-    ...pub.slice(0, 3).map((it) => indent(entry(it, u, { eager: true }), 6)),
+    '    <ol class="chart">',
+    ...pub.map((it, i) => indent(entry(it, u, { eager: i < 3 }), 6)),
     '    </ol>',
-    '    <ol class="chart rest" start="4">',
-    ...pub.slice(3).map((it) => indent(entry(it, u), 6)),
-    '    </ol>',
-    `    <p class="source">${sourceLine()}</p>`,
-    `    <p class="summary">${d.summary.join(' ')}</p>`,
     HAS_AFFILIATE ? `    <p class="notice">${AFFILIATE_NOTE}</p>` : null,
     '  </section>',
+    '  <aside class="digest" aria-labelledby="digest-title">',
+    '    <h2 id="digest-title">이번 주 한눈에</h2>',
+    `    <p>${d.sentences.join(' ')}</p>`,
+    '    <dl>',
+    ...d.stats.map(([k, v]) => `      <div><dt>${k}</dt><dd>${esc(v)}</dd></div>`),
+    '    </dl>',
+    '  </aside>',
     '  <section class="block how" aria-labelledby="how-title">',
     '    <div class="section-head">',
     '      <h2 id="how-title">순위는 이렇게 정해요</h2>',
-    `      <a class="more" href="${u('criteria/')}">순위 기준</a>`,
+    `      <p>${koreanDate(DATE)} 기준</p>`,
     '    </div>',
-    indent(methodSteps(), 4),
+    indent(methodCards(), 4),
+    `    <a class="more" href="${u('criteria/')}">순위 기준 자세히 보기</a>`,
     '  </section>',
     indent(faqBlock(homeFaq, 'faq', '자주 묻는 질문', 'block qa'), 2),
     '</main>',
@@ -725,14 +731,18 @@ function playFacts(v) {
     return n.toLocaleString('ko-KR');
   };
   return {
-    usage: p.minInstalls || p.installs ? `다운로드 ${fmt(p.minInstalls || p.installs)}+ · 구글 플레이` : null,
-    reaction: p.rating && p.ratings ? `평점 ${p.rating.toFixed(1)} · 평가 ${fmt(p.ratings)} · 구글 플레이` : null,
+    usage: p.minInstalls || p.installs ? `구글 플레이 다운로드 ${fmt(p.minInstalls || p.installs)}회 이상 규모예요.` : null,
+    reaction:
+      p.rating && p.ratings ? `구글 플레이 평점 ${p.rating.toFixed(1)}점, 평가 ${p.ratings.toLocaleString('ko-KR')}개예요.` : null,
   };
 }
 
 function partText(k, it, facts) {
-  if (it.parts[k] === null) return k !== 'search' && !it.v.playId ? '앱 없음 · 계산에서 뺌' : '이번 주 값 없음 · 계산에서 뺌';
-  if (k === 'search') return '최근 4주 검색량 · 네이버 데이터랩';
+  if (it.parts[k] === null) {
+    if (k !== 'search' && !it.v.playId) return '앱이 없어 이 항목은 빼고 계산했어요.';
+    return '이번 주에는 값을 받아 오지 못해 이 항목은 빼고 계산했어요.';
+  }
+  if (k === 'search') return '네이버 검색어 트렌드에서 최근 4주 동안의 검색 흐름을 봤어요.';
   return facts[k] ?? metricLine(k);
 }
 
@@ -821,7 +831,7 @@ function pageVendor(it) {
     '    <section class="block" aria-labelledby="parts-title">',
     '      <div class="section-head">',
     '        <h2 id="parts-title">이번 주 지표 구성</h2>',
-    `        <p>${sourceLine().replace('출처 ', '')}</p>`,
+    '        <p>항목별 점수를 더하면 총점이에요</p>',
     '      </div>',
     '      <ul class="parts">',
     ...METRIC_KEYS.map((k) =>
@@ -845,7 +855,7 @@ function pageVendor(it) {
     '      <figure class="trend">',
     indent(trendSvg(rows), 8),
     '      </figure>',
-    rows.length < 2 ? '      <p class="caveat">다음 주부터 변동이 이어져요.</p>' : null,
+    rows.length < 2 ? '      <p class="caveat">첫 집계라 변동 그래프는 다음 주부터 이어져요.</p>' : null,
     '      <table class="table">',
     '        <caption class="sr">주차별 순위와 총점</caption>',
     '        <thead>',
@@ -853,7 +863,7 @@ function pageVendor(it) {
     '        </thead>',
     '        <tbody>',
     ...rows
-      .slice(-4)
+      .slice()
       .reverse()
       .map(
         (r) =>
@@ -867,12 +877,13 @@ function pageVendor(it) {
     '  <section class="block" aria-labelledby="others-title">',
     '    <div class="section-head">',
     '      <h2 id="others-title">다른 웹하드 5곳</h2>',
+    '      <p>이번 주 순위표에서 골랐어요</p>',
     '    </div>',
-    '    <ol class="chart rest">',
+    '    <ol class="chart">',
     ...others.map((o) => indent(entry(o, u), 6)),
     '    </ol>',
     '  </section>',
-    `  <p class="notice">${CAVEAT} <a href="${u('criteria/')}">순위 기준</a>` +
+    `  <p class="notice">${CAVEAT} 자세한 내용은 <a href="${u('criteria/')}">순위 기준</a>에서 볼 수 있어요.` +
       `${v.affiliateUrl ? ` ${AFFILIATE_NOTE}` : ''}</p>`,
     '</main>',
   ]);
@@ -925,7 +936,7 @@ function pageCriteria() {
     '    </ol>',
     '  </nav>',
     '  <section class="hero" aria-labelledby="page-title">',
-    `    <p class="kicker"><span class="issue">${ranking.weekLabel} 기준</span></p>`,
+    `    <p class="kicker"><span class="issue">${ISSUE} 기준</span><span>순위 안내</span></p>`,
     '    <h1 id="page-title">웹하드 순위 기준과 자주 묻는 질문</h1>',
     `    <p class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신</p>`,
     `    <p class="caveat">${CAVEAT}</p>`,
@@ -933,30 +944,29 @@ function pageCriteria() {
     '  <section class="block" aria-labelledby="what-title">',
     '    <div class="section-head">',
     '      <h2 id="what-title">무엇을 보나요</h2>',
-    `      <p>${sourceLine()}</p>`,
+    `      <p>이번 주 반영 항목: ${usedLabels()}</p>`,
     '    </div>',
-    indent(methodSteps(), 4),
+    indent(methodCards(), 4),
     '  </section>',
-    '  <section class="block" aria-labelledby="calc-title">',
+    '  <section class="block prose" aria-labelledby="calc-title">',
     '    <div class="section-head">',
     '      <h2 id="calc-title">어떻게 줄 세우나요</h2>',
     '    </div>',
-    '    <ul class="dots">',
-    '      <li>항목 값을 같은 범위로 맞춰 더한 100점 만점 총점</li>',
-    `      <li>후보 ${ranking.candidates}곳 전체를 매주 다시 줄 세워 상위 ${site.publicCount}곳 공개</li>`,
-    '      <li>일부 서비스는 운영 기준에 따라 순위가 조정될 수 있어요</li>',
-    '      <li>별점은 총점을 5점 만점으로 바꾼 값(이용자 평점 아님)</li>',
-    HAS_AFFILIATE ? `      <li>${AFFILIATE_NOTE}</li>` : null,
-    '    </ul>',
+    '    <p>항목마다 값의 범위를 같게 맞춘 뒤 더해 100점 만점 총점을 만들어요. 지표가 일부만 있는 곳은 있는 항목만으로 계산해요.</p>',
+    `    <p>매주 후보 ${ranking.candidates}곳 전체를 같은 계산으로 다시 줄 세우고, 그중 상위 ${site.publicCount}곳을 공개해요.` +
+      ` ${site.publicCount}위 밖으로 밀려난 곳도 다음 주에 다시 겨뤄요.</p>`,
+    '    <p>일부 서비스는 운영 기준에 따라 순위가 조정될 수 있어요.</p>',
+    '    <p>별점은 총점을 5점 만점으로 바꿔 보여 주는 값이에요. 이용자가 직접 매긴 평점이 아니에요.</p>',
+    HAS_AFFILIATE ? `    <p>${AFFILIATE_NOTE}</p>` : null,
     '  </section>',
     '  <section class="block" aria-labelledby="when-title">',
     '    <div class="section-head">',
     '      <h2 id="when-title">언제 바뀌나요</h2>',
     '    </div>',
     '    <ul class="dots">',
-    '      <li>매주 월요일 아침 갱신</li>',
-    '      <li>값을 못 받은 항목은 직전 값 사용</li>',
-    '      <li>혜택·이벤트는 공식 사이트 안내가 우선</li>',
+    '      <li>매주 월요일 아침에 지표를 새로 모아 순위를 다시 계산해요.</li>',
+    '      <li>어떤 항목의 값을 받아 오지 못한 주에는 직전에 받은 값을 그대로 써요.</li>',
+    '      <li>가입 혜택과 이벤트는 서비스 사정으로 바뀔 수 있으니 공식 사이트 안내가 우선이에요.</li>',
     '    </ul>',
     '  </section>',
     indent(faqBlock(items, 'faq', '기준에 관한 질문'), 2),
@@ -1145,7 +1155,7 @@ function finalize(files) {
     fail(`invalid --base-url ${BASE_URL}`);
   }
   const defaultHost = base.hostname.endsWith('.github.io');
-  const re = /https:\/\/site-url\.invalid\/([^"'\s<>)\]]*)/g;
+  const re = new RegExp(`${PLACEHOLDER.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}([^"'\\s<>)\\]]*)`, 'g');
   for (const [file, content] of files) {
     if (typeof content !== 'string') continue;
     let next = content;
@@ -1156,7 +1166,7 @@ function finalize(files) {
     }
     files.set(file, next);
   }
-  const left = [...files].filter(([, c]) => typeof c === 'string' && c.includes('site-url.invalid')).map(([f]) => f);
+  const left = [...files].filter(([, c]) => typeof c === 'string' && c.includes(PLACEHOLDER)).map(([f]) => f);
   if (left.length) fail(left.map((f) => `${f}: address placeholder left after swap`));
 }
 
@@ -1210,7 +1220,7 @@ for (const file of fs.existsSync(staticDir) ? fs.readdirSync(staticDir, { recurs
   if (fs.statSync(full).isFile()) files.set(`assets/${file.split(path.sep).join('/')}`, fs.readFileSync(full));
 }
 for (const need of ['assets/og.png', 'assets/touch-icon.png']) {
-  if (!files.has(need)) fail(`${need} is missing; run node scripts/assets.mjs brand`);
+  if (!files.has(need)) fail(`${need} is missing; run node scripts/imagery.mjs brand`);
 }
 
 finalize(files);
