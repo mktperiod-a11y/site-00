@@ -1,26 +1,59 @@
+/* Pretendard (SIL OFL 1.1, license in font/OFL.txt), KS X 1001 subset, only the weights the site uses. */
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("font/pretendard-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("font/pretendard-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("font/pretendard-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Pretendard";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("font/pretendard-700.woff2") format("woff2");
+}
+
 /* Design tokens: every color, gap and radius used below comes from here. */
 :root {
-  /* Material 3 dark roles from a blue key color (surface tone 6, containers 10/17/22, on-colors 90/80, primary 80). */
+  /* Material 3 dark roles (SchemeFidelity) from the violet key color #7c4dff; text uses 87% / 60% white emphasis. */
   color-scheme: dark;
-  --surface: #111318;
-  --surface-lowest: #0c0e13;
-  --surface-low: #191c20;
-  --surface-high: #282a2f;
-  --surface-highest: #33353a;
+  --surface: #14121c;
+  --surface-lowest: #0f0d16;
+  --surface-low: #1d1a24;
+  --surface-high: #2b2833;
+  --surface-highest: #36333e;
   --on-surface: #e1e2e5;
   --on-surface-variant: #a2a4a9;
-  --outline: #8e9099;
-  --outline-variant: #44474f;
-  --primary: #aac7ff;
-  --on-primary: #0a305f;
-  --primary-container: #284777;
-  --on-primary-container: #d6e3ff;
+  --outline: #948ea1;
+  --outline-variant: #494455;
+  --primary: #cdbdff;
+  --on-primary: #370096;
+  --primary-container: #7c4dff;
+  --on-primary-container: #fcf6ff;
   --up: #ffb4ab;
   --down: #aac7ff;
-  --new: #d0bcff;
+  --new: #7fdcb5;
   --star: #ffc94d;
-  --star-off: #44474f;
-  --focus: #d6e3ff;
+  --star-off: #494455;
+  --focus: #e8deff;
   --lift: 0 4px 16px rgba(0, 0, 0, 0.5);
   --state-hover: 0.08;
   --state-focus: 0.1;
