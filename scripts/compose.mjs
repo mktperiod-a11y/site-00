@@ -106,8 +106,8 @@ function hexLum(hex) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
-const SURFACE = '#111318';
-const SURFACE_HIGH = '#282a2f';
+const SURFACE = '#14121c';
+const SURFACE_HIGH = '#2b2833';
 
 function contrast(a, b) {
   const [hi, lo] = [hexLum(a), hexLum(b)].sort((x, y) => y - x);
@@ -300,6 +300,7 @@ function head(p) {
     p.canonical !== undefined ? '<meta name="twitter:card" content="summary_large_image">' : null,
     `<link rel="icon" href="${u('favicon.svg')}" type="image/svg+xml">`,
     `<link rel="apple-touch-icon" href="${u('assets/touch-icon.png')}">`,
+    ...[400, 600].map((w) => `<link rel="preload" href="${u(`assets/font/pretendard-${w}.woff2`)}" as="font" type="font/woff2" crossorigin>`),
     `<link rel="stylesheet" href="${u(`assets/site.css?v=${ASSET_V.css}`)}">`,
     `<noscript><link rel="stylesheet" href="${u(`assets/nojs.css?v=${ASSET_V.nojs}`)}"></noscript>`,
     p.textOnly ? null : `<script src="${u(`assets/site.js?v=${ASSET_V.js}`)}" defer></script>`,

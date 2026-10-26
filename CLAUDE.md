@@ -18,11 +18,11 @@ data/metrics.json       수집 지표(실패 시 이전 값)
 data/ranking.json       현재 점수·순위·변동
 data/history.json       26주 기록
 data/first-week.json    최초 기준값(복원: npm run baseline:restore)
-src/css/site.css        :root 디자인 변수
+src/css/site.css        :root 디자인 변수, 글꼴 @font-face
 src/css/nojs.css        자바스크립트 꺼짐 화면
 src/js/site.js          메뉴·꾸밈만
 src/img/brand.svg       브랜드 마크
-src/static/             Sharp 재저장 이미지(og.png, touch-icon.png, icon/, logo/)
+src/static/             Sharp 재저장 이미지(og.png, touch-icon.png, icon/, logo/), font/(Pretendard KS X 1001 서브셋 400·500·600·700, OFL.txt)
 scripts/{compose,gather,standings,imagery}.mjs
 scripts/lib/rules.mjs   공통 규칙·제외 업체 판별값·주소 자리표시
 scripts/lib/score.mjs   점수 계산, scripts/lib/play.mjs 스토어 페이지 해석
@@ -76,10 +76,12 @@ tests/                  단위·빌드 테스트, render.mjs·ui-audit.mjs, fixt
 - **`_site/`에는 공개 HTML/assets/sitemap/robots/llms/favicon만**. `data/`·소스·테스트·설정 제외.
 - **CSP/referrer 전체 적용**, 인라인 `style` 금지; `.vc-<id>`/`.st-NN` 빌드 생성. 이동 페이지 인라인 스크립트에 CSP 해시. HTML **140칸 제한**(한글 2칸).
 - 메인 1~3위·갱신일; 카드 순위·업체·별점·혜택·링크. **44px 터치 영역, WCAG AA, 키보드 포커스, 가로 스크롤 금지, JS 없이 주요 콘텐츠 표시**. 모바일 메뉴 바깥 클릭/Esc 닫기.
-- 디자인: **일반 서비스형 다크 모드**(Material 3 다크 역할: 바탕 톤 6, 카드 톤 10, 1~3위 카드 톤 17, 글자 톤 90/80, 강조 파랑 톤 80)·큰 순위 숫자·한 업체 한 행·업체색 3구간 막대.
+- 디자인: **일반 서비스형 다크 모드**(Material 3 다크 역할, SchemeFidelity로 키 컬러 보라 `#7c4dff`에서 생성: 강조 `#cdbdff`, 바탕 `#14121c`, 1~3위 카드 `#2b2833`)·큰 순위 숫자·한 업체 한 행·업체색 3구간 막대.
   업체색은 빌드가 밝은 톤으로 올려 쓰고(`darkTone`), 업체색 위 글자는 **AAA(7:1) 이상**(호버 포함, `render.mjs`가 검사).
   **호버는 Material 상태 레이어만**: 카드 전체가 상세 링크(이름 링크를 카드 위로 늘림), 호버 8%·포커스 10% 덧칠. 테두리·색 바뀜·떠오르는 상세·왼쪽 막대 금지
   (`render.mjs`가 호버 전후로 카드 안 요소가 하나라도 바뀌면 실패).
+  글꼴: Pretendard 자체 호스팅(외부 CDN 금지, OFL 라이선스 파일 함께 배포). 쓰는 굵기만 넣고 400·600은 preload. 서브셋에 없는 글자(▲▼)는 시스템 글꼴로 대체.
+  키 컬러를 바꿀 때는 Material 색 도구로 씨앗 색 하나에서 역할 전체를 다시 만들고 `compose.mjs`의 `SURFACE`·`SURFACE_HIGH`, 로고·공유 이미지도 맞춘다.
   다크 글자: 본문 87%·보조 60% 흰색(`--on-surface`·`--on-surface-variant`), 굵기는 한 단계 가볍게(제목 600, 본문 400), 최소 14px, 줄 간격 1.7,
   글 줄 길이 42em 이하, 단락·섹션 여백 넉넉히. 메뉴가 열린 상태의 바깥 누름은 메뉴만 닫는다(아래 링크가 눌리지 않게).
   컨셉 장식(종이 질감, 굵은 검정 테두리·겹친 그림자, 사물 흉내 로고, 영문 장식 문구) 금지. 우상단 요약은 **배경 없는 옅은 패널**(왼쪽 선만)로 순위표보다 약하게, **줄글 없이 라벨+값 핵심 수치만**.

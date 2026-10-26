@@ -191,7 +191,7 @@ async function brand() {
     })
     .join('');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#111318"/>
+  <rect width="1200" height="630" fill="#14121c"/>
   <g transform="translate(80 92) scale(2.2)">${markInner}</g>
   <text x="80" y="330" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="88" font-weight="700"
     fill="#e2e2e9">${site.brand}</text>
@@ -200,7 +200,7 @@ async function brand() {
 </svg>`;
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'og.png'));
   const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
-  <rect width="180" height="180" fill="#aac7ff"/>
+  <rect width="180" height="180" fill="#cdbdff"/>
   <g transform="scale(2.8125)">${markInner}</g>
 </svg>`;
   await sharp(Buffer.from(icon)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'touch-icon.png'));
