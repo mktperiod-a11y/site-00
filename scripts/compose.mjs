@@ -1065,7 +1065,7 @@ function prepareAssets() {
     '',
     '  .home .hero {',
     '    grid-area: hero;',
-    '    padding-top: var(--sp-5);',
+    '    padding-top: 0;',
     '  }',
     '',
     '  .home .digest {',
