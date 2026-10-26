@@ -7,8 +7,8 @@
   --surface-low: #191c20;
   --surface-high: #282a2f;
   --surface-highest: #33353a;
-  --on-surface: #e2e2e9;
-  --on-surface-variant: #c4c6d0;
+  --on-surface: #e1e2e5;
+  --on-surface-variant: #a2a4a9;
   --outline: #8e9099;
   --outline-variant: #44474f;
   --primary: #aac7ff;
@@ -44,14 +44,14 @@
   --rule-w: 1px;
 
   --font: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
-  --fs-xs: 0.8125rem;
-  --fs-s: 0.875rem;
+  --fs-xs: 0.875rem;
+  --fs-s: 0.9375rem;
   --fs-m: 1rem;
   --fs-l: 1.125rem;
   --fs-xl: 1.375rem;
   --fs-2xl: 1.75rem;
   --fs-3xl: 2.25rem;
-  --lh: 1.6;
+  --lh: 1.7;
   --lh-tight: 1.25;
 }
 
@@ -86,6 +86,7 @@ dd {
 h1,
 h2,
 h3 {
+  font-weight: 600;
   text-wrap: balance;
 }
 
@@ -179,7 +180,7 @@ ol {
   align-items: center;
   gap: var(--sp-2);
   min-height: var(--tap);
-  font-weight: 800;
+  font-weight: 600;
   font-size: var(--fs-l);
   letter-spacing: -0.02em;
   text-decoration: none;
@@ -199,7 +200,7 @@ ol {
   color: var(--on-surface);
   font: inherit;
   font-size: var(--fs-s);
-  font-weight: 700;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -234,7 +235,7 @@ ol {
   align-items: center;
   min-height: var(--tap);
   padding: 0 var(--sp-2);
-  font-weight: 700;
+  font-weight: 500;
   text-decoration: none;
   border-bottom: var(--rule-w) solid var(--outline-variant);
 }
@@ -246,6 +247,7 @@ ol {
 /* Hero */
 .hero {
   padding: 0;
+  line-height: 1.5;
 }
 
 .kicker {
@@ -255,7 +257,7 @@ ol {
   gap: var(--sp-2);
   color: var(--on-surface-variant);
   font-size: var(--fs-xs);
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0.04em;
 }
 
@@ -280,7 +282,7 @@ ol {
 .stamp {
   margin-top: var(--sp-2);
   font-size: var(--fs-s);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .caveat {
@@ -288,6 +290,10 @@ ol {
   color: var(--on-surface-variant);
   font-size: var(--fs-xs);
   line-height: 1.5;
+}
+
+.caveat-more {
+  display: none;
 }
 
 /* Weekly chart */
@@ -338,6 +344,7 @@ ol {
   border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
   position: relative;
+  line-height: 1.45;
 }
 
 /* Material state layer: the whole card is one target (the name link is stretched over it), hover tints it 8%, focus 10%. */
@@ -387,7 +394,7 @@ ol {
 
 .entry-no {
   font-size: var(--fs-xl);
-  font-weight: 800;
+  font-weight: 600;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
@@ -430,8 +437,8 @@ ol {
 }
 
 .move {
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: 0.8125rem;
+  font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
 }
@@ -468,7 +475,7 @@ ol {
   background: var(--vc);
   border-color: var(--vc);
   color: var(--vc-on);
-  font-weight: 800;
+  font-weight: 600;
   font-size: var(--fs-l);
 }
 
@@ -492,7 +499,7 @@ ol {
 }
 
 .entry-name.is-longer {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
 }
 
 .nowrap {
@@ -514,7 +521,7 @@ ol {
   gap: 2px var(--sp-2);
   margin-top: 2px;
   font-size: var(--fs-xs);
-  font-weight: 700;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
 }
 
@@ -569,7 +576,7 @@ ol {
   padding: 3px var(--sp-2);
   border-radius: var(--r-1);
   font-size: var(--fs-xs);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.4;
 }
 
@@ -583,8 +590,8 @@ ol {
 
 .perk-tag {
   color: var(--primary);
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-size: 0.8125rem;
+  font-weight: 600;
 }
 
 .perk-none {
@@ -630,7 +637,7 @@ ol {
   background: var(--primary);
   color: var(--on-primary);
   font-size: var(--fs-s);
-  font-weight: 800;
+  font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
 }
@@ -694,7 +701,7 @@ ol {
 .digest dd {
   color: var(--on-surface);
   font-size: var(--fs-m);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .digest .up {
@@ -703,16 +710,23 @@ ol {
 
 /* Text blocks */
 .block {
-  padding: var(--sp-5) 0 0;
+  padding: var(--sp-7) 0 0;
 }
 
 .block > p,
 .block > ul {
-  margin-top: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+.block > p,
+.prose p,
+.dots,
+.faq p {
+  max-width: 42em;
 }
 
 .prose p + p {
-  margin-top: var(--sp-2);
+  margin-top: var(--sp-3);
 }
 
 .dots li {
@@ -721,7 +735,7 @@ ol {
 }
 
 .dots li + li {
-  margin-top: var(--sp-1);
+  margin-top: var(--sp-2);
 }
 
 .dots li::before {
@@ -737,12 +751,12 @@ ol {
 
 .methods {
   display: grid;
-  gap: var(--sp-3);
-  margin-top: var(--sp-3);
+  gap: var(--sp-4);
+  margin-top: var(--sp-4);
 }
 
 .method {
-  padding: var(--sp-4);
+  padding: var(--sp-5);
   background: var(--surface-low);
   border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
@@ -757,7 +771,7 @@ ol {
 }
 
 .method p {
-  margin-top: var(--sp-1);
+  margin-top: var(--sp-2);
   color: var(--on-surface-variant);
   font-size: var(--fs-s);
 }
@@ -766,8 +780,8 @@ ol {
   padding: 1px var(--sp-2);
   border-radius: var(--r-pill);
   background: var(--surface-highest);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.8125rem;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -781,11 +795,11 @@ ol {
   align-items: center;
   min-height: var(--tap);
   margin-top: var(--sp-2);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .faq {
-  margin-top: var(--sp-3);
+  margin-top: var(--sp-4);
   border-top: var(--rule-w) solid var(--outline-variant);
 }
 
@@ -799,8 +813,8 @@ ol {
   justify-content: space-between;
   gap: var(--sp-3);
   min-height: var(--tap);
-  padding: var(--sp-2) 0;
-  font-weight: 700;
+  padding: var(--sp-3) 0;
+  font-weight: 500;
   cursor: pointer;
   list-style: none;
 }
@@ -823,7 +837,7 @@ ol {
 }
 
 .faq p {
-  padding: 0 0 var(--sp-3);
+  padding: 0 0 var(--sp-4);
   color: var(--on-surface-variant);
   font-size: var(--fs-s);
 }
@@ -934,7 +948,7 @@ ol {
   gap: var(--sp-1) var(--sp-2);
   margin-top: var(--sp-1);
   font-size: var(--fs-s);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .score-group {
@@ -973,7 +987,7 @@ ol {
 }
 
 .part-value {
-  font-weight: 800;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
@@ -991,7 +1005,7 @@ ol {
   display: flex;
   justify-content: space-between;
   padding: var(--sp-2) var(--sp-4);
-  font-weight: 800;
+  font-weight: 600;
   border-top: var(--rule-w) solid var(--outline);
 }
 
@@ -1063,7 +1077,7 @@ ol {
 }
 
 .foot-brand {
-  font-weight: 800;
+  font-weight: 600;
   font-size: var(--fs-l);
 }
 
@@ -1110,7 +1124,7 @@ ol {
   display: inline-flex;
   align-items: center;
   min-height: var(--tap);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 @media (min-width: 640px) {
@@ -1120,6 +1134,10 @@ ol {
 
   .kicker {
     display: flex;
+  }
+
+  .caveat-more {
+    display: inline;
   }
 
   .entry .total {
@@ -1268,11 +1286,11 @@ ol {
   .podium .total {
     color: var(--on-surface);
     font-size: var(--fs-l);
-    font-weight: 900;
+    font-weight: 700;
   }
 
   .rest .entry {
-    grid-template-columns: 56px 48px minmax(150px, 1fr) minmax(0, 1.35fr) 200px auto;
+    grid-template-columns: 56px 48px minmax(190px, 1fr) minmax(0, 1.3fr) 160px auto;
     grid-template-areas: "rank icon main perks bar go";
     column-gap: var(--sp-4);
     padding: var(--sp-3) var(--sp-5);

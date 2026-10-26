@@ -14,8 +14,12 @@
       setOpen(!nav.classList.contains('is-open'));
     });
     document.addEventListener('click', function (event) {
-      if (nav.classList.contains('is-open') && !nav.contains(event.target)) setOpen(false);
-    });
+      if (nav.classList.contains('is-open') && !nav.contains(event.target)) {
+        event.preventDefault();
+        event.stopPropagation();
+        setOpen(false);
+      }
+    }, true);
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape' && nav.classList.contains('is-open')) {
         setOpen(false);

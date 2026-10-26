@@ -573,6 +573,8 @@ function methodCards(level = 'h3') {
 }
 
 const CAVEAT = '공개 지표에 운영 기준을 일부 더해 정리한 참고 순위예요. 어떤 서비스를 쓸지는 직접 비교해 보고 판단하세요.';
+// On phones the advice half of the caveat is hidden so ranks 1-3 stay on the first screen; the ranking notice always shows.
+const CAVEAT_HERO = CAVEAT.replace(/ (어떤 서비스를.*)$/, ' <span class="caveat-more">$1</span>');
 const AFFILIATE_NOTE = '일부 바로가기는 제휴 링크예요. 링크를 거쳐 가입해도 이용자가 내는 금액은 달라지지 않아요.';
 
 /* ---------- pages ---------- */
@@ -625,7 +627,7 @@ function pageIndex() {
     `    <p class="kicker"><span class="issue">${ISSUE}</span><span>주간 웹하드 차트</span></p>`,
     `    <h1 id="page-title"><span class="h1-when">${YM_KO}</span> 웹하드 순위</h1>`,
     `    <p class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신<span data-updated="${DATE}"></span></p>`,
-    `    <p class="caveat">${CAVEAT}</p>`,
+    `    <p class="caveat">${CAVEAT_HERO}</p>`,
     '  </section>',
     '  <section class="ranking" aria-labelledby="chart-title">',
     '    <div class="section-head">',
@@ -936,7 +938,7 @@ function pageCriteria() {
     `    <p class="kicker"><span class="issue">${ISSUE} 기준</span><span>순위 안내</span></p>`,
     '    <h1 id="page-title">웹하드 순위 기준과 자주 묻는 질문</h1>',
     `    <p class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신</p>`,
-    `    <p class="caveat">${CAVEAT}</p>`,
+    `    <p class="caveat">${CAVEAT_HERO}</p>`,
     '  </section>',
     '  <section class="block" aria-labelledby="what-title">',
     '    <div class="section-head">',
