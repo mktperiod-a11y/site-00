@@ -369,8 +369,49 @@ ol {
   letter-spacing: -0.04em;
 }
 
+@media (max-width: 639px) {
+  .entry.has-long-name {
+    grid-template-areas:
+      "rank icon main main"
+      "rank perks perks go"
+      "rank bar bar bar";
+  }
+}
+
+.chart + .chart {
+  margin-top: var(--sp-4);
+}
+
+.entry.is-podium {
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+
+.entry.is-podium:hover,
+.entry.is-podium:focus-within {
+  border-color: var(--ink);
+  box-shadow: 4px 4px 0 var(--vc);
+}
+
 .entry.is-podium .entry-no {
+  color: var(--brand-ink);
   font-size: var(--fs-2xl);
+}
+
+.entry.is-podium .entry-name {
+  font-size: var(--fs-l);
+}
+
+.entry.is-podium .entry-name.is-long {
+  font-size: var(--fs-s);
+}
+
+.entry.is-podium .entry-name.is-longer {
+  font-size: var(--fs-xs);
+}
+
+.rest .entry {
+  background: transparent;
 }
 
 .move {
@@ -1171,18 +1212,63 @@ ol {
 }
 
 @media (min-width: 1024px) {
-    .entry {
+  .podium {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--sp-5);
+  }
+
+  .podium .entry {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "rank icon go"
+      "main main main"
+      "bar bar bar"
+      "perks perks perks";
+    align-content: start;
+    row-gap: var(--sp-3);
+    padding: var(--sp-4) var(--sp-5) var(--sp-5);
+  }
+
+  .podium .entry-rank {
+    justify-items: start;
+  }
+
+  .podium .entry.is-podium .entry-no {
+    font-size: 2.75rem;
+  }
+
+  .podium .entry-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .podium .entry.is-podium .entry-name {
+    font-size: var(--fs-xl);
+  }
+
+  .podium .entry.is-podium .entry-name.is-long,
+  .podium .entry.is-podium .entry-name.is-longer {
+    font-size: var(--fs-l);
+  }
+
+  .podium .total {
+    color: var(--ink);
+    font-size: var(--fs-l);
+    font-weight: 900;
+  }
+
+  .rest .entry {
     grid-template-columns: 56px 48px minmax(150px, 1fr) minmax(0, 1.35fr) 200px auto;
     grid-template-areas: "rank icon main perks bar go";
     column-gap: var(--sp-4);
     padding: var(--sp-3) var(--sp-5);
   }
 
-  .entry-rank {
+  .rest .entry-rank {
     align-self: center;
   }
 
-  .entry-icon {
+  .rest .entry-icon {
     align-self: center;
   }
 

@@ -458,7 +458,7 @@ function goButton(v, u) {
 function entry(it, u, { eager = false, level = 'h3' } = {}) {
   const v = it.v;
   return block([
-    `<li class="entry vc-${v.id}${it.rank <= 3 ? ' is-podium' : ''}" id="rank-${v.id}">`,
+    `<li class="entry vc-${v.id}${it.rank <= 3 ? ' is-podium' : ''}${chars(v.name) > 6 ? ' has-long-name' : ''}" id="rank-${v.id}">`,
     '  <div class="entry-rank">',
     `    <span class="entry-no">${it.rank}<span class="sr">위</span></span>`,
     `    ${moveBadge(it.change)}`,
@@ -637,8 +637,11 @@ function pageIndex() {
     `      <h2 id="chart-title">이번 주 TOP ${site.publicCount}</h2>`,
     `      <p>후보 ${ranking.candidates}곳 중 상위 ${site.publicCount}곳</p>`,
     '    </div>',
-    '    <ol class="chart">',
-    ...pub.map((it, i) => indent(entry(it, u, { eager: i < 3 }), 6)),
+    '    <ol class="chart podium">',
+    ...pub.slice(0, 3).map((it) => indent(entry(it, u, { eager: true }), 6)),
+    '    </ol>',
+    '    <ol class="chart rest" start="4">',
+    ...pub.slice(3).map((it) => indent(entry(it, u), 6)),
     '    </ol>',
     HAS_AFFILIATE ? `    <p class="notice">${AFFILIATE_NOTE}</p>` : null,
     '  </section>',
@@ -879,7 +882,7 @@ function pageVendor(it) {
     '      <h2 id="others-title">다른 웹하드 5곳</h2>',
     '      <p>이번 주 순위표에서 골랐어요</p>',
     '    </div>',
-    '    <ol class="chart">',
+    '    <ol class="chart rest">',
     ...others.map((o) => indent(entry(o, u), 6)),
     '    </ol>',
     '  </section>',
