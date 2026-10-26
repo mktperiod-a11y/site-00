@@ -3,6 +3,7 @@
 //   node scripts/build.mjs                       build with the address placeholder left in place
 //   node scripts/build.mjs --base-url <url>      also swap the placeholder for the deployed address
 //   node scripts/build.mjs --out <dir>           write somewhere other than _site/
+//   node scripts/build.mjs --data <dir>          read data from another folder (used for edge-case renders)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -18,6 +19,8 @@ const option = (name) => {
 };
 const OUT = path.resolve(ROOT, option('--out') ?? '_site');
 const BASE_URL = option('--base-url') ?? process.env.SITE_URL ?? '';
+const DATA_DIR = path.relative(ROOT, path.resolve(ROOT, option('--data') ?? 'data'));
+const readData = (name, fallback) => readJSON(path.join(DATA_DIR, name), fallback);
 const METRIC_KEYS = ['search', 'usage', 'reaction'];
 
 function fail(messages) {
@@ -30,12 +33,12 @@ function fail(messages) {
 const blocked = scanForBlocked(ROOT, new Set(['.git', 'node_modules', '.cache', '_site', path.basename(OUT)]));
 if (blocked.length) fail(blocked);
 
-const site = readJSON('data/site.json');
-const vendors = readJSON('data/vendors.json');
-const ranking = readJSON('data/ranking.json', null);
-const history = readJSON('data/history.json', []);
-const metrics = readJSON('data/metrics.json', { vendors: {} });
-const faq = readJSON('data/faq.json');
+const site = readData('site.json');
+const vendors = readData('vendors.json');
+const ranking = readData('ranking.json', null);
+const history = readData('history.json', []);
+const metrics = readData('metrics.json', { vendors: {} });
+const faq = readData('faq.json');
 
 const vendorProblems = validateVendors(vendors);
 if (vendorProblems.length) fail(vendorProblems);
@@ -462,7 +465,7 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
     '  </div>',
     `  ${iconTag(v, u, eager, 'entry-icon')}`,
     '  <div class="entry-main">',
-    `    <${level} class="entry-name"><a href="${u(`webhard/${v.id}/`)}">${esc(v.name)}</a></${level}>`,
+    `    <${level} class="entry-name${chars(v.name) > 8 ? ' is-longer' : chars(v.name) > 6 ? ' is-long' : ''}"><a href="${u(`webhard/${v.id}/`)}">${esc(v.name)}</a></${level}>`,
     '    <p class="entry-score">',
     indent(starsTag(it.stars), 6),
     `      <span class="total"><span class="sr">총점 </span>${it.total.toFixed(1)}점</span>`,
@@ -503,7 +506,7 @@ function digest() {
     sentences,
     stats: [
       ['1위', a.v.name],
-      ['가장 크게 오름', top ? `${top.v.name} ▲${top.change}` : '–'],
+      ['최대 상승', top ? `${top.v.name} ▲${top.change}` : '–'],
       ['새로 진입', hasPrev ? `${fresh.length}곳` : '–'],
     ],
   };
@@ -682,7 +685,7 @@ function weekRows(v) {
 function trendSvg(rows) {
   const W = 320;
   const H = 120;
-  const padX = 18;
+  const padX = 22;
   const top = 14;
   const bottom = 96;
   const n = rows.length;
@@ -709,10 +712,10 @@ function trendSvg(rows) {
     ...rows.flatMap((r, i) =>
       r.rank ? [`  <circle class="dot" cx="${x(i).toFixed(1)}" cy="${y(r.rank).toFixed(1)}" r="4"/>`] : [],
     ),
-    ...rows.map((r, i) => {
+    ...rows.flatMap((r, i) => {
+      if (n > 5 && (n - 1 - i) % 2 === 1) return [];
       const [, m, dd] = r.date.split('-').map(Number);
-      const anchor = n === 1 ? 'middle' : i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle';
-      return `  <text class="axis" x="${x(i).toFixed(1)}" y="${H - 4}" text-anchor="${anchor}">${m}/${dd}</text>`;
+      return [`  <text class="axis" x="${x(i).toFixed(1)}" y="${H - 4}" text-anchor="middle">${m}/${dd}</text>`];
     }),
     '</svg>',
   ];
@@ -811,12 +814,14 @@ function pageVendor(it) {
     ...markLines.filter(Boolean).map((l) => `      ${l}`),
     '    </div>',
     '    <div class="profile-head">',
-    `      <h1 id="page-title">${esc(v.name)} 순위·가입 혜택·이벤트</h1>`,
+    `      <h1 id="page-title">${esc(v.name)} <span class="nowrap">순위·가입</span> <span class="nowrap">혜택·이벤트</span></h1>`,
     '      <p class="profile-rank">',
     `        <span>${WEEK_KO} ${it.rank}위</span>`,
     `        ${moveBadge(it.change)}`,
-    indent(starsTag(it.stars), 8),
-    `        <span class="total"><span class="sr">총점 </span>${it.total.toFixed(1)}점</span>`,
+    '        <span class="score-group">',
+    indent(starsTag(it.stars), 10),
+    `          <span class="total"><span class="sr">총점 </span>${it.total.toFixed(1)}점</span>`,
+    '        </span>',
     '      </p>',
     '    </div>',
     indent(goButton(v, u), 4),

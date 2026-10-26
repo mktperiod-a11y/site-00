@@ -123,9 +123,17 @@ tests/                node --test 테스트, render.mjs(Playwright 4개 화면 �
 ```
 node scripts/build.mjs            빌드(_site/)
 node --test                       테스트
-node tests/render.mjs <폴더>      Playwright 렌더 검사(+스크린샷)
+node tests/render.mjs <폴더>      Playwright 렌더 검사(+스크린샷). 실제 데이터, 기본 주소, 극단 데이터 세 벌
 python3 .github/scripts/privacy_check.py _site
 ```
+
+### UI 어색함 검사 (`tests/ui-audit.mjs`)
+- 눈으로 보던 어색함을 숫자로 판정한다: 가로 스크롤, 글자 잘림, 누르는 영역 44px, 카드 밖으로 삐져나옴, 같은 줄 요소의 세로 중심 차이 4px 초과,
+  한 줄이어야 할 라벨의 줄바꿈, 마지막 줄 1~2글자(외톨이 줄), 단어 중간 끊김, 줄 첫머리 문장부호, 한 줄에 홀로 떨어진 점수·라벨,
+  목록 간격 불균일, 글자 대비 AA, 차트 라벨 겹침, 한 색으로 뭉개진 이미지·검은 테두리, 글자 크기 8종 초과.
+- `tests/fixtures/edge-data.mjs`가 긴 이름(10자)·한 글자 이름, 혜택 0·1·2개(16자 한계), 아이콘·로고 없음, NEW·▲9·▼9,
+  총점 0~100, 항목 빈칸, 8주 순위 기록을 만든다. 실제 데이터가 깨지기 전에 여기서 먼저 걸린다.
+- 검사가 통과해도 4개 화면 폭 스크린샷을 눈으로 본다. 새로 찾은 어색함은 고친 뒤 같은 종류를 잡는 검사를 `ui-audit.mjs`에 더한다.
 
 ## 7. 소유자 결정 사항
 

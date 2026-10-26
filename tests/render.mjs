@@ -9,6 +9,8 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { ROOT, readJSON } from '../scripts/lib/rules.mjs';
+import { audit } from './ui-audit.mjs';
+import { makeEdgeData } from './fixtures/edge-data.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require('playwright');
@@ -60,58 +62,7 @@ async function checkPage(context, url, label, { width, height, firstScreen = fal
   const missing = label.endsWith('-404');
   if (!missing && res.status() !== 200) note(`${label}@${width}: HTTP ${res.status()}`);
   await page.waitForTimeout(150);
-  const r = await page.evaluate(
-    ({ firstScreen }) => {
-      const out = { issues: [] };
-      const doc = document.documentElement;
-      if (doc.scrollWidth > window.innerWidth) out.issues.push(`horizontal scroll ${doc.scrollWidth}>${window.innerWidth}`);
-      for (const img of document.images) {
-        if (!img.complete || img.naturalWidth === 0) out.issues.push(`broken image ${img.getAttribute('src')}`);
-        if (!img.hasAttribute('alt')) out.issues.push(`image without alt ${img.getAttribute('src')}`);
-      }
-      const visible = (el) => {
-        const s = getComputedStyle(el);
-        const b = el.getBoundingClientRect();
-        return s.display !== 'none' && s.visibility !== 'hidden' && b.width > 0 && b.height > 0;
-      };
-      const clipSel = '.perk, .entry-name, .go-btn, .total, .move, h1, h2, .nav a, .brand, .stamp, .kicker, .part, td';
-      for (const el of document.querySelectorAll(clipSel)) {
-        if (!visible(el)) continue;
-        if (el.scrollWidth > el.clientWidth + 1) out.issues.push(`clipped text in ${el.className || el.tagName}`);
-      }
-      const tapSel = '.go-btn, .menu-btn, .nav a, .crumbs a, .more, .foot nav a, .faq summary, .plain a';
-      for (const el of document.querySelectorAll(tapSel)) {
-        if (!visible(el)) continue;
-        const b = el.getBoundingClientRect();
-        if (b.width < 44 || b.height < 44) out.issues.push(`small tap target ${el.className || el.tagName} ${b.width}x${b.height}`);
-      }
-      for (const entry of document.querySelectorAll('.entry')) {
-        const e = entry.getBoundingClientRect();
-        const go = entry.querySelector('.go-btn').getBoundingClientRect();
-        const main = entry.querySelector('.entry-main').getBoundingClientRect();
-        if (go.right > e.right + 0.5 || go.left < e.left) out.issues.push(`button outside entry ${entry.id}`);
-        if (main.right > go.left + 0.5 && main.bottom > go.top && main.top < go.bottom) {
-          out.issues.push(`name overlaps button ${entry.id}`);
-        }
-        for (const part of ['.entry-rank', '.entry-name', '.entry-score', '.perks', '.go-btn']) {
-          const p = entry.querySelector(part);
-          if (!p || !visible(p)) out.issues.push(`${part} missing in ${entry.id}`);
-        }
-      }
-      if (firstScreen) {
-        const rows = [...document.querySelectorAll('.home .entry')].slice(0, 3);
-        rows.forEach((row, i) => {
-          if (row.getBoundingClientRect().bottom > window.innerHeight) out.issues.push(`rank ${i + 1} below the fold`);
-        });
-        const t = document.querySelector('.stamp time');
-        if (!t || t.getBoundingClientRect().bottom > window.innerHeight) out.issues.push('update date below the fold');
-      }
-      out.links = [...document.querySelectorAll('a[href]')].map((a) => a.href);
-      out.csp = window.__csp;
-      return out;
-    },
-    { firstScreen },
-  );
+  const r = await page.evaluate(audit, { firstScreen });
   for (const i of r.issues) note(`${label}@${width}: ${i}`);
   for (const e of errors) if (!(missing && /status of 404/.test(e))) note(`${label}@${width}: console ${e}`);
   for (const c of r.csp) note(`${label}@${width}: CSP ${c}`);
@@ -128,17 +79,24 @@ async function run(mode) {
   const server = await serve(tmp, prefix);
   const origin = `http://127.0.0.1:${server.address().port}`;
   const base = mode === 'default' ? 'https://owner.github.io/site-path/' : `${origin}/`;
-  execFileSync('node', [path.join(ROOT, 'scripts/build.mjs'), '--out', tmp, '--base-url', base], { stdio: 'pipe' });
+  const args = [path.join(ROOT, 'scripts/build.mjs'), '--out', tmp, '--base-url', base];
+  let ranking = readJSON('data/ranking.json');
+  let vendorList = readJSON('data/vendors.json');
+  if (mode === 'edge') {
+    const dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'edge-data-'));
+    ({ ranking, vendors: vendorList } = makeEdgeData(dataDir));
+    args.push('--data', dataDir);
+  }
+  execFileSync('node', args, { stdio: 'pipe' });
   const root = origin + prefix;
 
-  const ranking = readJSON('data/ranking.json');
-  const vendors = new Map(readJSON('data/vendors.json').map((v) => [v.id, v]));
+  const vendors = new Map(vendorList.map((v) => [v.id, v]));
   const ids = ranking.items.slice(0, 10).map((i) => i.id);
+  const details = mode === 'edge' ? ids.slice(0, 5).concat(ids.slice(7, 10)) : [ids[0], ids[9]];
   const targets = [
     ['index', root],
     ['criteria', `${root}criteria/`],
-    [`detail-${ids[0]}`, `${root}webhard/${ids[0]}/`],
-    [`detail-${ids[9]}`, `${root}webhard/${ids[9]}/`],
+    ...details.map((id) => [`detail-${id}`, `${root}webhard/${id}/`]),
     ['404', `${root}missing/deep/path/`],
   ];
 
@@ -233,6 +191,7 @@ async function run(mode) {
 if (SHOTS) fs.mkdirSync(SHOTS, { recursive: true });
 await run('custom');
 await run('default');
+await run('edge');
 if (problems.length) {
   console.error(problems.join('\n'));
   process.exit(1);

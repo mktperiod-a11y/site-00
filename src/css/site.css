@@ -66,7 +66,19 @@ body {
   font-size: var(--fs-m);
   line-height: var(--lh);
   word-break: keep-all;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
+}
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
 }
 
 img,
@@ -416,6 +428,18 @@ ol {
 
 .entry-name a {
   text-decoration: none;
+}
+
+.entry-name.is-long {
+  font-size: var(--fs-xs);
+}
+
+.entry-name.is-longer {
+  font-size: 0.75rem;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .entry-name a:hover,
@@ -789,8 +813,8 @@ ol {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
-    "mark mark"
-    "head go"
+    "mark go"
+    "head head"
     "perks perks";
   align-items: center;
   gap: var(--sp-3);
@@ -853,6 +877,13 @@ ol {
   margin-top: var(--sp-1);
   font-size: var(--fs-s);
   font-weight: 700;
+}
+
+.score-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1) var(--sp-2);
+  white-space: nowrap;
 }
 
 .profile .go-btn {
@@ -1038,6 +1069,11 @@ ol {
 
   .entry .total {
     display: inline;
+  }
+
+  .entry-name.is-long,
+  .entry-name.is-longer {
+    font-size: var(--fs-m);
   }
 
   .entry {
