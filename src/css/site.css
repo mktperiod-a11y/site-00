@@ -461,7 +461,7 @@ ol {
 
 .entry.is-podium {
   background: var(--surface-high);
-  border-color: transparent;
+  border-color: var(--hairline);
   border-radius: var(--r-3);
 }
 
