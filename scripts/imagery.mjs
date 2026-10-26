@@ -130,7 +130,7 @@ async function recolorIfLight(img) {
   }
   if (!count || sum / count < 0.82) return img;
   const alpha = await img.clone().ensureAlpha().extractChannel(3).toBuffer();
-  return sharp({ create: { width: info.width, height: info.height, channels: 3, background: '#1b1a22' } })
+  return sharp({ create: { width: info.width, height: info.height, channels: 3, background: '#191f28' } })
     .joinChannel(alpha)
     .png();
 }
@@ -191,21 +191,17 @@ async function brand() {
     })
     .join('');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f7f3ec"/>
-  <rect y="0" width="1200" height="14" fill="#1b1a22"/>
+  <rect width="1200" height="630" fill="#f4f5f7"/>
   <g transform="translate(80 92) scale(2.2)">${markInner}</g>
   <text x="80" y="330" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="88" font-weight="700"
-    fill="#1b1a22">${site.brand}</text>
-  <text x="84" y="400" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="40" fill="#55515f">주간 웹하드 순위 TOP 10</text>
-  <text x="84" y="520" font-family="Inter, sans-serif" font-size="26" font-weight="700" letter-spacing="6"
-    fill="#b3361b">${site.brandEn} · WEEKLY CHART</text>
+    fill="#191f28">${site.brand}</text>
+  <text x="84" y="400" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="40" fill="#4e5968">주간 웹하드 순위 TOP 10</text>
   ${bars}
-  <rect x="740" y="520" width="420" height="4" fill="#1b1a22"/>
 </svg>`;
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'og.png'));
   const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
-  <rect width="180" height="180" fill="#f7f3ec"/>
-  <g transform="translate(26 26) scale(2)">${markInner}</g>
+  <rect width="180" height="180" fill="#3182f6"/>
+  <g transform="scale(2.8125)">${markInner}</g>
 </svg>`;
   await sharp(Buffer.from(icon)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'touch-icon.png'));
   console.log('drew og.png and touch-icon.png');

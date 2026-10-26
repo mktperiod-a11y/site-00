@@ -109,8 +109,9 @@ function hexLum(hex) {
 function onColor(hex) {
   const l = hexLum(hex);
   const vsWhite = 1.05 / (l + 0.05);
-  const vsInk = (l + 0.05) / (hexLum('#1b1a22') + 0.05);
-  return vsWhite >= vsInk ? '#ffffff' : '#1b1a22';
+  const vsInk = (l + 0.05) / (hexLum('#191f28') + 0.05);
+  if (vsWhite >= vsInk) return '#ffffff';
+  return vsInk >= 4.5 ? '#191f28' : '#000000';
 }
 
 function webpSize(file) {
@@ -300,7 +301,6 @@ function header(u, current, textOnly) {
     `    <a class="brand" href="${u('')}">`,
     textOnly ? null : `      <img src="${u('assets/brand.svg')}" width="32" height="32" alt="">`,
     `      <span>${esc(BRAND)}</span>`,
-    '      <span class="brand-sub">WEEKLY CHART</span>',
     '    </a>',
     textOnly
       ? null

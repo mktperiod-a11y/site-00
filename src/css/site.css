@@ -1,20 +1,21 @@
 /* Design tokens: every color, gap and radius used below comes from here. */
 :root {
-  --paper: #f7f3ec;
-  --paper-deep: #eee6d8;
-  --card: #fffdf9;
-  --ink: #1b1a22;
-  --ink-soft: #55515f;
-  --rule: #e2d9c9;
-  --rule-strong: #cbbfac;
-  --brand: #ff5a36;
-  --brand-ink: #b3361b;
-  --up: #c2341f;
+  --paper: #f4f5f7;
+  --paper-deep: #eaecef;
+  --card: #ffffff;
+  --ink: #191f28;
+  --ink-soft: #4e5968;
+  --rule: #e5e8eb;
+  --rule-strong: #cdd2d8;
+  --brand: #3182f6;
+  --brand-ink: #1b64da;
+  --up: #d92633;
   --down: #1f5bc9;
   --new: #7a2fd0;
-  --star: #e89b00;
-  --star-off: #d9cfbf;
-  --focus: #1f5bc9;
+  --star: #f5a000;
+  --star-off: #d1d6db;
+  --focus: #1b64da;
+  --lift: 0 2px 6px rgba(25, 31, 40, 0.04), 0 8px 24px rgba(25, 31, 40, 0.08);
 
   --sp-1: 4px;
   --sp-2: 8px;
@@ -33,7 +34,6 @@
   --wrap: 1180px;
   --tap: 44px;
   --rule-w: 1px;
-  --rule-heavy: 3px;
 
   --font: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
   --fs-xs: 0.8125rem;
@@ -154,8 +154,8 @@ ol {
 .masthead {
   position: relative;
   z-index: 10;
-  background: var(--paper);
-  border-bottom: var(--rule-heavy) solid var(--ink);
+  background: var(--card);
+  border-bottom: var(--rule-w) solid var(--rule);
 }
 
 .masthead-in {
@@ -177,16 +177,6 @@ ol {
   text-decoration: none;
 }
 
-.brand-sub {
-  display: none;
-  padding-left: var(--sp-2);
-  border-left: var(--rule-w) solid var(--rule-strong);
-  color: var(--ink-soft);
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-
 .menu-btn {
   display: inline-flex;
   align-items: center;
@@ -195,7 +185,7 @@ ol {
   min-width: var(--tap);
   min-height: var(--tap);
   padding: 0 var(--sp-3);
-  border: var(--rule-w) solid var(--ink);
+  border: var(--rule-w) solid var(--rule-strong);
   border-radius: var(--r-pill);
   background: var(--card);
   color: var(--ink);
@@ -217,7 +207,8 @@ ol {
   left: 0;
   right: 0;
   background: var(--card);
-  border-bottom: var(--rule-heavy) solid var(--ink);
+  border-bottom: var(--rule-w) solid var(--rule);
+  box-shadow: var(--lift);
 }
 
 .nav.is-open {
@@ -263,8 +254,8 @@ ol {
 .issue {
   padding: 2px var(--sp-2);
   border-radius: var(--r-pill);
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--paper-deep);
+  color: var(--ink);
 }
 
 .hero h1 {
@@ -282,11 +273,6 @@ ol {
   margin-top: var(--sp-2);
   font-size: var(--fs-s);
   font-weight: 700;
-}
-
-.stamp time {
-  padding-bottom: 1px;
-  border-bottom: 2px solid var(--brand);
 }
 
 .caveat {
@@ -311,7 +297,6 @@ ol {
   justify-content: space-between;
   gap: var(--sp-3);
   padding-bottom: var(--sp-2);
-  border-bottom: var(--rule-w) solid var(--ink);
 }
 
 .section-head h2 {
@@ -383,14 +368,15 @@ ol {
 }
 
 .entry.is-podium {
-  border: 2px solid var(--ink);
-  box-shadow: 4px 4px 0 var(--ink);
+  border-color: transparent;
+  border-radius: var(--r-3);
+  box-shadow: var(--lift);
 }
 
 .entry.is-podium:hover,
 .entry.is-podium:focus-within {
-  border-color: var(--ink);
-  box-shadow: 4px 4px 0 var(--vc);
+  border-color: var(--vc);
+  box-shadow: var(--lift);
 }
 
 .entry.is-podium .entry-no {
@@ -408,10 +394,6 @@ ol {
 
 .entry.is-podium .entry-name.is-longer {
   font-size: var(--fs-xs);
-}
-
-.rest .entry {
-  background: transparent;
 }
 
 .move {
@@ -808,8 +790,8 @@ ol {
 .notice {
   margin-top: var(--sp-5);
   padding: var(--sp-3) var(--sp-4);
-  border-left: var(--rule-heavy) solid var(--brand);
-  background: var(--card);
+  border-radius: var(--r-2);
+  background: var(--paper-deep);
   color: var(--ink-soft);
   font-size: var(--fs-xs);
 }
@@ -969,7 +951,7 @@ ol {
   justify-content: space-between;
   padding: var(--sp-2) var(--sp-4);
   font-weight: 800;
-  border-top: var(--rule-heavy) solid var(--ink);
+  border-top: var(--rule-w) solid var(--rule-strong);
 }
 
 .trend {
@@ -1094,10 +1076,6 @@ ol {
     --gutter: 24px;
   }
 
-  .brand-sub {
-    display: inline;
-  }
-
   .kicker {
     display: flex;
   }
@@ -1125,6 +1103,7 @@ ol {
     position: static;
     background: none;
     border: 0;
+    box-shadow: none;
   }
 
   .nav ul {
