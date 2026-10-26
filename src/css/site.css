@@ -246,7 +246,7 @@ ol {
 
 /* Hero */
 .hero {
-  padding: var(--sp-3) 0 0;
+  padding: 0;
 }
 
 .kicker {
@@ -298,6 +298,7 @@ ol {
 
 /* Weekly chart */
 .board {
+  padding-top: var(--sp-5);
   display: grid;
   gap: var(--sp-4);
   padding-bottom: var(--sp-6);
@@ -604,41 +605,41 @@ ol {
 
 /* Digest panel */
 .digest {
-  padding: var(--sp-4);
-  background: var(--ink);
-  color: var(--paper);
-  border-radius: var(--r-3);
+  padding: var(--sp-1) 0 var(--sp-1) var(--sp-4);
+  border-left: 2px solid var(--rule-strong);
+  color: var(--ink-soft);
 }
 
 .digest h2 {
-  font-size: var(--fs-m);
+  color: var(--ink);
+  font-size: var(--fs-s);
   letter-spacing: -0.01em;
 }
 
 .digest p {
-  margin-top: var(--sp-2);
-  font-size: var(--fs-s);
+  margin-top: var(--sp-1);
+  font-size: var(--fs-xs);
 }
 
 .digest dl {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--sp-2);
-  margin-top: var(--sp-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1) var(--sp-4);
+  margin-top: var(--sp-2);
 }
 
 .digest dl div {
-  padding: var(--sp-2);
-  border: var(--rule-w) solid rgba(247, 243, 236, 0.28);
-  border-radius: var(--r-2);
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-1);
 }
 
 .digest dt {
-  font-size: 0.75rem;
-  opacity: 0.86;
+  font-size: var(--fs-xs);
 }
 
 .digest dd {
+  color: var(--ink);
   font-size: var(--fs-s);
   font-weight: 800;
 }
@@ -1109,7 +1110,7 @@ ol {
   }
 
   .hero {
-    padding: var(--sp-5) 0 var(--sp-4);
+    padding: var(--sp-2) 0 0;
   }
 
   .hero h1 {

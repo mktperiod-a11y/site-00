@@ -252,6 +252,83 @@ export function audit({ firstScreen }) {
     if (!t || t.getBoundingClientRect().bottom > window.innerHeight) issues.push('update date below the fold');
   }
 
+  // Blocks must breathe: away from the header, from each other and from the screen edge.
+  const header = document.querySelector('.masthead');
+  const main = document.querySelector('main');
+  if (header && main) {
+    const hb = header.getBoundingClientRect().bottom + window.scrollY;
+    const isBox = (el) => {
+      const s = getComputedStyle(el);
+      const bg = s.backgroundColor;
+      const hasBg = bg && !/rgba\(0, 0, 0, 0\)|transparent/.test(bg);
+      const hasBorder = ['Top', 'Right', 'Bottom', 'Left'].every((side) => parseFloat(s[`border${side}Width`]) > 0 &&
+        s[`border${side}Style`] !== 'none');
+      return hasBg || hasBorder || s.backgroundImage !== 'none';
+    };
+    const boxes = [...main.querySelectorAll('*')].filter((el) => visible(el) && isBox(el) && !el.closest('.sr, table') &&
+      el.getBoundingClientRect().width > 120);
+    const top = boxes.filter((el) => !boxes.some((o) => o !== el && o.contains(el)));
+    const tops = [];
+    const tw0 = document.createTreeWalker(main, NodeFilter.SHOW_TEXT);
+    while (tw0.nextNode()) {
+      const node = tw0.currentNode;
+      if (!node.data.trim() || !visible(node.parentElement) || node.parentElement.closest('.sr')) continue;
+      const r = document.createRange();
+      r.selectNodeContents(node);
+      const rect = r.getBoundingClientRect();
+      if (rect.width) tops.push(rect.top + window.scrollY);
+    }
+    if (tops.length && Math.min(...tops) - hb < 16) issues.push('content touches the header');
+    for (const el of top) {
+      const b = el.getBoundingClientRect();
+      if (b.top + window.scrollY - hb < 24) issues.push(`box too close to the header: ${label(el)}`);
+      if (b.left < 8 || b.right > window.innerWidth - 8) issues.push(`box touches the screen edge: ${label(el)}`);
+    }
+    for (let i = 0; i < top.length; i++) {
+      for (let j = i + 1; j < top.length; j++) {
+        const a = top[i];
+        const c = top[j];
+        if (a.parentElement === c.parentElement && a.tagName === c.tagName) continue;
+        const ra = a.getBoundingClientRect();
+        const rc = c.getBoundingClientRect();
+        const overlapX = Math.min(ra.right, rc.right) - Math.max(ra.left, rc.left);
+        const overlapY = Math.min(ra.bottom, rc.bottom) - Math.max(ra.top, rc.top);
+        if (overlapX > 0) {
+          const gap = Math.max(ra.top, rc.top) - Math.min(ra.bottom, rc.bottom);
+          if (gap >= 0 && gap < 16) issues.push(`boxes ${gap}px apart: ${label(a)} / ${label(c)}`);
+        } else if (overlapY > 0) {
+          const gap = Math.max(ra.left, rc.left) - Math.min(ra.right, rc.right);
+          if (gap >= 0 && gap < 16) issues.push(`boxes ${gap}px apart: ${label(a)} / ${label(c)}`);
+        }
+      }
+    }
+  }
+
+  // Nothing on the first screen may stand out more than the ranking cards.
+  const firstEntry = document.querySelector('.entry');
+  if (firstEntry && main) {
+    const rgb = (c) => (c.match(/[\d.]+/g) || [255, 255, 255]).slice(0, 3).map(Number);
+    const lumOf = ([r, g, b]) => {
+      const f = (v) => {
+        v /= 255;
+        return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b);
+    };
+    const ratio = (x, y) => (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+    const pageLum = lumOf(rgb(getComputedStyle(document.body).backgroundColor));
+    const entryWeight = ratio(lumOf(rgb(getComputedStyle(firstEntry).backgroundColor)), pageLum);
+    for (const el of main.querySelectorAll('*')) {
+      if (!visible(el) || el.closest('.chart')) continue;
+      const b = el.getBoundingClientRect();
+      if (b.top > window.innerHeight || b.width * b.height < 20000) continue;
+      const bg = getComputedStyle(el).backgroundColor;
+      if (/rgba\(0, 0, 0, 0\)|transparent/.test(bg)) continue;
+      const weight = ratio(lumOf(rgb(bg)), pageLum);
+      if (weight > Math.max(1.5, entryWeight * 1.5)) issues.push(`outshines the ranking on the first screen: ${label(el)}`);
+    }
+  }
+
   return {
     issues: [...new Set(issues)],
     links: [...document.querySelectorAll('a[href]')].map((a) => a.href),
