@@ -106,12 +106,30 @@ function hexLum(hex) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
+const SURFACE = '#111318';
+const SURFACE_HIGH = '#282a2f';
+
+function contrast(a, b) {
+  const [hi, lo] = [hexLum(a), hexLum(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+}
+
+function mix(hex, to, t) {
+  const ch = (h, i) => parseInt(h.slice(i, i + 2), 16);
+  return '#' + [1, 3, 5].map((i) => Math.round(ch(hex, i) + (ch(to, i) - ch(hex, i)) * t).toString(16).padStart(2, '0')).join('');
+}
+
+// On the dark theme a vendor color is lifted toward white (a lighter, softer tone) until it reads as text on the lightest card.
+function darkTone(hex) {
+  for (let t = 0; t <= 1; t += 0.02) {
+    const c = mix(hex, '#ffffff', t);
+    if (contrast(c, SURFACE_HIGH) >= 6) return c;
+  }
+  return '#ffffff';
+}
+
 function onColor(hex) {
-  const l = hexLum(hex);
-  const vsWhite = 1.05 / (l + 0.05);
-  const vsInk = (l + 0.05) / (hexLum('#191f28') + 0.05);
-  if (vsWhite >= vsInk) return '#ffffff';
-  return vsInk >= 4.5 ? '#191f28' : '#000000';
+  return contrast(hex, SURFACE) >= contrast(hex, '#ffffff') ? SURFACE : '#ffffff';
 }
 
 function webpSize(file) {
@@ -1030,7 +1048,10 @@ const assetFiles = new Map();
 
 function prepareAssets() {
   const vendorCss = vendors
-    .map((v) => `.vc-${v.id} {\n  --vc: ${v.color};\n  --vc-on: ${onColor(v.color)};\n}`)
+    .map((v) => {
+      const tone = darkTone(v.color);
+      return `.vc-${v.id} {\n  --vc: ${tone};\n  --vc-on: ${onColor(tone)};\n}`;
+    })
     .join('\n\n');
   const starCss = [];
   for (let n = Math.floor(site.starFloor * 10); n <= 50; n++) {
