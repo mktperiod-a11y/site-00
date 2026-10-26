@@ -128,14 +128,20 @@ async function run(mode) {
   if (await nav.isVisible()) note(`${mode}: mobile menu open before click`);
   await page.click('.menu-btn');
   if (!(await nav.isVisible())) note(`${mode}: mobile menu does not open`);
+  const before = page.url();
   await page.mouse.click(180, 600);
   if (await nav.isVisible()) note(`${mode}: mobile menu stays open after outside click`);
+  if (page.url() !== before) note(`${mode}: closing the menu by tapping outside also opened ${page.url()}`);
   await page.click('.menu-btn');
   await page.keyboard.press('Escape');
   if (await nav.isVisible()) note(`${mode}: mobile menu ignores Escape`);
   await page.keyboard.press('Tab');
-  const focusVisible = await page.evaluate(() => getComputedStyle(document.activeElement).outlineStyle !== 'none' ||
-    document.activeElement.classList.contains('skip'));
+  // A card's name link draws its focus ring on the whole card, which is the target.
+  const focusVisible = await page.evaluate(() => {
+    const el = document.activeElement;
+    const ringed = (n) => n && getComputedStyle(n).outlineStyle !== 'none';
+    return ringed(el) || el.classList.contains('skip') || (el.closest('.entry-name') && ringed(el.closest('.entry')));
+  });
   if (!focusVisible) note(`${mode}: keyboard focus not visible`);
 
   let jumped = null;
