@@ -1227,6 +1227,14 @@ ol {
     font-size: var(--fs-2xl);
   }
 
+  .split .part {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .split .part-value {
+    font-size: var(--fs-l);
+  }
+
   .split {
     display: grid;
     grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
