@@ -1,21 +1,27 @@
 /* Design tokens: every color, gap and radius used below comes from here. */
 :root {
-  --paper: #f4f5f7;
-  --paper-deep: #eaecef;
-  --card: #ffffff;
-  --ink: #191f28;
-  --ink-soft: #4e5968;
-  --rule: #e5e8eb;
-  --rule-strong: #cdd2d8;
-  --brand: #3182f6;
-  --brand-ink: #1b64da;
-  --up: #d92633;
-  --down: #1f5bc9;
-  --new: #7a2fd0;
-  --star: #f5a000;
-  --star-off: #d1d6db;
-  --focus: #1b64da;
-  --lift: 0 2px 6px rgba(25, 31, 40, 0.04), 0 8px 24px rgba(25, 31, 40, 0.08);
+  /* Material 3 dark roles from a blue key color (surface tone 6, containers 10/17/22, on-colors 90/80, primary 80). */
+  color-scheme: dark;
+  --surface: #111318;
+  --surface-lowest: #0c0e13;
+  --surface-low: #191c20;
+  --surface-high: #282a2f;
+  --surface-highest: #33353a;
+  --on-surface: #e2e2e9;
+  --on-surface-variant: #c4c6d0;
+  --outline: #8e9099;
+  --outline-variant: #44474f;
+  --primary: #aac7ff;
+  --on-primary: #0a305f;
+  --primary-container: #284777;
+  --on-primary-container: #d6e3ff;
+  --up: #ffb4ab;
+  --down: #aac7ff;
+  --new: #d0bcff;
+  --star: #ffc94d;
+  --star-off: #44474f;
+  --focus: #d6e3ff;
+  --lift: 0 4px 16px rgba(0, 0, 0, 0.5);
 
   --sp-1: 4px;
   --sp-2: 8px;
@@ -60,8 +66,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--paper);
-  color: var(--ink);
+  background: var(--surface);
+  color: var(--on-surface);
   font-family: var(--font);
   font-size: var(--fs-m);
   line-height: var(--lh);
@@ -134,8 +140,8 @@ ol {
   top: -100px;
   z-index: 20;
   padding: var(--sp-2) var(--sp-4);
-  background: var(--ink);
-  color: var(--card);
+  background: var(--primary);
+  color: var(--on-primary);
   border-radius: var(--r-1);
 }
 
@@ -154,8 +160,8 @@ ol {
 .masthead {
   position: relative;
   z-index: 10;
-  background: var(--card);
-  border-bottom: var(--rule-w) solid var(--rule);
+  background: var(--surface);
+  border-bottom: var(--rule-w) solid var(--outline-variant);
 }
 
 .masthead-in {
@@ -185,10 +191,10 @@ ol {
   min-width: var(--tap);
   min-height: var(--tap);
   padding: 0 var(--sp-3);
-  border: var(--rule-w) solid var(--rule-strong);
+  border: var(--rule-w) solid var(--outline);
   border-radius: var(--r-pill);
-  background: var(--card);
-  color: var(--ink);
+  background: var(--surface-low);
+  color: var(--on-surface);
   font: inherit;
   font-size: var(--fs-s);
   font-weight: 700;
@@ -206,8 +212,8 @@ ol {
   top: 100%;
   left: 0;
   right: 0;
-  background: var(--card);
-  border-bottom: var(--rule-w) solid var(--rule);
+  background: var(--surface-low);
+  border-bottom: var(--rule-w) solid var(--outline-variant);
   box-shadow: var(--lift);
 }
 
@@ -228,11 +234,11 @@ ol {
   padding: 0 var(--sp-2);
   font-weight: 700;
   text-decoration: none;
-  border-bottom: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--outline-variant);
 }
 
 .nav a[aria-current="page"] {
-  color: var(--brand-ink);
+  color: var(--primary);
 }
 
 /* Hero */
@@ -245,7 +251,7 @@ ol {
   flex-wrap: wrap;
   align-items: center;
   gap: var(--sp-2);
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -254,8 +260,8 @@ ol {
 .issue {
   padding: 2px var(--sp-2);
   border-radius: var(--r-pill);
-  background: var(--paper-deep);
-  color: var(--ink);
+  background: var(--surface-highest);
+  color: var(--on-surface);
 }
 
 .hero h1 {
@@ -266,7 +272,7 @@ ol {
 }
 
 .hero h1 .h1-when {
-  color: var(--brand-ink);
+  color: var(--primary);
 }
 
 .stamp {
@@ -277,7 +283,7 @@ ol {
 
 .caveat {
   margin-top: var(--sp-2);
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-xs);
   line-height: 1.5;
 }
@@ -305,7 +311,7 @@ ol {
 }
 
 .section-head p {
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-xs);
 }
 
@@ -326,8 +332,8 @@ ol {
   column-gap: var(--sp-2);
   row-gap: var(--sp-1);
   padding: var(--sp-2) var(--sp-3);
-  background: var(--card);
-  border: var(--rule-w) solid var(--rule);
+  background: var(--surface-low);
+  border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
@@ -368,19 +374,18 @@ ol {
 }
 
 .entry.is-podium {
+  background: var(--surface-high);
   border-color: transparent;
   border-radius: var(--r-3);
-  box-shadow: var(--lift);
 }
 
 .entry.is-podium:hover,
 .entry.is-podium:focus-within {
   border-color: var(--vc);
-  box-shadow: var(--lift);
 }
 
 .entry.is-podium .entry-no {
-  color: var(--brand-ink);
+  color: var(--primary);
   font-size: var(--fs-2xl);
 }
 
@@ -417,7 +422,7 @@ ol {
 }
 
 .move-same {
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
 }
 
 .entry-icon {
@@ -425,8 +430,8 @@ ol {
   width: 40px;
   height: 40px;
   border-radius: var(--r-2);
-  border: var(--rule-w) solid var(--rule);
-  background: var(--card);
+  border: var(--rule-w) solid var(--outline-variant);
+  background: var(--surface-low);
 }
 
 .mono {
@@ -485,7 +490,7 @@ ol {
 .total {
   padding: 0 var(--sp-1);
   border-radius: var(--r-1);
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -545,21 +550,21 @@ ol {
 }
 
 .perk-join {
-  background: var(--paper-deep);
+  background: var(--surface-highest);
 }
 
 .perk-event {
-  border: var(--rule-w) dashed var(--rule-strong);
+  border: var(--rule-w) dashed var(--outline);
 }
 
 .perk-tag {
-  color: var(--brand-ink);
+  color: var(--primary);
   font-size: 0.75rem;
   font-weight: 800;
 }
 
 .perk-none {
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-xs);
 }
 
@@ -573,7 +578,7 @@ ol {
   width: 100%;
   height: 6px;
   border-radius: var(--r-pill);
-  background: var(--paper-deep);
+  background: var(--surface-highest);
 }
 
 .scorebar rect {
@@ -581,11 +586,11 @@ ol {
 }
 
 .scorebar .seg-2 {
-  opacity: 0.66;
+  opacity: 0.75;
 }
 
 .scorebar .seg-3 {
-  opacity: 0.4;
+  opacity: 0.5;
 }
 
 .peek {
@@ -602,8 +607,8 @@ ol {
   min-height: var(--tap);
   padding: 0 10px;
   border-radius: var(--r-pill);
-  background: var(--ink);
-  color: var(--card);
+  background: var(--primary);
+  color: var(--on-primary);
   font-size: var(--fs-s);
   font-weight: 800;
   text-decoration: none;
@@ -613,8 +618,8 @@ ol {
 
 .go-btn:hover,
 .go-btn:focus-visible {
-  background: var(--vc, var(--brand-ink));
-  color: var(--vc-on, var(--card));
+  background: var(--vc, var(--on-primary-container));
+  color: var(--vc-on, var(--on-primary));
 }
 
 .go-long {
@@ -629,12 +634,12 @@ ol {
 /* Digest panel */
 .digest {
   padding: var(--sp-1) 0 var(--sp-1) var(--sp-4);
-  border-left: 2px solid var(--rule-strong);
-  color: var(--ink-soft);
+  border-left: 2px solid var(--outline);
+  color: var(--on-surface-variant);
 }
 
 .digest h2 {
-  color: var(--ink);
+  color: var(--on-surface);
   font-size: var(--fs-s);
   letter-spacing: -0.01em;
 }
@@ -651,7 +656,7 @@ ol {
 }
 
 .digest dd {
-  color: var(--ink);
+  color: var(--on-surface);
   font-size: var(--fs-m);
   font-weight: 800;
 }
@@ -691,7 +696,7 @@ ol {
   width: 6px;
   height: 6px;
   border-radius: var(--r-pill);
-  background: var(--brand);
+  background: var(--primary);
 }
 
 .methods {
@@ -702,8 +707,8 @@ ol {
 
 .method {
   padding: var(--sp-4);
-  background: var(--card);
-  border: var(--rule-w) solid var(--rule);
+  background: var(--surface-low);
+  border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
 }
 
@@ -717,22 +722,22 @@ ol {
 
 .method p {
   margin-top: var(--sp-1);
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-s);
 }
 
 .flag {
   padding: 1px var(--sp-2);
   border-radius: var(--r-pill);
-  background: var(--paper-deep);
+  background: var(--surface-highest);
   font-size: 0.75rem;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .flag-on {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--primary-container);
+  color: var(--on-primary-container);
 }
 
 .more {
@@ -745,11 +750,11 @@ ol {
 
 .faq {
   margin-top: var(--sp-3);
-  border-top: var(--rule-w) solid var(--rule);
+  border-top: var(--rule-w) solid var(--outline-variant);
 }
 
 .faq details {
-  border-bottom: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--outline-variant);
 }
 
 .faq summary {
@@ -774,7 +779,7 @@ ol {
   width: 24px;
   text-align: center;
   font-size: var(--fs-l);
-  color: var(--brand-ink);
+  color: var(--primary);
 }
 
 .faq details[open] summary::after {
@@ -783,7 +788,7 @@ ol {
 
 .faq p {
   padding: 0 0 var(--sp-3);
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-s);
 }
 
@@ -791,8 +796,8 @@ ol {
   margin-top: var(--sp-5);
   padding: var(--sp-3) var(--sp-4);
   border-radius: var(--r-2);
-  background: var(--paper-deep);
-  color: var(--ink-soft);
+  background: var(--surface-highest);
+  color: var(--on-surface-variant);
   font-size: var(--fs-xs);
 }
 
@@ -800,7 +805,7 @@ ol {
 .crumbs {
   padding-top: var(--sp-3);
   font-size: var(--fs-xs);
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
 }
 
 .crumbs ol {
@@ -837,8 +842,8 @@ ol {
   gap: var(--sp-3);
   margin-top: var(--sp-2);
   padding: var(--sp-4);
-  background: var(--card);
-  border: var(--rule-w) solid var(--rule);
+  background: var(--surface-low);
+  border: var(--rule-w) solid var(--outline-variant);
   border-top: 6px solid var(--vc);
   border-radius: var(--r-3);
 }
@@ -857,7 +862,7 @@ ol {
   height: 52px;
   padding: var(--sp-1) var(--sp-2);
   background: #ffffff;
-  border: var(--rule-w) solid var(--rule);
+  border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
 }
 
@@ -872,7 +877,7 @@ ol {
   width: 52px;
   height: 52px;
   border-radius: var(--r-2);
-  border: var(--rule-w) solid var(--rule);
+  border: var(--rule-w) solid var(--outline-variant);
 }
 
 .profile-head {
@@ -922,8 +927,8 @@ ol {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--sp-1) var(--sp-3);
   padding: var(--sp-3) var(--sp-4);
-  background: var(--card);
-  border: var(--rule-w) solid var(--rule);
+  background: var(--surface-low);
+  border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
 }
 
@@ -942,7 +947,7 @@ ol {
 }
 
 .part p {
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-xs);
 }
 
@@ -951,14 +956,14 @@ ol {
   justify-content: space-between;
   padding: var(--sp-2) var(--sp-4);
   font-weight: 800;
-  border-top: var(--rule-w) solid var(--rule-strong);
+  border-top: var(--rule-w) solid var(--outline);
 }
 
 .trend {
   margin-top: var(--sp-3);
   padding: var(--sp-4);
-  background: var(--card);
-  border: var(--rule-w) solid var(--rule);
+  background: var(--surface-low);
+  border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
 }
 
@@ -968,7 +973,7 @@ ol {
 }
 
 .trend .grid-line {
-  stroke: var(--rule);
+  stroke: var(--outline-variant);
   stroke-width: 1;
 }
 
@@ -981,13 +986,13 @@ ol {
 }
 
 .trend .dot {
-  fill: var(--card);
+  fill: var(--surface-low);
   stroke: var(--vc);
   stroke-width: 3;
 }
 
 .trend .axis {
-  fill: var(--ink-soft);
+  fill: var(--on-surface-variant);
   font-size: 11px;
 }
 
@@ -1002,12 +1007,12 @@ ol {
 .table th,
 .table td {
   padding: var(--sp-2);
-  border-bottom: var(--rule-w) solid var(--rule);
+  border-bottom: var(--rule-w) solid var(--outline-variant);
   text-align: left;
 }
 
 .table th {
-  color: var(--ink-soft);
+  color: var(--on-surface-variant);
   font-size: var(--fs-xs);
 }
 
@@ -1015,8 +1020,9 @@ ol {
 .foot {
   margin-top: var(--sp-7);
   padding: var(--sp-6) 0 var(--sp-7);
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--surface-lowest);
+  border-top: var(--rule-w) solid var(--outline-variant);
+  color: var(--on-surface);
   font-size: var(--fs-s);
 }
 
@@ -1119,7 +1125,7 @@ ol {
   }
 
   .nav a:hover {
-    background: var(--paper-deep);
+    background: var(--surface-highest);
   }
 
   .hero {
@@ -1224,7 +1230,7 @@ ol {
   }
 
   .podium .total {
-    color: var(--ink);
+    color: var(--on-surface);
     font-size: var(--fs-l);
     font-weight: 900;
   }
@@ -1252,8 +1258,9 @@ ol {
   .peek {
     display: block;
     position: absolute;
-    left: 0;
     right: 0;
+    width: max-content;
+    white-space: nowrap;
     top: calc(100% + var(--sp-1));
     padding: 2px var(--sp-2);
     border-radius: var(--r-1);

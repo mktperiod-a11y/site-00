@@ -191,16 +191,16 @@ async function brand() {
     })
     .join('');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
-  <rect width="1200" height="630" fill="#f4f5f7"/>
+  <rect width="1200" height="630" fill="#111318"/>
   <g transform="translate(80 92) scale(2.2)">${markInner}</g>
   <text x="80" y="330" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="88" font-weight="700"
-    fill="#191f28">${site.brand}</text>
-  <text x="84" y="400" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="40" fill="#4e5968">주간 웹하드 순위 TOP 10</text>
+    fill="#e2e2e9">${site.brand}</text>
+  <text x="84" y="400" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="40" fill="#c4c6d0">주간 웹하드 순위 TOP 10</text>
   ${bars}
 </svg>`;
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'og.png'));
   const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
-  <rect width="180" height="180" fill="#3182f6"/>
+  <rect width="180" height="180" fill="#aac7ff"/>
   <g transform="scale(2.8125)">${markInner}</g>
 </svg>`;
   await sharp(Buffer.from(icon)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'touch-icon.png'));

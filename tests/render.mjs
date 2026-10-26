@@ -165,6 +165,27 @@ async function run(mode) {
   const hex = (rgb) => '#' + rgb.match(/\d+/g).slice(0, 3).map((n) => Number(n).toString(16).padStart(2, '0')).join('');
   if (hex(hover.total) !== hover.vc.toLowerCase()) note(`${mode}: hover does not use the vendor color`);
   if (hover.peek !== '1') note(`${mode}: hover detail not shown`);
+
+  // Hover states put text on saturated vendor colors; AA (4.5) still read poorly there, so these need AAA (7).
+  for (const row of await dp.locator('.entry').all()) {
+    for (const target of ['.total', '.peek', '.go-btn']) {
+      await (target === '.go-btn' ? row.locator(target) : row).hover();
+      await dp.waitForTimeout(200);
+      const found = await row.evaluate((el, sel) => {
+        const t = el.querySelector(sel);
+        if (!t || !t.getClientRects().length) return null;
+        const rgb = (c) => c.match(/[\d.]+/g).slice(0, 3).map(Number);
+        const lum = ([r, g, b]) => [r, g, b].map((v) => {
+          v /= 255;
+          return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+        }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0);
+        const cs = getComputedStyle(t);
+        const [a, b] = [lum(rgb(cs.color)), lum(rgb(cs.backgroundColor))].sort((x, y) => y - x);
+        return { id: el.id, ratio: (a + 0.05) / (b + 0.05) };
+      }, target);
+      if (found && found.ratio < 7) note(`${mode}: hover contrast ${found.ratio.toFixed(2)} on ${target} in #${found.id}`);
+    }
+  }
   await desk.close();
 
   const nojs = await browser.newContext({ viewport: { width: 360, height: 740 }, javaScriptEnabled: false });
