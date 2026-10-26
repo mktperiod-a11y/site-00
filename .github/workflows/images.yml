@@ -1,4 +1,4 @@
-name: assets
+name: images
 
 on:
   workflow_dispatch:
@@ -16,9 +16,9 @@ jobs:
           node-version: 22
       - run: npm ci --no-audit --no-fund
       - name: Download and re-save icons and logos
-        run: node scripts/assets.mjs all
+        run: node scripts/imagery.mjs all
       - name: Privacy check
-        run: python3 .github/scripts/privacy_check.py src/static
+        run: python3 .github/scripts/leak_guard.py src/static
       - name: Commit images
         run: |
           git config user.name "github-actions[bot]"

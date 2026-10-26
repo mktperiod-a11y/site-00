@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Image pipeline. Every file written here is re-encoded by sharp, which drops EXIF/XMP/IPTC and text chunks.
-//   node scripts/assets.mjs fetch     download app icons and logos into .cache/raw (needs open network)
-//   node scripts/assets.mjs process   turn .cache/raw into src/static/icon/*.webp and src/static/logo/*.webp
-//   node scripts/assets.mjs brand     draw the share image and touch icon
-//   node scripts/assets.mjs all       fetch, then process
+//   node scripts/imagery.mjs fetch     download app icons and logos into .cache/raw (needs open network)
+//   node scripts/imagery.mjs process   turn .cache/raw into src/static/icon/*.webp and src/static/logo/*.webp
+//   node scripts/imagery.mjs brand     draw the share image and touch icon
+//   node scripts/imagery.mjs all       fetch, then process
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';

@@ -1,4 +1,4 @@
-name: checks
+name: verify
 
 on:
   push:
@@ -18,13 +18,13 @@ jobs:
         with:
           node-version: 22
       - name: Build
-        run: node scripts/build.mjs
+        run: node scripts/compose.mjs
       - name: Tests
         run: node --test
       - name: Privacy check
         env:
-          PRIVACY_PATTERNS: ${{ secrets.PRIVACY_PATTERNS }}
-        run: python3 .github/scripts/privacy_check.py _site
+          LEAK_GUARD_TERMS: ${{ secrets.LEAK_GUARD_TERMS }}
+        run: python3 .github/scripts/leak_guard.py _site
 
   render:
     runs-on: ubuntu-latest

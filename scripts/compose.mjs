@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Static site build. Reads data/ and src/, writes _site/.
-//   node scripts/build.mjs                       build with the address placeholder left in place
-//   node scripts/build.mjs --base-url <url>      also swap the placeholder for the deployed address
-//   node scripts/build.mjs --out <dir>           write somewhere other than _site/
-//   node scripts/build.mjs --data <dir>          read data from another folder (used for edge-case renders)
+//   node scripts/compose.mjs                       build with the address placeholder left in place
+//   node scripts/compose.mjs --base-url <url>      also swap the placeholder for the deployed address
+//   node scripts/compose.mjs --out <dir>           write somewhere other than _site/
+//   node scripts/compose.mjs --data <dir>          read data from another folder (used for edge-case renders)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -1155,7 +1155,7 @@ function finalize(files) {
     fail(`invalid --base-url ${BASE_URL}`);
   }
   const defaultHost = base.hostname.endsWith('.github.io');
-  const re = /https:\/\/site-url\.invalid\/([^"'\s<>)\]]*)/g;
+  const re = new RegExp(`${PLACEHOLDER.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}([^"'\\s<>)\\]]*)`, 'g');
   for (const [file, content] of files) {
     if (typeof content !== 'string') continue;
     let next = content;
@@ -1166,7 +1166,7 @@ function finalize(files) {
     }
     files.set(file, next);
   }
-  const left = [...files].filter(([, c]) => typeof c === 'string' && c.includes('site-url.invalid')).map(([f]) => f);
+  const left = [...files].filter(([, c]) => typeof c === 'string' && c.includes(PLACEHOLDER)).map(([f]) => f);
   if (left.length) fail(left.map((f) => `${f}: address placeholder left after swap`));
 }
 
@@ -1220,7 +1220,7 @@ for (const file of fs.existsSync(staticDir) ? fs.readdirSync(staticDir, { recurs
   if (fs.statSync(full).isFile()) files.set(`assets/${file.split(path.sep).join('/')}`, fs.readFileSync(full));
 }
 for (const need of ['assets/og.png', 'assets/touch-icon.png']) {
-  if (!files.has(need)) fail(`${need} is missing; run node scripts/assets.mjs brand`);
+  if (!files.has(need)) fail(`${need} is missing; run node scripts/imagery.mjs brand`);
 }
 
 finalize(files);

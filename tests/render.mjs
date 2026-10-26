@@ -79,7 +79,7 @@ async function run(mode) {
   const server = await serve(tmp, prefix);
   const origin = `http://127.0.0.1:${server.address().port}`;
   const base = mode === 'default' ? 'https://owner.github.io/site-path/' : `${origin}/`;
-  const args = [path.join(ROOT, 'scripts/build.mjs'), '--out', tmp, '--base-url', base];
+  const args = [path.join(ROOT, 'scripts/compose.mjs'), '--out', tmp, '--base-url', base];
   let ranking = readJSON('data/ranking.json');
   let vendorList = readJSON('data/vendors.json');
   if (mode === 'edge') {

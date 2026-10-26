@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export const ROOT = path.resolve(import.meta.dirname, '..', '..');
-export const PLACEHOLDER = 'https://site-url.invalid/';
+export const PLACEHOLDER = 'https://as80u2ict.invalid/';
 export const LINE_LIMIT = 140;
 
 export function readJSON(rel, fallback) {

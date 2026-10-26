@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
 import {
-  ROOT, readJSON, listFiles, longLines, scanForBlocked, validateVendors, blockedTermsForTests,
+  ROOT, PLACEHOLDER, readJSON, listFiles, longLines, scanForBlocked, validateVendors, blockedTermsForTests,
 } from '../scripts/lib/rules.mjs';
 
 const site = readJSON('data/site.json');
@@ -14,7 +14,7 @@ const ranking = readJSON('data/ranking.json');
 
 function build(base) {
   const out = fs.mkdtempSync(path.join(os.tmpdir(), 'site-'));
-  execFileSync('node', [path.join(ROOT, 'scripts/build.mjs'), '--out', out, '--base-url', base], { stdio: 'pipe' });
+  execFileSync('node', [path.join(ROOT, 'scripts/compose.mjs'), '--out', out, '--base-url', base], { stdio: 'pipe' });
   const files = new Map();
   for (const f of listFiles(out, new Set())) files.set(path.relative(out, f).split(path.sep).join('/'), f);
   return { out, files, read: (rel) => fs.readFileSync(path.join(out, rel), 'utf8') };
@@ -53,7 +53,7 @@ test('excluded services are absent and their presence stops the build', () => {
   const probe = path.join(ROOT, 'tests', 'probe-excluded.txt');
   fs.writeFileSync(probe, blockedTermsForTests()[0]);
   try {
-    const r = spawnSync('node', [path.join(ROOT, 'scripts/build.mjs'), '--out', fs.mkdtempSync(path.join(os.tmpdir(), 'x-'))]);
+    const r = spawnSync('node', [path.join(ROOT, 'scripts/compose.mjs'), '--out', fs.mkdtempSync(path.join(os.tmpdir(), 'x-'))]);
     assert.notEqual(r.status, 0);
   } finally {
     fs.rmSync(probe);
@@ -68,7 +68,7 @@ test('no placeholder, comments, internal words or long lines in the output', () 
   for (const b of [custom, github]) {
     for (const f of textFiles(b)) {
       const text = b.read(f);
-      assert.ok(!text.includes('site-url.invalid'), `${f} placeholder`);
+      assert.ok(!text.includes(PLACEHOLDER), `${f} placeholder`);
       assert.deepEqual(longLines(text), [], `${f} long lines`);
       if (f.endsWith('.html')) assert.ok(!text.includes('<!--'), `${f} comment`);
       if (f.endsWith('.css')) assert.ok(!text.includes('/*'), `${f} comment`);

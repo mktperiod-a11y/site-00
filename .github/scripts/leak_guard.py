@@ -2,7 +2,7 @@
 """Repository privacy check. Fails when tracked files or commit metadata could identify the operator.
 
 Checks
-  * forbidden strings from the PRIVACY_PATTERNS secret (one per line or comma separated)
+  * forbidden strings from the LEAK_GUARD_TERMS secret (one per line or comma separated)
   * the GitHub account and repository name, read at run time (GITHUB_REPOSITORY or the origin remote)
   * e-mail addresses, phone numbers, business registration numbers, verification and analytics tokens
   * image metadata (EXIF, XMP, IPTC, PNG text/time chunks, GIF comments, SVG metadata and editor traces),
@@ -45,7 +45,7 @@ def identity_terms():
     if "/" in repo:
         owner, name = repo.split("/", 1)
         terms += [owner, name]
-    secret = os.environ.get("PRIVACY_PATTERNS", "")
+    secret = os.environ.get("LEAK_GUARD_TERMS", "")
     terms += [t.strip() for t in re.split(r"[\n,]", secret) if t.strip()]
     return [t for t in terms if len(t) >= 4]
 
@@ -167,7 +167,7 @@ def check_commits():
 def main():
     for path in tracked_files():
         rel = path.relative_to(ROOT).as_posix()
-        if rel == ".github/scripts/privacy_check.py":
+        if rel == ".github/scripts/leak_guard.py":
             continue
         check_file(path, rel)
     for extra in sys.argv[1:]:
@@ -175,8 +175,8 @@ def main():
         for path in sorted(p for p in base.rglob("*") if p.is_file()):
             check_file(path, f"{base.name}/{path.relative_to(base).as_posix()}")
     check_commits()
-    if not os.environ.get("PRIVACY_PATTERNS"):
-        print("::warning::PRIVACY_PATTERNS is not set; only built-in checks ran.")
+    if not os.environ.get("LEAK_GUARD_TERMS"):
+        print("::warning::LEAK_GUARD_TERMS is not set; only built-in checks ran.")
     if problems:
         print("privacy check failed:")
         for p in sorted(set(problems)):

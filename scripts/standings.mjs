@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Rebuilds data/ranking.json from data/metrics.json and records the week in data/history.json.
-//   node scripts/rank.mjs                     compute this week's ranking
-//   node scripts/rank.mjs --restore-baseline  put the first collected metrics back, then compute
+//   node scripts/standings.mjs                     compute this week's ranking
+//   node scripts/standings.mjs --restore-baseline  put the first collected metrics back, then compute
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON, kstDate, validateVendors } from './lib/rules.mjs';
@@ -16,15 +16,15 @@ if (problems.length) {
   process.exit(1);
 }
 
-const baselineFile = path.join(ROOT, 'data/baseline.json');
+const baselineFile = path.join(ROOT, 'data/first-week.json');
 let metrics = readJSON('data/metrics.json', { vendors: {} });
 
 if (args.has('--restore-baseline')) {
   if (!fs.existsSync(baselineFile)) {
-    console.error('data/baseline.json does not exist yet');
+    console.error('data/first-week.json does not exist yet');
     process.exit(1);
   }
-  metrics = readJSON('data/baseline.json').metrics;
+  metrics = readJSON('data/first-week.json').metrics;
   writeJSON('data/metrics.json', metrics);
   console.log('metrics restored from baseline');
 }
@@ -42,7 +42,7 @@ writeJSON('data/ranking.json', ranking);
 writeJSON('data/history.json', appendHistory(history, ranking, site.historyWeeks ?? 26));
 
 if (!fs.existsSync(baselineFile)) {
-  writeJSON('data/baseline.json', { createdAt: date, metrics, ranking });
+  writeJSON('data/first-week.json', { createdAt: date, metrics, ranking });
   console.log('baseline saved');
 }
 

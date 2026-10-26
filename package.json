@@ -5,15 +5,15 @@
   "type": "module",
   "description": "Static weekly chart site generator",
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "rank": "node scripts/rank.mjs",
-    "collect": "node scripts/collect.mjs",
+    "build": "node scripts/compose.mjs",
+    "rank": "node scripts/standings.mjs",
+    "collect": "node scripts/gather.mjs",
     "test": "node --test",
     "render": "node tests/render.mjs",
-    "privacy": "python3 .github/scripts/privacy_check.py",
-    "baseline:restore": "node scripts/rank.mjs --restore-baseline",
-    "assets": "node scripts/assets.mjs all",
-    "assets:brand": "node scripts/assets.mjs brand"
+    "privacy": "python3 .github/scripts/leak_guard.py",
+    "baseline:restore": "node scripts/standings.mjs --restore-baseline",
+    "assets": "node scripts/imagery.mjs all",
+    "assets:brand": "node scripts/imagery.mjs brand"
   },
   "devDependencies": {
     "sharp": "0.35.5"
