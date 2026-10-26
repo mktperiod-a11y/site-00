@@ -329,6 +329,32 @@ export function audit({ firstScreen }) {
     }
   }
 
+  // Ranks 1-3 must always stand apart from rank 4 and below in at least two ways; which ways is free.
+  if (firstScreen) {
+    const entries = all('.home .entry');
+    if (entries.length >= 4) {
+      const look = (el) => {
+        const s = getComputedStyle(el);
+        const no = el.querySelector('.entry-no');
+        return {
+          bg: s.backgroundColor,
+          border: `${s.borderTopWidth} ${s.borderTopColor}`,
+          shadow: s.boxShadow,
+          height: el.getBoundingClientRect().height,
+          width: el.getBoundingClientRect().width,
+          no: no ? parseFloat(getComputedStyle(no).fontSize) : 0,
+        };
+      };
+      const fourth = look(entries[3]);
+      entries.slice(0, 3).forEach((el, i) => {
+        const a = look(el);
+        const signals = [a.bg !== fourth.bg, a.border !== fourth.border, a.shadow !== fourth.shadow,
+          a.height > fourth.height * 1.2, Math.abs(a.width - fourth.width) > 40, a.no > fourth.no * 1.3].filter(Boolean).length;
+        if (signals < 2) issues.push(`rank ${i + 1} is not clearly emphasized over rank 4 (${signals} difference)`);
+      });
+    }
+  }
+
   return {
     issues: [...new Set(issues)],
     links: [...document.querySelectorAll('a[href]')].map((a) => a.href),
