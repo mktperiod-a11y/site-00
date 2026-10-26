@@ -154,21 +154,31 @@ async function run(mode) {
   const desk = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const dp = await desk.newPage();
   await dp.goto(root);
-  const first = dp.locator('.entry').first();
-  await first.hover();
-  await dp.waitForTimeout(250);
-  const hover = await first.evaluate((el) => ({
-    total: getComputedStyle(el.querySelector('.total')).backgroundColor,
-    vc: getComputedStyle(el).getPropertyValue('--vc').trim(),
-    peek: getComputedStyle(el.querySelector('.peek')).opacity,
-  }));
-  const hex = (rgb) => '#' + rgb.match(/\d+/g).slice(0, 3).map((n) => Number(n).toString(16).padStart(2, '0')).join('');
-  if (hex(hover.total) !== hover.vc.toLowerCase()) note(`${mode}: hover does not use the vendor color`);
-  if (hover.peek !== '1') note(`${mode}: hover detail not shown`);
-
-  // Hover states put text on saturated vendor colors; AA (4.5) still read poorly there, so these need AAA (7).
+  // Hover follows Material: only an 8% state layer appears. Nothing inside the card may move, recolor or pop up.
+  const snapshot = (el) => {
+    const o = el.getBoundingClientRect();
+    return [...el.querySelectorAll('*')].map((n) => {
+      const r = n.getBoundingClientRect();
+      const cs = getComputedStyle(n);
+      return [r.x - o.x, r.y - o.y, r.width, r.height, cs.color, cs.backgroundColor, cs.borderColor, cs.boxShadow, cs.opacity, cs.visibility]
+        .join('|');
+    });
+  };
   for (const row of await dp.locator('.entry').all()) {
-    for (const target of ['.total', '.peek', '.go-btn']) {
+    await row.scrollIntoViewIfNeeded();
+    const before = await row.evaluate(snapshot);
+    await row.locator('.entry-name').hover();
+    await dp.waitForTimeout(250);
+    const after = await row.evaluate((el, fn) => ({ cells: new Function(`return (${fn})`)()(el), layer: getComputedStyle(el, '::after').opacity }),
+      snapshot.toString());
+    const id = await row.getAttribute('id');
+    if (after.cells.join() !== before.join()) note(`${mode}: hover changes more than the state layer in #${id}`);
+    if (Math.abs(Number(after.layer) - 0.08) > 0.001) note(`${mode}: hover state layer is ${after.layer} in #${id}, expected 0.08`);
+  }
+
+  // Hovered text and buttons keep AAA (7) contrast; AA (4.5) read poorly on saturated colors before.
+  for (const row of await dp.locator('.entry').all()) {
+    for (const target of ['.total', '.go-btn']) {
       await (target === '.go-btn' ? row.locator(target) : row).hover();
       await dp.waitForTimeout(200);
       const found = await row.evaluate((el, sel) => {

@@ -439,11 +439,6 @@ function scorebar(parts, { solo = false, height = 6 } = {}) {
   ]);
 }
 
-const peekText = (parts) =>
-  METRIC_KEYS.filter((k) => parts[k] !== null)
-    .map((k) => `${METRIC_LABELS[k]} ${parts[k].toFixed(1)}`)
-    .join(' · ');
-
 function perksList(v, full = false) {
   const list = shownBenefits(v);
   const items = [];
@@ -492,7 +487,6 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
     indent(perksList(v), 2),
     '  <div class="entry-bar">',
     indent(scorebar(it.parts), 4),
-    `    <p class="peek">${peekText(it.parts)}</p>`,
     '  </div>',
     indent(goButton(v, u), 2),
     '</li>',
