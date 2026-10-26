@@ -484,32 +484,15 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
 /* ---------- text generated from the week's data ---------- */
 
 function digest() {
-  const [a, b, c] = pub;
-  const sentences = [
-    `이번 주 1위는 ${josa(a.v.name, '이에요/예요')}. 2위 ${b.v.name}, 3위 ${josa(c.v.name, '이/가')} 뒤를 이었어요.`,
-  ];
   const hasPrev = pub.some((it) => it.change !== null);
-  const risers = pub.filter((it) => typeof it.change === 'number' && it.change > 0).sort((x, y) => y.change - x.change);
-  const fresh = pub.filter((it) => it.change === 'new');
-  if (!hasPrev) sentences.push('이번 주가 첫 집계라 지난주와 비교한 변동은 다음 주부터 보여 드려요.');
-  else if (risers.length) {
-    const r = risers[0];
-    sentences.push(`지난주보다 가장 크게 오른 곳은 ${r.change}계단 오른 ${josa(r.v.name, '이에요/예요')}.`);
-  } else sentences.push('지난주보다 순위가 오른 곳은 없어요.');
-  if (fresh.length) {
-    const names = fresh.map((it) => it.v.name);
-    sentences.push(`새로 ${site.publicCount}위 안에 든 곳은 ${josa(listKo(names), '이에요/예요')}.`);
-  }
-  sentences.push(`후보 ${ranking.candidates}곳 가운데 지표가 모인 ${ranking.scored}곳을 같은 계산으로 비교했어요.`);
-  const top = risers[0];
-  return {
-    sentences,
-    stats: [
-      ['1위', a.v.name],
-      ['최대 상승', top ? `${top.v.name} ▲${top.change}` : '–'],
-      ['새로 진입', hasPrev ? `${fresh.length}곳` : '–'],
-    ],
-  };
+  const top = pub.filter((it) => typeof it.change === 'number' && it.change > 0).sort((x, y) => y.change - x.change)[0];
+  const fresh = pub.filter((it) => it.change === 'new').length;
+  return [
+    ['1위', esc(pub[0].v.name)],
+    ['최대 상승', top ? `${esc(top.v.name)} <span class="up">▲${top.change}</span>` : hasPrev ? '없음' : '–'],
+    ['새로 진입', hasPrev ? `${fresh}곳` : '–'],
+    ['비교한 곳', `${ranking.scored}곳`],
+  ];
 }
 
 function metricLine(k) {
@@ -647,9 +630,8 @@ function pageIndex() {
     '  </section>',
     '  <aside class="digest" aria-labelledby="digest-title">',
     '    <h2 id="digest-title">이번 주 한눈에</h2>',
-    `    <p>${d.sentences.join(' ')}</p>`,
     '    <dl>',
-    ...d.stats.map(([k, v]) => `      <div><dt>${k}</dt><dd>${esc(v)}</dd></div>`),
+    ...d.map(([k, v]) => `      <div><dt>${k}</dt><dd>${v}</dd></div>`),
     '    </dl>',
     '  </aside>',
     '  <section class="block how" aria-labelledby="how-title">',

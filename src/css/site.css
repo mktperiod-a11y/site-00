@@ -657,22 +657,11 @@ ol {
   letter-spacing: -0.01em;
 }
 
-.digest p {
-  margin-top: var(--sp-1);
-  font-size: var(--fs-xs);
-}
-
 .digest dl {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-1) var(--sp-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: var(--sp-2) var(--sp-4);
   margin-top: var(--sp-2);
-}
-
-.digest dl div {
-  display: flex;
-  align-items: baseline;
-  gap: var(--sp-1);
 }
 
 .digest dt {
@@ -681,8 +670,12 @@ ol {
 
 .digest dd {
   color: var(--ink);
-  font-size: var(--fs-s);
+  font-size: var(--fs-m);
   font-weight: 800;
+}
+
+.digest .up {
+  white-space: nowrap;
 }
 
 /* Text blocks */
