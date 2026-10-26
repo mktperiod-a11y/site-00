@@ -247,6 +247,7 @@ ol {
 /* Hero */
 .hero {
   padding: 0;
+  line-height: 1.5;
 }
 
 .kicker {
@@ -289,6 +290,10 @@ ol {
   color: var(--on-surface-variant);
   font-size: var(--fs-xs);
   line-height: 1.5;
+}
+
+.caveat-more {
+  display: none;
 }
 
 /* Weekly chart */
@@ -339,6 +344,7 @@ ol {
   border: var(--rule-w) solid var(--outline-variant);
   border-radius: var(--r-2);
   position: relative;
+  line-height: 1.45;
 }
 
 /* Material state layer: the whole card is one target (the name link is stretched over it), hover tints it 8%, focus 10%. */
@@ -1128,6 +1134,10 @@ ol {
 
   .kicker {
     display: flex;
+  }
+
+  .caveat-more {
+    display: inline;
   }
 
   .entry .total {
