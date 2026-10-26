@@ -48,14 +48,13 @@
   --on-primary: #370096;
   --primary-container: #7c4dff;
   --on-primary-container: #fcf6ff;
-  --secondary-container: #4e3b8c;
-  --on-secondary-container: #e8deff;
   --up: #ffb4ab;
   --down: #aac7ff;
   --new: #7fdcb5;
   --star: #ffc94d;
   --star-off: #494455;
   --focus: #e8deff;
+  --hairline: rgba(255, 255, 255, 0.14);
   --lift: 0 4px 16px rgba(0, 0, 0, 0.5);
   --state-hover: 0.08;
   --state-focus: 0.1;
@@ -72,6 +71,7 @@
   --r-2: 10px;
   --r-3: 16px;
   --r-pill: 999px;
+  --r-btn: 8px;
 
   --gutter: 16px;
   --wrap: 1180px;
@@ -414,21 +414,20 @@ ol {
   z-index: 1;
 }
 
-/* Material emphasis: the filled button is kept for the one main action (detail page). Ranks 1-3 get tonal buttons and
-   the repeated rows outlined ones, so a list of buttons sits in its cards instead of floating over them. */
+/* The filled button is kept for the one main action (detail page). List buttons are quiet: neutral text, a hairline edge
+   and a small radius, with ranks 1-3 on a slightly raised surface, so they sit in their cards instead of floating. */
 .entry .go-btn {
   position: relative;
   z-index: 2;
-  border-radius: var(--r-2);
+  border-radius: var(--r-btn);
   background: transparent;
-  box-shadow: inset 0 0 0 var(--rule-w) var(--outline);
-  color: var(--primary);
+  box-shadow: inset 0 0 0 var(--rule-w) var(--hairline);
+  color: var(--on-surface);
+  font-weight: 500;
 }
 
 .entry.is-podium .go-btn {
-  background: var(--secondary-container);
-  box-shadow: none;
-  color: var(--on-secondary-container);
+  background: var(--surface-highest);
 }
 
 .entry-rank {
