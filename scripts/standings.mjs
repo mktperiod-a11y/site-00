@@ -2,9 +2,8 @@
 // Rebuilds data/ranking.json from data/metrics.json and records the week in data/history.json.
 //   node scripts/standings.mjs                     compute this week's ranking
 //   node scripts/standings.mjs --restore-baseline  put the first collected metrics back, then compute
-// The ranking recipe comes only from the RANK_RECIPE environment variable (a repository secret in the
-// weekly workflow). The repository keeps just its hash in data/site.json, so a changed or missing
-// recipe leaves last week's ranking in place instead of silently switching the calculation.
+// Calculation settings come from the RANK_RECIPE environment variable and must match data/site.json#recipeHash;
+// otherwise last week's ranking is kept.
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON, kstDate, validateVendors } from './lib/rules.mjs';

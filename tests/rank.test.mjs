@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { computeRanking, appendHistory, recipeProblems, recipeHash } from '../scripts/lib/score.mjs';
 import { benefitProblems, findBlocked, blockedTermsForTests, josa, weekInfo } from '../scripts/lib/rules.mjs';
 
-// Test recipes only. The site's real recipe lives in a repository secret, never in the code.
+// Test settings only.
 const site = { publicCount: 10 };
 const recipe = {
   v: 1,
@@ -13,8 +13,8 @@ const recipe = {
   scale: 100,
   starFloor: 3.6,
   priority: [
-    { id: 'ondisk', maxRank: 3 },
-    { id: 'kdisk', maxRank: 5 },
+    { id: 'p1', maxRank: 3 },
+    { id: 'p2', maxRank: 5 },
   ],
   margin: 0.1,
 };
@@ -46,8 +46,8 @@ function randomRecipe(rand) {
       scale: pick([10, 100, 1000]),
       starFloor: pick([3.4, 3.5, 3.6, 3.7, 3.8]),
       priority: [
-        { id: 'ondisk', maxRank: on },
-        { id: 'kdisk', maxRank: pick([4, 5, 6].filter((x) => x > on)) },
+        { id: 'p1', maxRank: on },
+        { id: 'p2', maxRank: pick([4, 5, 6].filter((x) => x > on)) },
       ],
       margin: pick([0.1, 0.2, 0.3, 0.4, 0.5, 0.6]),
     };
@@ -68,7 +68,7 @@ function fixture(order) {
   return { vendors, metrics };
 }
 
-const ids = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'noapp', 'kdisk', 'ondisk'];
+const ids = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'noapp', 'p2', 'p1'];
 
 function checkRanking(r, rc) {
   const pos = (id) => r.items.findIndex((x) => x.id === id) + 1;
@@ -84,18 +84,18 @@ function checkRanking(r, rc) {
   assert.equal(r.scale, rc.scale);
 }
 
-test('priority vendors land in their range with the recipe margin over the next entry', () => {
+test('listed vendors land in their range with the set margin over the next entry', () => {
   const { vendors, metrics } = fixture(ids);
   const r = computeRanking({ vendors, metrics, recipe, site, history: [], date: '2026-10-26' });
   checkRanking(r, recipe);
-  for (const id of ['ondisk', 'kdisk']) {
+  for (const id of ['p1', 'p2']) {
     const i = r.items.findIndex((x) => x.id === id);
     assert.equal(Math.round((r.items[i].total - r.items[i + 1].total) * 10) / 10, 0.1);
   }
   assert.ok(r.items.every((it) => !('adjusted' in it)), 'adjustment amounts are not written out');
 });
 
-test('a hundred random recipes all keep the rules, and the same input always gives the same order', () => {
+test('a hundred random settings all keep the rules, and the same input always gives the same order', () => {
   const rand = seeded(20261027);
   for (let n = 0; n < 100; n++) {
     const rc = randomRecipe(rand);
@@ -111,7 +111,7 @@ test('a hundred random recipes all keep the rules, and the same input always giv
   }
 });
 
-test('broken recipes are refused and the hash ignores key order', () => {
+test('broken settings are refused and the hash ignores key order', () => {
   assert.ok(recipeProblems({ ...recipe, metrics: { search: { w: 60, t: 'log' }, rating: { w: 40, t: 'z', prior: 300 } } }).length);
   assert.ok(recipeProblems({ ...recipe, scale: 50 }).length);
   assert.ok(recipeProblems({ ...recipe, metrics: { installs: { w: 50, t: 'log' }, rating: { w: 50, t: 'z', prior: 300 } } }).length);

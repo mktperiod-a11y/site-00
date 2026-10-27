@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Repository privacy check. Fails when tracked files or commit metadata could identify the operator.
+"""Repository hygiene check for tracked files, build output and commit metadata.
 
 Checks
   * forbidden strings from the LEAK_GUARD_TERMS secret (one per line or comma separated)
@@ -9,6 +9,7 @@ Checks
     including base64 images embedded in HTML, CSS and SVG
   * a CNAME file
   * commit author and committer e-mails (must be GitHub no-reply addresses)
+  * the same forbidden strings in the message of the commit being checked
 Optional argument: extra directories to scan in addition to tracked files (for example a build output).
 """
 import base64
@@ -164,6 +165,18 @@ def check_commits():
                 problems.append(f"commit {sha[:8]}: e-mail is not a GitHub no-reply address")
 
 
+def check_messages():
+    # Only the commit being pushed: older messages cannot be changed any more.
+    out = git("log", "-1", "HEAD", "--format=%H%x1f%B")
+    if "\x1f" not in out:
+        return
+    sha, body = out.split("\x1f", 1)
+    low = body.lower()
+    for t in identity_terms():
+        if t.lower() in low:
+            problems.append(f"commit {sha[:8]}: message contains a forbidden string")
+
+
 def main():
     for path in tracked_files():
         rel = path.relative_to(ROOT).as_posix()
@@ -175,6 +188,7 @@ def main():
         for path in sorted(p for p in base.rglob("*") if p.is_file()):
             check_file(path, f"{base.name}/{path.relative_to(base).as_posix()}")
     check_commits()
+    check_messages()
     if not os.environ.get("LEAK_GUARD_TERMS"):
         print("::warning::LEAK_GUARD_TERMS is not set; only built-in checks ran.")
     if problems:

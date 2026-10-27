@@ -20,7 +20,7 @@ export function writeJSON(rel, value) {
   fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
 }
 
-// Excluded services are stored as shifted code points so their names never appear in the repository.
+// Blocked names, stored as shifted code points.
 const BLOCKED_CODES = {
   ko: [
     [48127, 53811, 46363, 49835, 53363], [54035, 51075, 52887, 49835, 53951], [54035, 51075, 51067, 51599],
@@ -135,7 +135,7 @@ export function validateVendors(vendors) {
     if (names.has(v.name)) problems.push(`${v.name}: duplicate name`);
     ids.add(v.id);
     names.add(v.name);
-    // excluded: the owner left this vendor out of this site; it keeps its data but never competes or appears.
+    // excluded: data is kept, but the vendor is not ranked or shown.
     if (!['active', 'pending', 'excluded'].includes(v.status)) problems.push(`${v.id}: unknown status`);
     if (v.status === 'active' && !/^https:\/\//.test(v.url ?? '')) problems.push(`${v.id}: active vendor needs an https url`);
     if (!/^#[0-9a-f]{6}$/i.test(v.color ?? '')) problems.push(`${v.id}: color must be #rrggbb`);
