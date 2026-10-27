@@ -1173,6 +1173,9 @@ function urlDirOf(file) {
   return '';
 }
 
+const PLACEHOLDER_RE = PLACEHOLDER.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&');
+const SHARE_META = new RegExp(`(<meta property="og:(?:url|image)" content=")${PLACEHOLDER_RE}`, 'g');
+
 function finalize(files) {
   if (!BASE_URL) return;
   let base;
@@ -1182,13 +1185,15 @@ function finalize(files) {
     fail(`invalid --base-url ${BASE_URL}`);
   }
   const defaultHost = base.hostname.endsWith('.github.io');
-  const re = new RegExp(`${PLACEHOLDER.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')}([^"'\\s<>)\\]]*)`, 'g');
+  const re = new RegExp(`${PLACEHOLDER_RE}([^"'\\s<>)\\]]*)`, 'g');
   for (const [file, content] of files) {
     if (typeof content !== 'string') continue;
     let next = content;
     if (!defaultHost) next = next.split(PLACEHOLDER).join(base.href);
     else {
       if (file === 'robots.txt') next = next.replace(/\nSitemap:[^\n]*\n?/, '\n');
+      // Link previews (messengers, social sites) only load a share image from a full address.
+      next = next.replace(SHARE_META, (_, head) => head + base.href);
       next = next.replace(re, (_, p) => (file === '404.html' ? base.pathname + p : relPath(urlDirOf(file), p)));
     }
     files.set(file, next);

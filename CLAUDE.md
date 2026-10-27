@@ -7,6 +7,7 @@
 ## 기술
 - Node.js ESM, 내장 모듈만: `scripts/compose.mjs`(빌드), `gather.mjs`(지표 수집), `standings.mjs`(순위 계산).
 - 이미지: Sharp는 `scripts/imagery.mjs`에서만. 사이트는 외부 이미지·글꼴·스크립트를 불러오지 않는다.
+- 공유 이미지(`og.png`, `touch-icon.png`): `node scripts/imagery.mjs brand`(Pretendard를 fontTools로 풀어 씀). 기본 github 주소에서도 `og:url`·`og:image`만 전체 주소로 쓴다.
 - 배포: GitHub Actions → Pages(Source = GitHub Actions). 워크플로 `verify`(push·PR), `publish`(main·수동·주간 호출), `refresh`(주간), `images`(수동).
 - 테스트: `node --test`, Playwright 렌더 검사(`tests/render.mjs`, `tests/ui-audit.mjs`), 저장소 검사(`.github/scripts/leak_guard.py`).
 

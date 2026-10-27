@@ -6,7 +6,7 @@
 //   node scripts/imagery.mjs all       fetch, then process
 import fs from 'node:fs';
 import path from 'node:path';
-import sharp from 'sharp';
+import { execFileSync } from 'node:child_process';
 import { ROOT, readJSON, writeJSON } from './lib/rules.mjs';
 import { playIcon } from './lib/play.mjs';
 
@@ -14,6 +14,36 @@ const RAW = path.join(ROOT, '.cache/raw');
 const STATIC = path.join(ROOT, 'src/static');
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
 const warn = (msg) => console.log(`::warning::${msg}`);
+// librsvg finds fonts through fontconfig, which reads its settings once when sharp loads, and
+// sharp's FreeType cannot open WOFF2. So unpack the self-hosted Pretendard files (fontTools)
+// into .cache and point fontconfig there before the import.
+function useSiteFonts() {
+  const dir = path.join(ROOT, '.cache/fontconfig');
+  const fonts = path.join(dir, 'fonts');
+  fs.mkdirSync(fonts, { recursive: true });
+  const src = path.join(STATIC, 'font');
+  try {
+    for (const f of fs.readdirSync(src).filter((x) => x.endsWith('.woff2'))) {
+      const out = path.join(fonts, f.replace(/\.woff2$/, '.otf'));
+      if (fs.existsSync(out)) continue;
+      const py = 'import sys; from fontTools.ttLib import TTFont; t = TTFont(sys.argv[1]); t.flavor = None; t.save(sys.argv[2])';
+      execFileSync('python3', ['-c', py, path.join(src, f), out], { stdio: 'pipe' });
+    }
+  } catch (e) {
+    warn(`could not unpack site fonts, text falls back to system fonts: ${e.message.split('\n')[0]}`);
+    return;
+  }
+  const conf = path.join(dir, 'fonts.conf');
+  fs.writeFileSync(
+    conf,
+    `<?xml version="1.0"?>\n<!DOCTYPE fontconfig SYSTEM "fonts.dtd">\n<fontconfig>\n` +
+      `  <dir>${fonts}</dir>\n  <cachedir>${dir}</cachedir>\n</fontconfig>\n`,
+  );
+  process.env.FONTCONFIG_FILE = conf;
+}
+
+if (process.argv[2] === 'brand') useSiteFonts();
+const { default: sharp } = await import('sharp');
 
 async function get(url, as = 'buffer') {
   const ctrl = new AbortController();
@@ -183,20 +213,42 @@ async function brand() {
   const site = readJSON('data/site.json');
   const mark = fs.readFileSync(path.join(ROOT, 'src/img/brand.svg'), 'utf8');
   const markInner = mark.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
-  const colors = readJSON('data/vendors.json').slice(0, 10).map((v) => v.color);
-  const bars = colors
+  const font = 'font-family="Pretendard"';
+  // Three top cards like the home page, without names so the picture does not go stale.
+  const cards = [
+    { y: 96, bg: '#3b3748', edge: 'rgba(205,189,255,0.55)', bar: 0.94, size: 64 },
+    { y: 252, bg: '#383443', edge: 'rgba(205,189,255,0.32)', bar: 0.82, size: 52 },
+    { y: 396, bg: '#383443', edge: 'rgba(205,189,255,0.32)', bar: 0.71, size: 52 },
+  ]
     .map((c, i) => {
-      const h = 120 + ((i * 37) % 5) * 34 + (9 - i) * 8;
-      return `<rect x="${760 + i * 40}" y="${520 - h}" width="28" height="${h}" rx="6" fill="${c}"/>`;
+      const h = i === 0 ? 140 : 128;
+      const mid = c.y + h / 2;
+      return [
+        `<rect x="688" y="${c.y}" width="432" height="${h}" rx="22" fill="${c.bg}" stroke="${c.edge}" stroke-width="2"/>`,
+        `<text x="728" y="${mid + c.size * 0.36}" ${font} font-size="${c.size}" font-weight="700" fill="#e1e2e5">${i + 1}</text>`,
+        `<rect x="804" y="${mid - 22}" width="${i === 0 ? 176 : 148}" height="18" rx="9" fill="#e1e2e5" fill-opacity="0.6"/>`,
+        `<rect x="804" y="${mid + 12}" width="276" height="10" rx="5" fill="#494455"/>`,
+        `<rect x="804" y="${mid + 12}" width="${Math.round(276 * c.bar)}" height="10" rx="5" fill="#cdbdff"/>`,
+      ].join('\n  ');
     })
-    .join('');
+    .join('\n  ');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="0.82" cy="0.18" r="0.7">
+      <stop offset="0" stop-color="#7c4dff" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#7c4dff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
   <rect width="1200" height="630" fill="#14121c"/>
-  <g transform="translate(80 92) scale(2.2)">${markInner}</g>
-  <text x="80" y="330" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="88" font-weight="700"
-    fill="#e2e2e9">${site.brand}</text>
-  <text x="84" y="400" font-family="WenQuanYi Zen Hei, Inter, sans-serif" font-size="40" fill="#c4c6d0">주간 웹하드 순위 TOP 10</text>
-  ${bars}
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <g transform="translate(80 84) scale(0.875)">${markInner}</g>
+  <text x="152" y="128" ${font} font-size="34" font-weight="600" fill="#e1e2e5">${site.brand}</text>
+  <text x="76" y="300" ${font} font-size="80" font-weight="700" fill="#e1e2e5">이번 주</text>
+  <text x="76" y="398" ${font} font-size="80" font-weight="700" fill="#e1e2e5">웹하드 순위</text>
+  <text x="80" y="470" ${font} font-size="32" fill="#e1e2e5" fill-opacity="0.6">상위 10곳을 한눈에 비교해요</text>
+  <circle cx="92" cy="541" r="8" fill="#7fdcb5"/>
+  <text x="112" y="551" ${font} font-size="28" font-weight="500" fill="#e1e2e5" fill-opacity="0.87">매주 갱신</text>
+  ${cards}
 </svg>`;
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'og.png'));
   const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
