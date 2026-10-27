@@ -388,10 +388,6 @@ ol {
   animation: live-pulse 2.4s ease-out infinite;
 }
 
-.live-next {
-  display: none;
-}
-
 @keyframes live-pulse {
   0% {
     box-shadow: 0 0 0 0 rgba(127, 220, 181, 0.55);
@@ -1309,10 +1305,6 @@ ol {
 
   .check-table tbody th {
     white-space: nowrap;
-  }
-
-  .live-next {
-    display: inline;
   }
 
   .kicker {

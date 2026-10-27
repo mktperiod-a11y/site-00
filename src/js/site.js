@@ -27,14 +27,4 @@
       }
     });
   }
-
-  var stamp = document.querySelector('[data-updated]');
-  if (stamp) {
-    var parts = stamp.getAttribute('data-updated').split('-');
-    var then = Date.UTC(+parts[0], +parts[1] - 1, +parts[2]);
-    var now = new Date();
-    var today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    var days = Math.round((today - then) / 86400000);
-    if (days >= 0 && days < 60) stamp.textContent = days === 0 ? ' · 오늘 갱신' : ' · ' + days + '일 전 갱신';
-  }
 })();
