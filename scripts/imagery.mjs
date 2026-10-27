@@ -209,46 +209,55 @@ async function processAll() {
   console.log('processed icons and logos');
 }
 
+// Point on a circle, degrees clockwise from twelve o'clock.
+const onCircle = (cx, cy, r, deg) => {
+  const a = ((deg - 90) * Math.PI) / 180;
+  return [cx + r * Math.cos(a), cy + r * Math.sin(a)].map((x) => x.toFixed(1));
+};
+
+function arcPath(cx, cy, r, sweep) {
+  const [x1, y1] = onCircle(cx, cy, r, 0);
+  const [x2, y2] = onCircle(cx, cy, r, sweep);
+  return `M${x1} ${y1}A${r} ${r} 0 ${sweep > 180 ? 1 : 0} 1 ${x2} ${y2}`;
+}
+
 async function brand() {
   const site = readJSON('data/site.json');
   const mark = fs.readFileSync(path.join(ROOT, 'src/img/brand.svg'), 'utf8');
   const markInner = mark.replace(/^[\s\S]*?<svg[^>]*>/, '').replace(/<\/svg>\s*$/, '');
   const font = 'font-family="Pretendard"';
-  // Three top cards like the home page, without names so the picture does not go stale.
-  const cards = [
-    { y: 96, bg: '#3b3748', edge: 'rgba(205,189,255,0.55)', bar: 0.94, size: 64 },
-    { y: 252, bg: '#383443', edge: 'rgba(205,189,255,0.32)', bar: 0.82, size: 52 },
-    { y: 396, bg: '#383443', edge: 'rgba(205,189,255,0.32)', bar: 0.71, size: 52 },
+  // A disk of three tracks: the longer the track, the higher the rank. No names, so it never goes stale.
+  const [cx, cy] = [900, 315];
+  const tracks = [
+    [230, 300, '#cdbdff'],
+    [178, 250, '#a88bff'],
+    [126, 205, '#7c4dff'],
   ]
-    .map((c, i) => {
-      const h = i === 0 ? 140 : 128;
-      const mid = c.y + h / 2;
-      return [
-        `<rect x="688" y="${c.y}" width="432" height="${h}" rx="22" fill="${c.bg}" stroke="${c.edge}" stroke-width="2"/>`,
-        `<text x="728" y="${mid + c.size * 0.36}" ${font} font-size="${c.size}" font-weight="700" fill="#e1e2e5">${i + 1}</text>`,
-        `<rect x="804" y="${mid - 22}" width="${i === 0 ? 176 : 148}" height="18" rx="9" fill="#e1e2e5" fill-opacity="0.6"/>`,
-        `<rect x="804" y="${mid + 12}" width="276" height="10" rx="5" fill="#494455"/>`,
-        `<rect x="804" y="${mid + 12}" width="${Math.round(276 * c.bar)}" height="10" rx="5" fill="#cdbdff"/>`,
-      ].join('\n  ');
-    })
+    .map(([r, sweep, color], i) => [
+      `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#e1e2e5" stroke-opacity="0.07" stroke-width="34"/>`,
+      `<path d="${arcPath(cx, cy, r, sweep)}" fill="none" stroke="${color}" stroke-width="34" stroke-linecap="round"/>`,
+      `<text x="${cx - 26}" y="${cy - r + 11}" ${font} font-size="30" font-weight="700" fill="#e1e2e5" text-anchor="end">${i + 1}</text>`,
+    ].join('\n  '))
     .join('\n  ');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <defs>
-    <radialGradient id="glow" cx="0.82" cy="0.18" r="0.7">
-      <stop offset="0" stop-color="#7c4dff" stop-opacity="0.22"/>
+    <radialGradient id="glow" cx="0.78" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="#7c4dff" stop-opacity="0.28"/>
       <stop offset="1" stop-color="#7c4dff" stop-opacity="0"/>
     </radialGradient>
   </defs>
   <rect width="1200" height="630" fill="#14121c"/>
   <rect width="1200" height="630" fill="url(#glow)"/>
-  <g transform="translate(80 84) scale(0.875)">${markInner}</g>
-  <text x="152" y="128" ${font} font-size="34" font-weight="600" fill="#e1e2e5">${site.brand}</text>
+  <g transform="translate(80 80) scale(0.875)">${markInner}</g>
+  <text x="152" y="120" ${font} font-size="34" font-weight="600" fill="#e1e2e5">${site.brand}</text>
   <text x="76" y="300" ${font} font-size="80" font-weight="700" fill="#e1e2e5">이번 주</text>
-  <text x="76" y="398" ${font} font-size="80" font-weight="700" fill="#e1e2e5">웹하드 순위</text>
+  <text x="76" y="398" ${font} font-size="80" font-weight="700" fill="#cdbdff">웹하드 순위</text>
   <text x="80" y="470" ${font} font-size="32" fill="#e1e2e5" fill-opacity="0.6">상위 10곳을 한눈에 비교해요</text>
   <circle cx="92" cy="541" r="8" fill="#7fdcb5"/>
   <text x="112" y="551" ${font} font-size="28" font-weight="500" fill="#e1e2e5" fill-opacity="0.87">매주 갱신</text>
-  ${cards}
+  ${tracks}
+  <circle cx="${cx}" cy="${cy}" r="40" fill="#2b2833"/>
+  <circle cx="${cx}" cy="${cy}" r="12" fill="#14121c"/>
 </svg>`;
   await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path.join(STATIC, 'og.png'));
   const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180">
