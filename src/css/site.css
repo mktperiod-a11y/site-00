@@ -59,8 +59,7 @@
   --podium-edge: rgba(205, 189, 255, 0.32);
   --first-bg: #3b3748;
   --first-edge: rgba(205, 189, 255, 0.55);
-  --btn-edge: rgba(255, 255, 255, 0.26);
-  --btn-raised: #4c4856;
+  --btn-fill: #535159;
   --live: #7fdcb5;
   --lift: 0 4px 16px rgba(0, 0, 0, 0.5);
   --state-hover: 0.08;
@@ -461,19 +460,14 @@ ol {
 
 /* The filled button is kept for the one main action (detail page). List buttons are quiet: neutral text, a hairline edge
    and a small radius, with ranks 1-3 on a slightly raised surface, so they sit in their cards instead of floating. */
+/* A filled chip a step whiter than the benefit chips beside it (about 24% white over the card), text at 7:1 or more. */
 .entry .go-btn {
   position: relative;
   z-index: 2;
   border-radius: var(--r-btn);
-  background: transparent;
-  box-shadow: inset 0 0 0 var(--rule-w) var(--btn-edge);
-  color: var(--on-surface);
-  font-weight: 600;
-}
-
-.entry.is-podium .go-btn {
-  background: var(--btn-raised);
+  background: var(--btn-fill);
   color: var(--on-primary-container);
+  font-weight: 600;
 }
 
 .entry-rank {
