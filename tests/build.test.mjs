@@ -118,11 +118,15 @@ test('official addresses only exist in encoded form on redirect pages', () => {
   assert.match(html, /noindex,nofollow/);
 });
 
-test('on a default github address no absolute self links are written', () => {
+test('on a default github address only the share meta carries the full address', () => {
   for (const f of textFiles(github)) {
-    const text = github.read(f);
+    const text = github.read(f).replace(/<meta property="og:(?:url|image)" content="[^"]*">/g, '');
     assert.ok(!text.includes('owner.github.io'), `${f} absolute address`);
   }
+  const home = github.read('index.html');
+  assert.match(home, /<meta property="og:image" content="https:\/\/owner\.github\.io\/repo-path\/assets\/og\.png">/);
+  assert.match(home, /<meta property="og:url" content="https:\/\/owner\.github\.io\/repo-path\/">/);
+  assert.match(github.read('criteria/index.html'), /og:url" content="https:\/\/owner\.github\.io\/repo-path\/criteria\/"/);
   assert.ok(!github.read('robots.txt').includes('Sitemap:'));
   assert.match(github.read('404.html'), /href="\/repo-path\/assets\/site\.css/);
   assert.match(custom.read('sitemap.xml'), /<loc>https:\/\/example\.test\/<\/loc>/);
