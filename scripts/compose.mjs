@@ -57,11 +57,6 @@ const DATE = ranking.date;
 const YM = `${ranking.year}.${String(ranking.month).padStart(2, '0')}`;
 const YM_KO = `${ranking.year}년 ${ranking.month}월`;
 const WEEK_KO = `${YM_KO} ${ranking.weekLabel.split(' ')[1]}`;
-const NEXT_UPDATE = (() => {
-  const t = new Date(`${DATE}T00:00:00Z`);
-  t.setUTCDate(t.getUTCDate() + (((8 - t.getUTCDay()) % 7) || 7));
-  return t.toISOString().slice(0, 10);
-})();
 const ISSUE = `${YM} · ${ranking.weekLabel.split(' ')[1]}`;
 const USED = METRIC_KEYS.filter((k) => ranking.metricsUsed.includes(k));
 const HAS_AFFILIATE = pub.some((it) => it.v.affiliateUrl);
@@ -657,7 +652,7 @@ function pageIndex() {
   const main = block([
     '<main id="main" class="wrap board home">',
     '  <section class="hero" aria-labelledby="page-title">',
-    `    <p class="kicker"><span class="issue">${ISSUE}</span><span>주간 웹하드 차트</span></p>`,
+    `    <p class="kicker"><span class="issue">${ISSUE}</span></p>`,
     `    <h1 id="page-title"><span class="h1-when">${YM_KO}</span> 웹하드 순위</h1>`,
     `    <p class="caveat">${CAVEAT_HERO}</p>`,
     '  </section>',
@@ -666,8 +661,7 @@ function pageIndex() {
     `      <h2 id="chart-title">이번 주 TOP ${site.publicCount}</h2>`,
     '      <p class="live">',
     '        <span class="live-dot" aria-hidden="true"></span>',
-    `        <span class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신<span data-updated="${DATE}"></span></span>`,
-    `        <span class="live-next">다음 갱신 ${koreanDate(NEXT_UPDATE)}</span>`,
+    `        <span class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신</span>`,
     '      </p>',
     '    </div>',
     '    <ol class="chart podium">',
@@ -971,7 +965,7 @@ function pageCriteria() {
     '    </ol>',
     '  </nav>',
     '  <section class="hero" aria-labelledby="page-title">',
-    `    <p class="kicker"><span class="issue">${ISSUE} 기준</span><span>순위 안내</span></p>`,
+    `    <p class="kicker"><span class="issue">${ISSUE} 기준</span></p>`,
     '    <h1 id="page-title">웹하드 순위 기준과 자주 묻는 질문</h1>',
     `    <p class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신</p>`,
     `    <p class="caveat">${CAVEAT_HERO}</p>`,
