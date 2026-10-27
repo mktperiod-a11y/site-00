@@ -36,11 +36,14 @@ test('the chart shows exactly the public count', () => {
 });
 
 test('minimum positions hold in the published ranking', () => {
-  for (const f of site.floors) {
-    const pos = ranking.items.findIndex((i) => i.id === f.id) + 1;
+  // The exact ranges live in the secret recipe; these are the widest a recipe may choose.
+  for (const [id, widest] of [['ondisk', 4], ['kdisk', 6]]) {
+    const pos = ranking.items.findIndex((i) => i.id === id) + 1;
     if (pos === 0) continue;
-    assert.ok(pos <= f.maxRank, `${f.id} is ${pos}`);
+    assert.ok(pos <= widest, `${id} is ${pos}`);
   }
+  assert.ok(!('weights' in site) && !('floors' in site), 'ranking weights and ranges stay out of the repository');
+  assert.ok(ranking.items.every((i) => !('adjusted' in i)), 'adjustment amounts stay out of the repository');
   for (const it of ranking.items) {
     const sum = Object.values(it.parts).filter((x) => x !== null).reduce((a, b) => a + b, 0);
     assert.equal(Math.round(sum * 10), Math.round(it.total * 10), it.id);

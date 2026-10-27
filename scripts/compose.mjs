@@ -54,6 +54,9 @@ const pub = ranking.items.slice(0, site.publicCount).map((it) => {
 
 const BRAND = site.brand;
 const DATE = ranking.date;
+// Totals are stored out of 100; each site shows them on its own scale (10, 100 or 1000 points).
+const SCALE = ranking.scale ?? 100;
+const pts = (x) => (x * SCALE / 100).toFixed({ 10: 2, 100: 1, 1000: 0 }[SCALE] ?? 1);
 const YM = `${ranking.year}.${String(ranking.month).padStart(2, '0')}`;
 const YM_KO = `${ranking.year}년 ${ranking.month}월`;
 const WEEK_KO = `${YM_KO} ${ranking.weekLabel.split(' ')[1]}`;
@@ -474,7 +477,7 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
     `    <${level} class="entry-name${chars(v.name) > 8 ? ' is-longer' : chars(v.name) > 6 ? ' is-long' : ''}"><a href="${u(`webhard/${v.id}/`)}">${esc(v.name)}</a></${level}>`,
     '    <p class="entry-score">',
     indent(starsTag(it.stars), 6),
-    `      <span class="total"><span class="sr">총점 </span>${it.total.toFixed(1)}점</span>`,
+    `      <span class="total"><span class="sr">총점 </span>${pts(it.total)}점</span>`,
     '    </p>',
     '  </div>',
     indent(perksList(v), 2),
@@ -781,7 +784,7 @@ function pageVendor(it) {
       ? `${benefitText} 같은 가입 혜택과 이벤트를 정리했어요.`
       : '가입 혜택과 이벤트는 공식 사이트 안내를 확인하세요.',
     `${usedLabels()} 기준 점수 구성과 최근 순위 변동도 함께 볼 수 있어요.`,
-    `총점은 ${it.total.toFixed(1)}점이에요.`,
+    `총점은 ${pts(it.total)}점이에요.`,
   ]);
   const others = seededShuffle(
     pub.filter((o) => o.id !== v.id),
@@ -841,7 +844,7 @@ function pageVendor(it) {
     `        ${moveBadge(it.change)}`,
     '        <span class="score-group">',
     indent(starsTag(it.stars), 10),
-    `          <span class="total"><span class="sr">총점 </span>${it.total.toFixed(1)}점</span>`,
+    `          <span class="total"><span class="sr">총점 </span>${pts(it.total)}점</span>`,
     '        </span>',
     '      </p>',
     '    </div>',
@@ -859,14 +862,14 @@ function pageVendor(it) {
       block([
         '        <li class="part">',
         `          <h3>${METRIC_LABELS[k]}</h3>`,
-        `          <span class="part-value">${it.parts[k] === null ? '–' : `${it.parts[k].toFixed(1)}점`}</span>`,
+        `          <span class="part-value">${it.parts[k] === null ? '–' : `${pts(it.parts[k])}점`}</span>`,
         it.parts[k] === null ? null : indent(scorebar(it.parts[k]), 10),
         `          <p>${esc(partText(k, it, facts))}</p>`,
         '        </li>',
       ]),
     ),
     '      </ul>',
-    `      <p class="part-sum"><span>총점</span><span>${it.total.toFixed(1)}점</span></p>`,
+    `      <p class="part-sum"><span>총점</span><span>${pts(it.total)}점</span></p>`,
     '    </section>',
     '    <section class="block" aria-labelledby="trend-head">',
     '      <div class="section-head">',
@@ -889,7 +892,7 @@ function pageVendor(it) {
       .map(
         (r) =>
           `          <tr><td>${koreanDate(r.date)}</td><td>${r.rank ? `${r.rank}위` : `${site.publicCount}위 밖`}</td>` +
-          `<td>${r.total !== null && r.total !== undefined ? r.total.toFixed(1) : '–'}</td></tr>`,
+          `<td>${r.total !== null && r.total !== undefined ? pts(r.total) : '–'}</td></tr>`,
       ),
     '        </tbody>',
     '      </table>',
@@ -973,7 +976,7 @@ function pageCriteria() {
     '    <div class="section-head">',
     '      <h2 id="calc-title">어떻게 줄 세우나요</h2>',
     '    </div>',
-    '    <p>여러 공개 지표를 함께 살펴 100점 만점 총점을 매겨요.</p>',
+    `    <p>여러 공개 지표를 함께 살펴 ${SCALE.toLocaleString('ko-KR')}점 만점 총점을 매겨요.</p>`,
     `    <p>매주 후보 전체를 같은 기준으로 다시 줄 세우고, 상위 ${site.publicCount}곳을 공개해요.` +
       ` ${site.publicCount}위 밖으로 밀려난 곳도 다음 주에 다시 겨뤄요.</p>`,
     '    <p>일부 서비스는 운영 기준에 따라 순위가 조정될 수 있어요.</p>',
@@ -1072,7 +1075,7 @@ function prepareAssets() {
     })
     .join('\n\n');
   const starCss = [];
-  for (let n = Math.floor(site.starFloor * 10); n <= 50; n++) {
+  for (let n = 30; n <= 50; n++) {
     starCss.push(`.st-${n} .stars-fill {\n  width: ${n * 2}%;\n}`);
   }
   const homeCss = [
@@ -1150,7 +1153,7 @@ function llms() {
     '',
     ...pub.map((it) => {
       const perks = shownBenefits(it.v).map((b) => b.text);
-      return `${it.rank}. [${it.v.name}](${abs(`webhard/${it.v.id}/`)}): 총점 ${it.total.toFixed(1)}점, ${
+      return `${it.rank}. [${it.v.name}](${abs(`webhard/${it.v.id}/`)}): 총점 ${pts(it.total)}점, ${
         perks.length ? perks.join(' / ') : '혜택은 공식 사이트에서 확인'
       }`;
     }),

@@ -28,6 +28,8 @@ jobs:
           NAVER_CLIENT_SECRET: ${{ secrets.NAVER_CLIENT_SECRET }}
         run: node scripts/gather.mjs
       - name: Rank
+        env:
+          RANK_RECIPE: ${{ secrets.TALLY_K7Q2 }}
         run: node scripts/standings.mjs
       - name: Build and test
         run: |
