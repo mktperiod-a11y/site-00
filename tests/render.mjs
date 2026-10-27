@@ -61,6 +61,16 @@ async function checkPage(context, url, label, { width, height, firstScreen = fal
   const res = await page.goto(url, { waitUntil: 'load' });
   const missing = label.endsWith('-404');
   if (!missing && res.status() !== 200) note(`${label}@${width}: HTTP ${res.status()}`);
+  // Lazy images below the fold may not have started yet; load them all before judging them.
+  await page.evaluate(async () => {
+    const imgs = [...document.images];
+    for (const img of imgs) img.loading = 'eager';
+    const settled = imgs.map((img) => (img.complete ? null : new Promise((ok) => {
+      img.addEventListener('load', ok, { once: true });
+      img.addEventListener('error', ok, { once: true });
+    })));
+    await Promise.race([Promise.all(settled), new Promise((ok) => setTimeout(ok, 5000))]);
+  });
   await page.waitForTimeout(150);
   const r = await page.evaluate(audit, { firstScreen });
   for (const i of r.issues) note(`${label}@${width}: ${i}`);
