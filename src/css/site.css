@@ -59,6 +59,9 @@
   --podium-edge: rgba(205, 189, 255, 0.32);
   --first-bg: #3b3748;
   --first-edge: rgba(205, 189, 255, 0.55);
+  --btn-edge: rgba(255, 255, 255, 0.26);
+  --btn-raised: #4c4856;
+  --live: #7fdcb5;
   --lift: 0 4px 16px rgba(0, 0, 0, 0.5);
   --state-hover: 0.08;
   --state-focus: 0.1;
@@ -337,7 +340,7 @@ ol {
 
 /* Weekly chart */
 .board {
-  padding-top: var(--sp-5);
+  padding-top: var(--sp-6);
   display: grid;
   gap: var(--sp-4);
   padding-bottom: var(--sp-6);
@@ -360,6 +363,44 @@ ol {
 .section-head p {
   color: var(--on-surface-variant);
   font-size: var(--fs-xs);
+}
+
+.live {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--sp-2);
+}
+
+.live .stamp {
+  color: var(--on-surface);
+  font-size: var(--fs-s);
+  font-weight: 600;
+}
+
+.live-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r-pill);
+  background: var(--live);
+  box-shadow: 0 0 0 0 var(--live);
+  animation: live-pulse 2.4s ease-out infinite;
+}
+
+.live-next {
+  display: none;
+}
+
+@keyframes live-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(127, 220, 181, 0.55);
+  }
+
+  70%,
+  100% {
+    box-shadow: 0 0 0 8px rgba(127, 220, 181, 0);
+  }
 }
 
 .chart {
@@ -425,13 +466,14 @@ ol {
   z-index: 2;
   border-radius: var(--r-btn);
   background: transparent;
-  box-shadow: inset 0 0 0 var(--rule-w) var(--hairline);
+  box-shadow: inset 0 0 0 var(--rule-w) var(--btn-edge);
   color: var(--on-surface);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .entry.is-podium .go-btn {
-  background: var(--surface-highest);
+  background: var(--btn-raised);
+  color: var(--on-primary-container);
 }
 
 .entry-rank {
@@ -641,7 +683,7 @@ ol {
 }
 
 .perk-event {
-  border: var(--rule-w) dashed var(--outline);
+  background: var(--surface-highest);
 }
 
 .perk-tag {
@@ -909,7 +951,7 @@ ol {
 
 /* Detail pages */
 .crumbs {
-  padding-top: var(--sp-3);
+  padding-top: var(--sp-5);
   font-size: var(--fs-xs);
   color: var(--on-surface-variant);
 }
@@ -1188,6 +1230,14 @@ ol {
     --gutter: 24px;
   }
 
+  .board {
+    padding-top: var(--sp-7);
+  }
+
+  .live-next {
+    display: inline;
+  }
+
   .kicker {
     display: flex;
   }
@@ -1398,6 +1448,10 @@ ol {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
+
   * {
     transition: none !important;
   }
