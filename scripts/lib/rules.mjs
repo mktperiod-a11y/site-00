@@ -135,7 +135,8 @@ export function validateVendors(vendors) {
     if (names.has(v.name)) problems.push(`${v.name}: duplicate name`);
     ids.add(v.id);
     names.add(v.name);
-    if (!['active', 'pending'].includes(v.status)) problems.push(`${v.id}: unknown status`);
+    // excluded: the owner left this vendor out of this site; it keeps its data but never competes or appears.
+    if (!['active', 'pending', 'excluded'].includes(v.status)) problems.push(`${v.id}: unknown status`);
     if (v.status === 'active' && !/^https:\/\//.test(v.url ?? '')) problems.push(`${v.id}: active vendor needs an https url`);
     if (!/^#[0-9a-f]{6}$/i.test(v.color ?? '')) problems.push(`${v.id}: color must be #rrggbb`);
     for (const b of v.benefits ?? []) {

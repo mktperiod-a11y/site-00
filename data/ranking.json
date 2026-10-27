@@ -4,8 +4,8 @@
   "weekLabel": "10월 5주차",
   "year": 2026,
   "month": 10,
-  "candidates": 19,
-  "scored": 18,
+  "candidates": 18,
+  "scored": 17,
   "pending": [
     "wedisk"
   ],
@@ -31,12 +31,12 @@
     {
       "id": "filesun",
       "rank": 2,
-      "total": 94.8,
+      "total": 94.9,
       "stars": 4.9,
       "parts": {
         "search": null,
         "usage": 55.9,
-        "reaction": 38.9
+        "reaction": 39
       },
       "change": 0,
       "prevRank": 2,
@@ -73,12 +73,12 @@
     {
       "id": "kdisk",
       "rank": 5,
-      "total": 76.3,
+      "total": 76.2,
       "stars": 4.7,
       "parts": {
         "search": null,
         "usage": 37.8,
-        "reaction": 38.5
+        "reaction": 38.4
       },
       "change": 0,
       "prevRank": 5,
@@ -87,34 +87,20 @@
     {
       "id": "filejo",
       "rank": 6,
-      "total": 76.2,
+      "total": 76.1,
       "stars": 4.7,
       "parts": {
         "search": null,
         "usage": 44.9,
-        "reaction": 31.3
+        "reaction": 31.2
       },
       "change": 0,
       "prevRank": 6,
       "adjusted": 0
     },
     {
-      "id": "ggulfile",
-      "rank": 7,
-      "total": 76.1,
-      "stars": 4.7,
-      "parts": {
-        "search": null,
-        "usage": 39.5,
-        "reaction": 36.6
-      },
-      "change": 1,
-      "prevRank": 8,
-      "adjusted": 0
-    },
-    {
       "id": "ssadafile",
-      "rank": 8,
+      "rank": 7,
       "total": 76,
       "stars": 4.7,
       "parts": {
@@ -122,13 +108,13 @@
         "usage": 42,
         "reaction": 34
       },
-      "change": -1,
+      "change": 0,
       "prevRank": 7,
       "adjusted": 0
     },
     {
       "id": "yesfile",
-      "rank": 9,
+      "rank": 8,
       "total": 75.5,
       "stars": 4.7,
       "parts": {
@@ -137,96 +123,96 @@
         "reaction": 21.1
       },
       "change": 0,
-      "prevRank": 9,
+      "prevRank": 8,
       "adjusted": 0
     },
     {
       "id": "filekuki",
-      "rank": 10,
-      "total": 61.7,
+      "rank": 9,
+      "total": 61.6,
       "stars": 4.5,
       "parts": {
         "search": null,
         "usage": 26.2,
-        "reaction": 35.5
+        "reaction": 35.4
+      },
+      "change": 0,
+      "prevRank": 9,
+      "adjusted": 0
+    },
+    {
+      "id": "filenori",
+      "rank": 10,
+      "total": 59.5,
+      "stars": 4.4,
+      "parts": {
+        "search": null,
+        "usage": 30.6,
+        "reaction": 28.9
       },
       "change": 0,
       "prevRank": 10,
       "adjusted": 0
     },
     {
-      "id": "filenori",
+      "id": "filebogo",
       "rank": 11,
-      "total": 59.8,
+      "total": 54.5,
       "stars": 4.4,
       "parts": {
         "search": null,
-        "usage": 30.6,
-        "reaction": 29.2
+        "usage": 39.9,
+        "reaction": 14.6
       },
       "change": "new",
       "prevRank": 11,
       "adjusted": 0
     },
     {
-      "id": "filebogo",
+      "id": "filecity",
       "rank": 12,
-      "total": 54.4,
-      "stars": 4.4,
+      "total": 53.1,
+      "stars": 4.3,
       "parts": {
         "search": null,
-        "usage": 39.9,
-        "reaction": 14.5
+        "usage": 26.6,
+        "reaction": 26.5
       },
       "change": "new",
       "prevRank": 12,
       "adjusted": 0
     },
     {
-      "id": "filecity",
+      "id": "bigfile",
       "rank": 13,
-      "total": 53.3,
+      "total": 52.9,
       "stars": 4.3,
       "parts": {
         "search": null,
-        "usage": 26.6,
-        "reaction": 26.7
+        "usage": 26.3,
+        "reaction": 26.6
       },
       "change": "new",
       "prevRank": 13,
       "adjusted": 0
     },
     {
-      "id": "bigfile",
+      "id": "todisk",
       "rank": 14,
-      "total": 53.2,
+      "total": 48.2,
       "stars": 4.3,
       "parts": {
         "search": null,
-        "usage": 26.3,
-        "reaction": 26.9
+        "usage": 28.6,
+        "reaction": 19.6
       },
       "change": "new",
       "prevRank": 14,
       "adjusted": 0
     },
     {
-      "id": "todisk",
-      "rank": 15,
-      "total": 48.4,
-      "stars": 4.3,
-      "parts": {
-        "search": null,
-        "usage": 28.6,
-        "reaction": 19.8
-      },
-      "change": "new",
-      "prevRank": 15,
-      "adjusted": 0
-    },
-    {
       "id": "filemaru",
-      "rank": 16,
+      "rank": 15,
       "total": 41.7,
       "stars": 4.2,
       "parts": {
@@ -235,35 +221,35 @@
         "reaction": 0
       },
       "change": "new",
-      "prevRank": 16,
+      "prevRank": 15,
       "adjusted": 0
     },
     {
       "id": "filestar",
-      "rank": 17,
-      "total": 39.6,
-      "stars": 4.2,
+      "rank": 16,
+      "total": 39.2,
+      "stars": 4.1,
       "parts": {
         "search": null,
         "usage": 11.5,
-        "reaction": 28.1
+        "reaction": 27.7
       },
       "change": "new",
-      "prevRank": 17,
+      "prevRank": 16,
       "adjusted": 0
     },
     {
       "id": "geniefile",
-      "rank": 18,
-      "total": 32.5,
+      "rank": 17,
+      "total": 32.2,
       "stars": 4.1,
       "parts": {
         "search": null,
         "usage": 0,
-        "reaction": 32.5
+        "reaction": 32.2
       },
       "change": "new",
-      "prevRank": 18,
+      "prevRank": 17,
       "adjusted": 0
     }
   ]
