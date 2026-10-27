@@ -278,7 +278,7 @@ ol {
   align-items: center;
   min-height: var(--tap);
   padding: 0 var(--sp-2);
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   border-bottom: var(--rule-w) solid var(--outline-variant);
 }
@@ -756,10 +756,11 @@ ol {
   height: 12px;
 }
 
-/* Digest panel */
+/* Digest panel: a quiet card, flatter than the ranking cards (no edge, lowest raised surface). */
 .digest {
-  padding: var(--sp-1) 0 var(--sp-1) var(--sp-4);
-  border-left: 2px solid var(--outline);
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-low);
+  border-radius: var(--r-3);
   color: var(--on-surface-variant);
 }
 
