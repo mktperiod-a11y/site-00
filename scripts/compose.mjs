@@ -57,6 +57,11 @@ const DATE = ranking.date;
 const YM = `${ranking.year}.${String(ranking.month).padStart(2, '0')}`;
 const YM_KO = `${ranking.year}년 ${ranking.month}월`;
 const WEEK_KO = `${YM_KO} ${ranking.weekLabel.split(' ')[1]}`;
+const NEXT_UPDATE = (() => {
+  const t = new Date(`${DATE}T00:00:00Z`);
+  t.setUTCDate(t.getUTCDate() + (((8 - t.getUTCDay()) % 7) || 7));
+  return t.toISOString().slice(0, 10);
+})();
 const ISSUE = `${YM} · ${ranking.weekLabel.split(' ')[1]}`;
 const USED = METRIC_KEYS.filter((k) => ranking.metricsUsed.includes(k));
 const HAS_AFFILIATE = pub.some((it) => it.v.affiliateUrl);
@@ -510,9 +515,9 @@ function digest() {
 
 function metricLine(k) {
   return {
-    search: '네이버 검색어 트렌드에서 서비스 이름이 최근 4주 동안 얼마나 검색됐는지 봐요.',
-    usage: '구글 플레이 한국 스토어에 공개된 앱 다운로드 규모를 봐요.',
-    reaction: '구글 플레이 평점을 평가 수와 함께 살펴봐요.',
+    search: '사람들이 서비스를 얼마나 찾아보는지 살펴봐요.',
+    usage: '앱이 얼마나 널리 쓰이는지 살펴봐요.',
+    reaction: '이용자들의 평가를 함께 살펴봐요.',
   }[k];
 }
 
@@ -527,22 +532,49 @@ function fillFaq(text) {
     .replace(/\{public\}/g, String(site.publicCount));
 }
 
-function faqBlock(items, id, title, cls = 'block') {
+// Things a visitor can check on any service before signing up. Advice only: the site does not audit these per service.
+const SIGNUP_CHECKS = [
+  ['가입 혜택', '받는 조건(본인인증·앱 설치)과 사용 기한', '조건을 채울 수 있는지부터 따져 보세요'],
+  ['정액 이용권', '자동 연장 여부, 해지하는 곳', '결제 전에 해지 방법을 미리 찾아 두세요'],
+  ['앱·모바일', '앱 제공 여부, 휴대폰에서 받기', '주로 쓰는 기기에서 먼저 둘러보세요'],
+  ['콘텐츠', '제휴 표시, 이용 연령', '제휴 표시가 있는 콘텐츠만 받으세요'],
+];
+
+function checkTable() {
+  return block([
+    '<div class="checks">',
+    '  <h3 class="checks-title">가입 전 확인표</h3>',
+    '  <table class="check-table">',
+    '    <thead>',
+    '      <tr><th scope="col">확인할 것</th><th scope="col">살펴볼 내용</th><th scope="col">가입 전 판단</th></tr>',
+    '    </thead>',
+    '    <tbody>',
+    ...SIGNUP_CHECKS.map(([k, what, how]) =>
+      `      <tr><th scope="row">${k}</th><td data-label="살펴볼 내용">${what}</td><td data-label="가입 전 판단">${how}</td></tr>`),
+    '    </tbody>',
+    '  </table>',
+    '</div>',
+  ]);
+}
+
+function faqBlock(items, id, title, cls = 'block', extra = null) {
   return block([
     `<section class="${cls}" id="${id}" aria-labelledby="${id}-title">`,
     '  <div class="section-head">',
     `    <h2 id="${id}-title">${title}</h2>`,
     '  </div>',
-    '  <div class="faq">',
-    ...items.map((f) =>
+    `  <ol class="qa-cards${items.length % 3 ? ' is-even' : ''}">`,
+    ...items.map((f, i) =>
       block([
-        '    <details>',
-        `      <summary>${esc(f.q)}</summary>`,
+        '    <li class="qa-card">',
+        `      <span class="qa-no" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>`,
+        `      <h3>${esc(f.q)}</h3>`,
         `      <p>${esc(f.a)}</p>`,
-        '    </details>',
+        '    </li>',
       ]),
     ),
-    '  </div>',
+    '  </ol>',
+    extra ? indent(extra, 2) : null,
     '</section>',
   ]);
 }
@@ -627,13 +659,16 @@ function pageIndex() {
     '  <section class="hero" aria-labelledby="page-title">',
     `    <p class="kicker"><span class="issue">${ISSUE}</span><span>주간 웹하드 차트</span></p>`,
     `    <h1 id="page-title"><span class="h1-when">${YM_KO}</span> 웹하드 순위</h1>`,
-    `    <p class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신<span data-updated="${DATE}"></span></p>`,
     `    <p class="caveat">${CAVEAT_HERO}</p>`,
     '  </section>',
     '  <section class="ranking" aria-labelledby="chart-title">',
     '    <div class="section-head">',
     `      <h2 id="chart-title">이번 주 TOP ${site.publicCount}</h2>`,
-    `      <p>후보 ${ranking.candidates}곳 중 상위 ${site.publicCount}곳</p>`,
+    '      <p class="live">',
+    '        <span class="live-dot" aria-hidden="true"></span>',
+    `        <span class="stamp"><time datetime="${DATE}">${koreanDate(DATE)}</time> 갱신<span data-updated="${DATE}"></span></span>`,
+    `        <span class="live-next">다음 갱신 ${koreanDate(NEXT_UPDATE)}</span>`,
+    '      </p>',
     '    </div>',
     '    <ol class="chart podium">',
     ...pub.slice(0, 3).map((it) => indent(entry(it, u, { eager: true }), 6)),
@@ -657,7 +692,7 @@ function pageIndex() {
     indent(methodCards(), 4),
     `    <a class="more" href="${u('criteria/')}">순위 기준 자세히 보기</a>`,
     '  </section>',
-    indent(faqBlock(homeFaq, 'faq', '자주 묻는 질문', 'block qa'), 2),
+    indent(faqBlock(homeFaq, 'faq', '자주 묻는 질문', 'block qa', checkTable()), 2),
     '</main>',
   ]);
   pages.push({
@@ -731,9 +766,9 @@ function playFacts(v) {
     return n.toLocaleString('ko-KR');
   };
   return {
-    usage: p.minInstalls || p.installs ? `구글 플레이 다운로드 ${fmt(p.minInstalls || p.installs)}회 이상 규모예요.` : null,
+    usage: p.minInstalls || p.installs ? `다운로드 ${fmt(p.minInstalls || p.installs)}회 이상 규모예요.` : null,
     reaction:
-      p.rating && p.ratings ? `구글 플레이 평점 ${p.rating.toFixed(1)}점, 평가 ${p.ratings.toLocaleString('ko-KR')}개예요.` : null,
+      p.rating && p.ratings ? `평점 ${p.rating.toFixed(1)}점, 평가 ${p.ratings.toLocaleString('ko-KR')}개예요.` : null,
   };
 }
 
@@ -742,7 +777,7 @@ function partText(k, it, facts) {
     if (k !== 'search' && !it.v.playId) return '앱이 없어 이 항목은 빼고 계산했어요.';
     return '이번 주에는 값을 받아 오지 못해 이 항목은 빼고 계산했어요.';
   }
-  if (k === 'search') return '네이버 검색어 트렌드에서 최근 4주 동안의 검색 흐름을 봤어요.';
+  if (k === 'search') return '이번 주 검색 관심도를 반영했어요.';
   return facts[k] ?? metricLine(k);
 }
 
@@ -952,8 +987,8 @@ function pageCriteria() {
     '    <div class="section-head">',
     '      <h2 id="calc-title">어떻게 줄 세우나요</h2>',
     '    </div>',
-    '    <p>항목마다 값의 범위를 같게 맞춘 뒤 더해 100점 만점 총점을 만들어요. 지표가 일부만 있는 곳은 있는 항목만으로 계산해요.</p>',
-    `    <p>매주 후보 ${ranking.candidates}곳 전체를 같은 계산으로 다시 줄 세우고, 그중 상위 ${site.publicCount}곳을 공개해요.` +
+    '    <p>여러 공개 지표를 함께 살펴 100점 만점 총점을 매겨요.</p>',
+    `    <p>매주 후보 전체를 같은 기준으로 다시 줄 세우고, 상위 ${site.publicCount}곳을 공개해요.` +
       ` ${site.publicCount}위 밖으로 밀려난 곳도 다음 주에 다시 겨뤄요.</p>`,
     '    <p>일부 서비스는 운영 기준에 따라 순위가 조정될 수 있어요.</p>',
     '    <p>별점은 총점을 5점 만점으로 바꿔 보여 주는 값이에요. 이용자가 직접 매긴 평점이 아니에요.</p>',
@@ -965,7 +1000,6 @@ function pageCriteria() {
     '    </div>',
     '    <ul class="dots">',
     '      <li>매주 월요일 아침에 지표를 새로 모아 순위를 다시 계산해요.</li>',
-    '      <li>어떤 항목의 값을 받아 오지 못한 주에는 직전에 받은 값을 그대로 써요.</li>',
     '      <li>가입 혜택과 이벤트는 서비스 사정으로 바뀔 수 있으니 공식 사이트 안내가 우선이에요.</li>',
     '    </ul>',
     '  </section>',
