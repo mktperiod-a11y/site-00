@@ -61,6 +61,7 @@
   --first-edge: rgba(205, 189, 255, 0.55);
   --btn-fill: #535159;
   --live: #7fdcb5;
+  --tint-chip: #36313f;
   --lift: 0 4px 16px rgba(0, 0, 0, 0.5);
   --state-hover: 0.08;
   --state-focus: 0.1;
@@ -812,8 +813,7 @@ ol {
 
 .block > p,
 .prose p,
-.dots,
-.faq p {
+.dots {
   max-width: 42em;
 }
 
@@ -890,48 +890,94 @@ ol {
   font-weight: 500;
 }
 
-.faq {
+/* FAQ as numbered cards, plus a pre-signup check table on the home page */
+.qa-cards {
+  display: grid;
+  gap: var(--sp-4);
   margin-top: var(--sp-4);
-  border-top: var(--rule-w) solid var(--outline-variant);
 }
 
-.faq details {
-  border-bottom: var(--rule-w) solid var(--outline-variant);
+.qa-card {
+  padding: var(--sp-4);
+  background: var(--surface-low);
+  border: var(--rule-w) solid var(--outline-variant);
+  border-radius: var(--r-2);
 }
 
-.faq summary {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  min-height: var(--tap);
-  padding: var(--sp-3) 0;
-  font-weight: 500;
-  cursor: pointer;
-  list-style: none;
+.qa-no {
+  display: inline-grid;
+  place-items: center;
+  min-width: 32px;
+  height: 24px;
+  padding: 0 var(--sp-2);
+  border-radius: var(--r-pill);
+  background: var(--tint-chip);
+  color: var(--primary);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
-.faq summary::-webkit-details-marker {
+.qa-card h3 {
+  margin-top: var(--sp-3);
+  font-size: var(--fs-m);
+  line-height: var(--lh-tight);
+}
+
+.qa-card p {
+  margin-top: var(--sp-2);
+  color: var(--on-surface-variant);
+  font-size: var(--fs-s);
+}
+
+.checks {
+  margin-top: var(--sp-6);
+}
+
+.checks-title {
+  font-size: var(--fs-m);
+}
+
+.check-table {
+  width: 100%;
+  margin-top: var(--sp-3);
+  border-collapse: separate;
+  border-spacing: 0;
+  border: var(--rule-w) solid var(--outline-variant);
+  border-radius: var(--r-2);
+  font-size: var(--fs-s);
+}
+
+.check-table thead {
   display: none;
 }
 
-.faq summary::after {
-  content: "+";
-  flex: none;
-  width: 24px;
-  text-align: center;
-  font-size: var(--fs-l);
-  color: var(--primary);
+.check-table tr {
+  display: block;
+  padding: var(--sp-4);
 }
 
-.faq details[open] summary::after {
-  content: "−";
+.check-table tr + tr {
+  border-top: var(--rule-w) solid var(--outline-variant);
 }
 
-.faq p {
-  padding: 0 0 var(--sp-4);
+.check-table th,
+.check-table td {
+  display: block;
+  text-align: left;
+}
+
+.check-table tbody th {
+  font-weight: 600;
+}
+
+.check-table td {
+  margin-top: var(--sp-1);
   color: var(--on-surface-variant);
-  font-size: var(--fs-s);
+}
+
+.check-table td + td {
+  color: var(--on-surface);
 }
 
 .notice {
@@ -1228,6 +1274,43 @@ ol {
     padding-top: var(--sp-7);
   }
 
+  .qa-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .qa-card {
+    padding: var(--sp-5);
+  }
+
+  .check-table thead {
+    display: table-header-group;
+  }
+
+  .check-table tr {
+    display: table-row;
+    padding: 0;
+  }
+
+  .check-table th,
+  .check-table td {
+    display: table-cell;
+    margin: 0;
+    padding: var(--sp-3) var(--sp-4);
+    border-top: var(--rule-w) solid var(--outline-variant);
+    vertical-align: top;
+  }
+
+  .check-table thead th {
+    border-top: 0;
+    color: var(--on-surface-variant);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+  }
+
+  .check-table tbody th {
+    white-space: nowrap;
+  }
+
   .live-next {
     display: inline;
   }
@@ -1344,6 +1427,14 @@ ol {
 }
 
 @media (min-width: 1024px) {
+  .qa-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .qa-cards.is-even {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .podium {
     grid-template-columns: minmax(0, 1.25fr) repeat(2, minmax(0, 1fr));
     gap: var(--sp-5);

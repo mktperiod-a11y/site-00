@@ -532,22 +532,49 @@ function fillFaq(text) {
     .replace(/\{public\}/g, String(site.publicCount));
 }
 
-function faqBlock(items, id, title, cls = 'block') {
+// Things a visitor can check on any service before signing up. Advice only: the site does not audit these per service.
+const SIGNUP_CHECKS = [
+  ['가입 혜택', '받는 조건(본인인증·앱 설치)과 사용 기한', '조건을 채울 수 있는지부터 따져 보세요'],
+  ['정액 이용권', '자동 연장 여부, 해지하는 곳', '결제 전에 해지 방법을 미리 찾아 두세요'],
+  ['앱·모바일', '앱 제공 여부, 휴대폰에서 받기', '주로 쓰는 기기에서 먼저 둘러보세요'],
+  ['콘텐츠', '제휴 표시, 이용 연령', '제휴 표시가 있는 콘텐츠만 받으세요'],
+];
+
+function checkTable() {
+  return block([
+    '<div class="checks">',
+    '  <h3 class="checks-title">가입 전 확인표</h3>',
+    '  <table class="check-table">',
+    '    <thead>',
+    '      <tr><th scope="col">확인할 것</th><th scope="col">살펴볼 내용</th><th scope="col">가입 전 판단</th></tr>',
+    '    </thead>',
+    '    <tbody>',
+    ...SIGNUP_CHECKS.map(([k, what, how]) =>
+      `      <tr><th scope="row">${k}</th><td data-label="살펴볼 내용">${what}</td><td data-label="가입 전 판단">${how}</td></tr>`),
+    '    </tbody>',
+    '  </table>',
+    '</div>',
+  ]);
+}
+
+function faqBlock(items, id, title, cls = 'block', extra = null) {
   return block([
     `<section class="${cls}" id="${id}" aria-labelledby="${id}-title">`,
     '  <div class="section-head">',
     `    <h2 id="${id}-title">${title}</h2>`,
     '  </div>',
-    '  <div class="faq">',
-    ...items.map((f) =>
+    `  <ol class="qa-cards${items.length % 3 ? ' is-even' : ''}">`,
+    ...items.map((f, i) =>
       block([
-        '    <details>',
-        `      <summary>${esc(f.q)}</summary>`,
+        '    <li class="qa-card">',
+        `      <span class="qa-no" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>`,
+        `      <h3>${esc(f.q)}</h3>`,
         `      <p>${esc(f.a)}</p>`,
-        '    </details>',
+        '    </li>',
       ]),
     ),
-    '  </div>',
+    '  </ol>',
+    extra ? indent(extra, 2) : null,
     '</section>',
   ]);
 }
@@ -665,7 +692,7 @@ function pageIndex() {
     indent(methodCards(), 4),
     `    <a class="more" href="${u('criteria/')}">순위 기준 자세히 보기</a>`,
     '  </section>',
-    indent(faqBlock(homeFaq, 'faq', '자주 묻는 질문', 'block qa'), 2),
+    indent(faqBlock(homeFaq, 'faq', '자주 묻는 질문', 'block qa', checkTable()), 2),
     '</main>',
   ]);
   pages.push({
