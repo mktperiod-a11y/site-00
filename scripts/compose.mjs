@@ -472,7 +472,7 @@ function goButton(v, u) {
 function entry(it, u, { eager = false, level = 'h3' } = {}) {
   const v = it.v;
   return block([
-    `<li class="entry vc-${v.id}${it.rank <= 3 ? ' is-podium' : ''}${chars(v.name) > 6 ? ' has-long-name' : ''}" id="rank-${v.id}">`,
+    `<li class="entry vc-${v.id}${it.rank <= 3 ? ' is-podium' : ''}${it.rank === 1 ? ' is-first' : ''}${chars(v.name) > 6 ? ' has-long-name' : ''}" id="rank-${v.id}">`,
     '  <div class="entry-rank">',
     `    <span class="entry-no">${it.rank}<span class="sr">위</span></span>`,
     `    ${moveBadge(it.change)}`,
