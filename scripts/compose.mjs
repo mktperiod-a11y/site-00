@@ -493,13 +493,16 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
 
 function digest() {
   const hasPrev = pub.some((it) => it.change !== null);
-  const top = pub.filter((it) => typeof it.change === 'number' && it.change > 0).sort((x, y) => y.change - x.change)[0];
+  const moved = pub.filter((it) => typeof it.change === 'number');
+  const top = moved.filter((it) => it.change > 0).sort((x, y) => y.change - x.change)[0];
+  const drop = moved.filter((it) => it.change < 0).sort((x, y) => x.change - y.change)[0];
   const fresh = pub.filter((it) => it.change === 'new').length;
+  const none = hasPrev ? '없음' : '–';
   return [
     ['1위', esc(pub[0].v.name)],
-    ['최대 상승', top ? `${esc(top.v.name)} <span class="up">▲${top.change}</span>` : hasPrev ? '없음' : '–'],
+    ['최대 상승', top ? `${esc(top.v.name)} <span class="up">▲${top.change}</span>` : none],
+    ['최대 하락', drop ? `${esc(drop.v.name)} <span class="down">▼${-drop.change}</span>` : none],
     ['새로 진입', hasPrev ? `${fresh}곳` : '–'],
-    ['비교한 곳', `${ranking.scored}곳`],
   ];
 }
 

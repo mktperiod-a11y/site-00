@@ -93,6 +93,7 @@
   --fs-xl: 1.375rem;
   --fs-2xl: 1.75rem;
   --fs-3xl: 2.25rem;
+  --fs-4xl: 2.75rem;
   --lh: 1.7;
   --lh-tight: 1.25;
 }
@@ -785,8 +786,17 @@ ol {
   font-weight: 600;
 }
 
-.digest .up {
+.digest .up,
+.digest .down {
   white-space: nowrap;
+}
+
+.digest .up {
+  color: var(--up);
+}
+
+.digest .down {
+  color: var(--down);
 }
 
 /* Text blocks */
@@ -1354,7 +1364,7 @@ ol {
   }
 
   .hero h1 {
-    font-size: var(--fs-3xl);
+    font-size: var(--fs-4xl);
   }
 
   .caveat {
@@ -1445,7 +1455,7 @@ ol {
   }
 
   .podium .entry.is-first .entry-no {
-    font-size: 2.75rem;
+    font-size: var(--fs-4xl);
   }
 
   .podium .entry-icon {
