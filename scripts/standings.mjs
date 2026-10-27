@@ -2,10 +2,13 @@
 // Rebuilds data/ranking.json from data/metrics.json and records the week in data/history.json.
 //   node scripts/standings.mjs                     compute this week's ranking
 //   node scripts/standings.mjs --restore-baseline  put the first collected metrics back, then compute
+// The ranking recipe comes only from the RANK_RECIPE environment variable (a repository secret in the
+// weekly workflow). The repository keeps just its hash in data/site.json, so a changed or missing
+// recipe leaves last week's ranking in place instead of silently switching the calculation.
 import fs from 'node:fs';
 import path from 'node:path';
 import { ROOT, readJSON, writeJSON, kstDate, validateVendors } from './lib/rules.mjs';
-import { computeRanking, appendHistory } from './lib/score.mjs';
+import { computeRanking, appendHistory, recipeHash } from './lib/score.mjs';
 
 const args = new Set(process.argv.slice(2));
 const site = readJSON('data/site.json');
@@ -14,6 +17,18 @@ const problems = validateVendors(vendors);
 if (problems.length) {
   console.error(problems.join('\n'));
   process.exit(1);
+}
+
+let recipe;
+try {
+  recipe = JSON.parse(process.env.RANK_RECIPE ?? '');
+} catch {
+  console.log('::warning::Ranking recipe is not available; last week\'s ranking is kept.');
+  process.exit(0);
+}
+if (recipeHash(recipe) !== site.recipeHash) {
+  console.log('::warning::Ranking recipe does not match data/site.json recipeHash; last week\'s ranking is kept.');
+  process.exit(0);
 }
 
 const baselineFile = path.join(ROOT, 'data/first-week.json');
@@ -31,7 +46,7 @@ if (args.has('--restore-baseline')) {
 
 const date = process.env.RANK_DATE ?? kstDate();
 const history = readJSON('data/history.json', []);
-const ranking = computeRanking({ vendors, metrics, site, history, date });
+const ranking = computeRanking({ vendors, metrics, recipe, site, history, date });
 
 if (ranking.items.length < site.publicCount) {
   console.error(`only ${ranking.items.length} vendors have metrics; ${site.publicCount} are needed`);

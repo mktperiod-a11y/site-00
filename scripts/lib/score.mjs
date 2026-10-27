@@ -1,19 +1,55 @@
+import crypto from 'node:crypto';
 import { weekInfo } from './rules.mjs';
 
+// The three public items. Each recipe metric feeds exactly one of them.
 const KEYS = ['search', 'usage', 'reaction'];
+const METRIC_GROUP = { search: 'search', installs: 'usage', ratings: 'usage', rating: 'reaction' };
+const TRANSFORMS = {
+  search: ['log', 'rank', 'z'],
+  installs: ['log', 'rank', 'z'],
+  ratings: ['log', 'rank', 'z'],
+  rating: ['linear', 'rank', 'z'],
+};
 
 const round1 = (x) => Math.round(x * 10) / 10;
 const finite = (x) => (typeof x === 'number' && Number.isFinite(x) ? x : null);
 
-function minMax(values) {
-  const known = values.filter((x) => x !== null);
-  if (!known.length) return values.map(() => null);
-  const lo = Math.min(...known);
-  const hi = Math.max(...known);
-  return values.map((x) => (x === null ? null : hi > lo ? (x - lo) / (hi - lo) : 0.5));
+/* ---------- recipe: chosen once per site, kept out of the repository ---------- */
+
+export function recipeProblems(r) {
+  const out = [];
+  if (!r || typeof r !== 'object') return ['recipe is not an object'];
+  const m = r.metrics ?? {};
+  const names = Object.keys(m);
+  for (const k of names) {
+    if (!(k in METRIC_GROUP)) out.push(`unknown metric ${k}`);
+    else if (!TRANSFORMS[k].includes(m[k].t)) out.push(`${k}: bad transform`);
+    if (!Number.isInteger(m[k]?.w) || m[k].w < 15 || m[k].w > 50 || m[k].w % 5) out.push(`${k}: weight must be 15-50 in steps of 5`);
+  }
+  for (const g of KEYS) if (!names.some((k) => METRIC_GROUP[k] === g)) out.push(`no metric for ${g}`);
+  if (names.reduce((a, k) => a + (m[k]?.w ?? 0), 0) !== 100) out.push('weights must add up to 100');
+  if (m.rating && !(m.rating.prior >= 100 && m.rating.prior <= 500)) out.push('rating prior must be 100-500');
+  if (!(r.smooth === 1 || (r.smooth >= 0.5 && r.smooth <= 0.8))) out.push('smooth must be 1 or 0.5-0.8');
+  if (!['prev', 'name', ...names].includes(r.tie)) out.push('bad tie rule');
+  if (![10, 100, 1000].includes(r.scale)) out.push('scale must be 10, 100 or 1000');
+  if (!(r.starFloor >= 3.4 && r.starFloor <= 3.8)) out.push('star floor must be 3.4-3.8');
+  if (!(r.margin >= 0.1 && r.margin <= 0.6)) out.push('margin must be 0.1-0.6');
+  if (!Array.isArray(r.priority)) out.push('priority must be a list');
+  return out;
 }
 
-export function normalizedSignals(vendors, metrics, ratingPrior) {
+const canonical = (x) =>
+  Array.isArray(x)
+    ? `[${x.map(canonical).join(',')}]`
+    : x && typeof x === 'object'
+      ? `{${Object.keys(x).sort().map((k) => `${JSON.stringify(k)}:${canonical(x[k])}`).join(',')}}`
+      : JSON.stringify(x);
+
+export const recipeHash = (r) => crypto.createHash('sha256').update(canonical(r)).digest('hex');
+
+/* ---------- metrics ---------- */
+
+function rawValues(vendors, metrics, prior) {
   const raw = vendors.map((v) => {
     const m = metrics?.vendors?.[v.id] ?? {};
     const play = v.playId ? m.play ?? {} : {};
@@ -21,23 +57,45 @@ export function normalizedSignals(vendors, metrics, ratingPrior) {
       id: v.id,
       search: finite(m.search?.value),
       installs: finite(play.installs),
-      rating: finite(play.rating),
       ratings: finite(play.ratings),
+      stars: finite(play.rating),
     };
   });
-  const rated = raw.filter((r) => r.rating !== null && r.ratings !== null && r.ratings > 0);
-  const mean = rated.length ? rated.reduce((s, r) => s + r.rating, 0) / rated.length : null;
-  const search = minMax(raw.map((r) => (r.search === null ? null : Math.log1p(Math.max(0, r.search) * 100))));
-  const usage = minMax(raw.map((r) => (r.installs === null ? null : Math.log10(Math.max(0, r.installs) + 1))));
-  const reaction = minMax(
-    raw.map((r) => {
-      if (r.rating === null || r.ratings === null || r.ratings <= 0 || mean === null) return null;
-      const n = r.ratings;
-      return (n / (n + ratingPrior)) * r.rating + (ratingPrior / (n + ratingPrior)) * mean;
-    }),
-  );
-  return raw.map((r, i) => ({ id: r.id, search: search[i], usage: usage[i], reaction: reaction[i] }));
+  const rated = raw.filter((r) => r.stars !== null && r.ratings > 0);
+  const mean = rated.length ? rated.reduce((s, r) => s + r.stars, 0) / rated.length : null;
+  for (const r of raw) {
+    // Few reviews pull the rating toward the overall mean.
+    r.rating = r.stars === null || !(r.ratings > 0) || mean === null ? null : (r.ratings * r.stars + prior * mean) / (r.ratings + prior);
+  }
+  return raw;
 }
+
+function transform(values, kind, metric) {
+  const known = values.filter((x) => x !== null);
+  if (!known.length) return values.map(() => null);
+  const pre = (x) => (kind === 'linear' || metric === 'rating' ? x : Math.log1p(Math.max(0, x) * (metric === 'search' ? 100 : 1)));
+  if (kind === 'rank') {
+    return values.map((x) => {
+      if (x === null) return null;
+      if (known.length === 1) return 0.5;
+      const below = known.filter((y) => y < x).length;
+      const same = known.filter((y) => y === x).length;
+      return (below + (same - 1) / 2) / (known.length - 1);
+    });
+  }
+  const pv = values.map((x) => (x === null ? null : pre(x)));
+  const kv = pv.filter((x) => x !== null);
+  if (kind === 'z') {
+    const mean = kv.reduce((a, b) => a + b, 0) / kv.length;
+    const sd = Math.sqrt(kv.reduce((a, b) => a + (b - mean) ** 2, 0) / kv.length);
+    return pv.map((x) => (x === null ? null : sd > 0 ? (Math.max(-2, Math.min(2, (x - mean) / sd)) + 2) / 4 : 0.5));
+  }
+  const lo = Math.min(...kv);
+  const hi = Math.max(...kv);
+  return pv.map((x) => (x === null ? null : hi > lo ? (x - lo) / (hi - lo) : 0.5));
+}
+
+/* ---------- points ---------- */
 
 function distribute(parts, caps, extra) {
   const keys = Object.keys(parts);
@@ -76,52 +134,72 @@ function previousEntry(history, weekKey) {
   return older.length ? older[older.length - 1] : null;
 }
 
-export function computeRanking({ vendors, metrics, site, history, date }) {
+// Totals are kept on a 0-100 scale; `scale` only changes how they are shown.
+export function computeRanking({ vendors, metrics, recipe, site, history, date }) {
+  const problems = recipeProblems(recipe);
+  if (problems.length) throw new Error(`invalid ranking recipe: ${problems.join('; ')}`);
   const active = vendors.filter((v) => v.status === 'active');
   const week = weekInfo(date);
-  const signals = normalizedSignals(active, metrics, site.ratingPrior ?? 300);
+  const names = Object.keys(recipe.metrics);
+  const raw = rawValues(active, metrics, recipe.metrics.rating?.prior ?? 300);
+  const norm = Object.fromEntries(names.map((k) => [k, transform(raw.map((r) => r[k]), recipe.metrics[k].t, k)]));
   const prev = previousEntry(history, week.key);
   const prevRank = new Map((prev?.order ?? []).map((id, i) => [id, i + 1]));
+  const prevTotal = prev?.totals ?? {};
 
   const scored = [];
   const pending = [];
-  for (const s of signals) {
-    const have = KEYS.filter((k) => s[k] !== null);
+  raw.forEach((r, i) => {
+    const have = names.filter((k) => norm[k][i] !== null);
     if (!have.length) {
-      pending.push(s.id);
-      continue;
+      pending.push(r.id);
+      return;
     }
-    const wsum = have.reduce((a, k) => a + site.weights[k], 0);
+    const wsum = have.reduce((a, k) => a + recipe.metrics[k].w, 0);
     const caps = {};
     const parts = {};
     for (const k of have) {
-      caps[k] = (site.weights[k] * 100) / wsum;
-      parts[k] = caps[k] * s[k];
+      const g = METRIC_GROUP[k];
+      const cap = (recipe.metrics[k].w * 100) / wsum;
+      caps[g] = (caps[g] ?? 0) + cap;
+      parts[g] = (parts[g] ?? 0) + cap * norm[k][i];
     }
-    const rawTotal = have.reduce((a, k) => a + parts[k], 0);
-    scored.push({ id: s.id, parts, caps, rawTotal, total: round1(rawTotal), adjust: 0 });
-  }
+    let rawTotal = Object.values(parts).reduce((a, b) => a + b, 0);
+    // Optional weekly smoothing with last week's total, so one noisy week moves the order less.
+    if (recipe.smooth < 1 && typeof prevTotal[r.id] === 'number') {
+      const next = recipe.smooth * rawTotal + (1 - recipe.smooth) * prevTotal[r.id];
+      const capSum = Object.values(caps).reduce((a, b) => a + b, 0);
+      for (const g of Object.keys(parts)) parts[g] = rawTotal > 0 ? (parts[g] * next) / rawTotal : (caps[g] * next) / capSum;
+      rawTotal = next;
+    }
+    const tieValue = recipe.tie in norm ? norm[recipe.tie][i] ?? -1 : 0;
+    scored.push({ id: r.id, parts, caps, rawTotal, total: round1(rawTotal), adjust: 0, tieValue });
+  });
 
   const name = new Map(active.map((v) => [v.id, v.name]));
+  const byTie = (a, b) => {
+    if (recipe.tie === 'prev') return (prevRank.get(a.id) ?? 999) - (prevRank.get(b.id) ?? 999);
+    if (recipe.tie === 'name') return 0;
+    return b.tieValue - a.tieValue;
+  };
   const sort = () =>
     scored.sort(
       (a, b) =>
         b.total - a.total ||
         b.rawTotal + b.adjust - (a.rawTotal + a.adjust) ||
-        (prevRank.get(a.id) ?? 999) - (prevRank.get(b.id) ?? 999) ||
+        byTie(a, b) ||
         name.get(a.id).localeCompare(name.get(b.id), 'ko'),
     );
   sort();
 
   for (let pass = 0; pass < 10; pass++) {
     let changed = false;
-    for (const f of site.floors ?? []) {
+    for (const f of recipe.priority ?? []) {
       const idx = scored.findIndex((r) => r.id === f.id);
       if (idx < 0 || idx + 1 <= f.maxRank) continue;
       const row = scored[idx];
-      const others = scored.filter((r) => r.id !== f.id);
-      const below = others[f.maxRank - 1];
-      const target = round1(below.total + 0.1);
+      const below = scored.filter((r) => r.id !== f.id)[f.maxRank - 1];
+      const target = Math.min(100, round1(below.total + recipe.margin));
       row.adjust += target - row.total;
       row.total = target;
       sort();
@@ -130,8 +208,7 @@ export function computeRanking({ vendors, metrics, site, history, date }) {
     if (!changed) break;
   }
 
-  const publicCount = site.publicCount;
-  const floor = site.starFloor;
+  const floor = recipe.starFloor;
   const items = scored.map((r, i) => {
     const rank = i + 1;
     const parts = r.adjust > 0 ? distribute(r.parts, r.caps, r.total - r.rawTotal) : r.parts;
@@ -140,19 +217,10 @@ export function computeRanking({ vendors, metrics, site, history, date }) {
     let change = null;
     if (prev) {
       const pr = prevRank.get(r.id);
-      change = pr && pr <= publicCount ? pr - rank : 'new';
+      change = pr && pr <= site.publicCount ? pr - rank : 'new';
     }
     const stars = Math.min(5, Math.max(floor, round1(floor + ((5 - floor) * r.total) / 100)));
-    return {
-      id: r.id,
-      rank,
-      total: r.total,
-      stars,
-      parts: full,
-      change,
-      prevRank: prevRank.get(r.id) ?? null,
-      adjusted: r.adjust > 0 ? round1(r.adjust) : 0,
-    };
+    return { id: r.id, rank, total: r.total, stars, parts: full, change, prevRank: prevRank.get(r.id) ?? null };
   });
 
   const used = KEYS.filter((k) => items.some((it) => it.parts[k] !== null));
@@ -162,6 +230,7 @@ export function computeRanking({ vendors, metrics, site, history, date }) {
     weekLabel: week.label,
     year: week.year,
     month: week.month,
+    scale: recipe.scale,
     candidates: active.length,
     scored: items.length,
     pending,

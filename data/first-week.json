@@ -195,8 +195,7 @@
           "reaction": 40.3
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filesun",
@@ -209,8 +208,7 @@
           "reaction": 38.9
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filemong",
@@ -223,8 +221,7 @@
           "reaction": 40.7
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "tple",
@@ -237,8 +234,7 @@
           "reaction": 41.7
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "kdisk",
@@ -251,8 +247,7 @@
           "reaction": 38.4
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 13.8
+        "prevRank": null
       },
       {
         "id": "filejo",
@@ -265,8 +260,7 @@
           "reaction": 31.1
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "ssadafile",
@@ -279,8 +273,7 @@
           "reaction": 34
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "ggulfile",
@@ -293,8 +286,7 @@
           "reaction": 36.1
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "yesfile",
@@ -307,8 +299,7 @@
           "reaction": 21.1
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filekuki",
@@ -321,8 +312,7 @@
           "reaction": 35.6
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filenori",
@@ -335,8 +325,7 @@
           "reaction": 29.2
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filebogo",
@@ -349,8 +338,7 @@
           "reaction": 14.5
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filecity",
@@ -363,8 +351,7 @@
           "reaction": 26.8
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "bigfile",
@@ -377,8 +364,7 @@
           "reaction": 27
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "todisk",
@@ -391,8 +377,7 @@
           "reaction": 19.8
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filemaru",
@@ -405,8 +390,7 @@
           "reaction": 0
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "filestar",
@@ -419,8 +403,7 @@
           "reaction": 28.1
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       },
       {
         "id": "geniefile",
@@ -433,8 +416,7 @@
           "reaction": 32.4
         },
         "change": null,
-        "prevRank": null,
-        "adjusted": 0
+        "prevRank": null
       }
     ]
   }
