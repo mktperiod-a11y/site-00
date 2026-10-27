@@ -14,7 +14,7 @@ const TRANSFORMS = {
 const round1 = (x) => Math.round(x * 10) / 10;
 const finite = (x) => (typeof x === 'number' && Number.isFinite(x) ? x : null);
 
-/* ---------- recipe: chosen once per site, kept out of the repository ---------- */
+/* ---------- calculation settings ---------- */
 
 export function recipeProblems(r) {
   const out = [];
@@ -165,7 +165,7 @@ export function computeRanking({ vendors, metrics, recipe, site, history, date }
       parts[g] = (parts[g] ?? 0) + cap * norm[k][i];
     }
     let rawTotal = Object.values(parts).reduce((a, b) => a + b, 0);
-    // Optional weekly smoothing with last week's total, so one noisy week moves the order less.
+    // Optional weekly smoothing with last week's total.
     if (recipe.smooth < 1 && typeof prevTotal[r.id] === 'number') {
       const next = recipe.smooth * rawTotal + (1 - recipe.smooth) * prevTotal[r.id];
       const capSum = Object.values(caps).reduce((a, b) => a + b, 0);
