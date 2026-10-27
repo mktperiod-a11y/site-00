@@ -423,19 +423,11 @@ function logoTag(v, u) {
   return `<img src="${u(`assets/logo/${v.id}.webp`)}" width="${w}" height="${h}" alt="${esc(v.name)} 로고">`;
 }
 
-function scorebar(parts, { solo = false, height = 6 } = {}) {
-  let x = 0;
-  const rects = [];
-  METRIC_KEYS.forEach((k, i) => {
-    const p = parts[k];
-    if (p === null || p === undefined || p <= 0) return;
-    const cls = solo ? 'seg-1' : `seg-${i + 1}`;
-    rects.push(`<rect class="${cls}" x="${x.toFixed(1)}" width="${p.toFixed(1)}" height="${height}"/>`);
-    x += p;
-  });
+// One solid bar for a score out of 100 (the total on lists, a single item on detail pages).
+function scorebar(value, height = 6) {
   return block([
     `<svg class="scorebar" viewBox="0 0 100 ${height}" preserveAspectRatio="none" aria-hidden="true" focusable="false">`,
-    ...rects.map((r) => `  ${r}`),
+    value > 0 ? `  <rect width="${Math.min(value, 100).toFixed(1)}" height="${height}"/>` : null,
     '</svg>',
   ]);
 }
@@ -487,7 +479,7 @@ function entry(it, u, { eager = false, level = 'h3' } = {}) {
     '  </div>',
     indent(perksList(v), 2),
     '  <div class="entry-bar">',
-    indent(scorebar(it.parts), 4),
+    indent(scorebar(it.total), 4),
     '  </div>',
     indent(goButton(v, u), 2),
     '</li>',
@@ -868,7 +860,7 @@ function pageVendor(it) {
         '        <li class="part">',
         `          <h3>${METRIC_LABELS[k]}</h3>`,
         `          <span class="part-value">${it.parts[k] === null ? '–' : `${it.parts[k].toFixed(1)}점`}</span>`,
-        it.parts[k] === null ? null : indent(scorebar({ [k]: it.parts[k] }, { solo: true }), 10),
+        it.parts[k] === null ? null : indent(scorebar(it.parts[k]), 10),
         `          <p>${esc(partText(k, it, facts))}</p>`,
         '        </li>',
       ]),
@@ -1073,6 +1065,7 @@ const assetFiles = new Map();
 
 function prepareAssets() {
   const vendorCss = vendors
+    .filter((v) => v.status !== 'excluded')
     .map((v) => {
       const tone = darkTone(v.color);
       return `.vc-${v.id} {\n  --vc: ${tone};\n  --vc-on: ${onColor(tone)};\n}`;

@@ -108,7 +108,7 @@
     ]
   },
   {
-    "id": "ggulfile", "name": "꿀파일", "status": "active",
+    "id": "ggulfile", "name": "꿀파일", "status": "excluded",
     "url": "https://ggulfile.com/", "affiliateUrl": null,
     "playId": "com.ggulfile.app.ggulfile_app", "appStoreId": null,
     "color": "#f50087",
